@@ -20,7 +20,9 @@ package com.hally.influencerai.main.interactors;
 
 import android.content.Context;
 import android.net.Uri;
+import android.support.annotation.NonNull;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -80,10 +82,13 @@ public class ProfileInteractor {
                 .child(DatabaseHelper.PROFILES_DB_KEY)
                 .child(profile.getId())
                 .setValue(profile);
-        task.addOnCompleteListener(task1 -> {
-            onProfileCreatedListener.onProfileCreated(task1.isSuccessful());
-            addRegistrationToken(FirebaseInstanceId.getInstance().getToken(), profile.getId());
-            LogUtil.logDebug(TAG, "createOrUpdateProfile, success: " + task1.isSuccessful());
+        task.addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task1) {
+                onProfileCreatedListener.onProfileCreated(task1.isSuccessful());
+                ProfileInteractor.this.addRegistrationToken(FirebaseInstanceId.getInstance().getToken(), profile.getId());
+                LogUtil.logDebug(TAG, "createOrUpdateProfile, success: " + task1.isSuccessful());
+            }
         });
     }
 
@@ -92,25 +97,31 @@ public class ProfileInteractor {
         UploadTask uploadTask = databaseHelper.uploadImage(imageUri, imageTitle);
 
         if (uploadTask != null) {
-            uploadTask.addOnCompleteListener(task -> {
-                if (task.isSuccessful()) {
-                    task.getResult().getStorage().getDownloadUrl().addOnCompleteListener(task1 -> {
-                        if (task1.isSuccessful()) {
-                            Uri downloadUrl = task1.getResult();
-                            LogUtil.logDebug(TAG, "successful upload image, image url: " + String.valueOf(downloadUrl));
+            uploadTask.addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+                    if (task.isSuccessful()) {
+                        task.getResult().getStorage().getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Uri> task1) {
+                                if (task1.isSuccessful()) {
+                                    Uri downloadUrl = task1.getResult();
+                                    LogUtil.logDebug(TAG, "successful upload image, image url: " + String.valueOf(downloadUrl));
 
-                            profile.setPhotoUrl(downloadUrl.toString());
-                            createOrUpdateProfile(profile, onProfileCreatedListener);
-                        } else {
-                            onProfileCreatedListener.onProfileCreated(false);
-                            LogUtil.logDebug(TAG, "createOrUpdateProfileWithImage, fail to getDownloadUrl");
-                        }
-                    });
-                } else {
-                    onProfileCreatedListener.onProfileCreated(false);
-                    LogUtil.logDebug(TAG, "createOrUpdateProfileWithImage, fail to upload image");
+                                    profile.setPhotoUrl(downloadUrl.toString());
+                                    ProfileInteractor.this.createOrUpdateProfile(profile, onProfileCreatedListener);
+                                } else {
+                                    onProfileCreatedListener.onProfileCreated(false);
+                                    LogUtil.logDebug(TAG, "createOrUpdateProfileWithImage, fail to getDownloadUrl");
+                                }
+                            }
+                        });
+                    } else {
+                        onProfileCreatedListener.onProfileCreated(false);
+                        LogUtil.logDebug(TAG, "createOrUpdateProfileWithImage, fail to upload image");
+                    }
+
                 }
-
             });
         } else {
             onProfileCreatedListener.onProfileCreated(false);
@@ -200,7 +211,12 @@ public class ProfileInteractor {
                 .child(DatabaseHelper.PROFILES_DB_KEY)
                 .child(userId).child("notificationTokens")
                 .child(token).setValue(true);
-        task.addOnCompleteListener(task1 -> LogUtil.logDebug(TAG, "addRegistrationToken, success: " + task1.isSuccessful()));
+        task.addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task1) {
+                LogUtil.logDebug(TAG, "addRegistrationToken, success: " + task1.isSuccessful());
+            }
+        });
     }
 
     public void updateRegistrationToken(final String token) {
@@ -226,7 +242,12 @@ public class ProfileInteractor {
         DatabaseReference databaseReference = ApplicationHelper.getDatabaseHelper().getDatabaseReference();
         DatabaseReference tokenRef = databaseReference.child(DatabaseHelper.PROFILES_DB_KEY).child(userId).child("notificationTokens").child(token);
         Task<Void> task = tokenRef.removeValue();
-        task.addOnCompleteListener(task1 -> LogUtil.logDebug(TAG, "removeRegistrationToken, success: " + task1.isSuccessful()));
+        task.addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task1) {
+                LogUtil.logDebug(TAG, "removeRegistrationToken, success: " + task1.isSuccessful());
+            }
+        });
     }
 
     public ValueEventListener searchProfiles(String searchText, OnDataChangedListener<Profile> onDataChangedListener) {

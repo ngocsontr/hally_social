@@ -17,13 +17,9 @@
 package com.hally.influencerai.main.login;
 
 import android.content.Intent;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
-import android.content.pm.Signature;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.util.Base64;
-import android.util.Log;
+import android.view.View;
 
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -35,7 +31,10 @@ import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.hally.influencerai.R;
@@ -45,8 +44,6 @@ import com.hally.influencerai.utils.GoogleApiHelper;
 import com.hally.influencerai.utils.LogUtil;
 import com.hally.influencerai.utils.LogoutHelper;
 
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 
 public class LoginActivity extends BaseActivity<LoginView, LoginPresenter> implements LoginView, GoogleApiClient.OnConnectionFailedListener {
@@ -79,7 +76,12 @@ public class LoginActivity extends BaseActivity<LoginView, LoginPresenter> imple
         mGoogleApiClient = GoogleApiHelper.createGoogleApiClient(this);
         mAuth = FirebaseAuth.getInstance();
 
-        findViewById(R.id.googleSignInButton).setOnClickListener(view -> presenter.onGoogleSignInClick());
+        findViewById(R.id.googleSignInButton).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                presenter.onGoogleSignInClick();
+            }
+        });
     }
 
     private void initFirebaseAuth() {
@@ -89,38 +91,24 @@ public class LoginActivity extends BaseActivity<LoginView, LoginPresenter> imple
             LogoutHelper.signOut(mGoogleApiClient, this);
         }
 
-        mAuthListener = firebaseAuth -> {
-            final FirebaseUser user = firebaseAuth.getCurrentUser();
-            if (user != null) {
-                // Profile is signed in
-                LogUtil.logDebug(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
-                presenter.checkIsProfileExist(user.getUid());
-                setResult(RESULT_OK);
-            } else {
-                // Profile is signed out
-                LogUtil.logDebug(TAG, "onAuthStateChanged:signed_out");
+        mAuthListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                final FirebaseUser user = firebaseAuth.getCurrentUser();
+                if (user != null) {
+                    // Profile is signed in
+                    LogUtil.logDebug(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
+                    presenter.checkIsProfileExist(user.getUid());
+                    LoginActivity.this.setResult(RESULT_OK);
+                } else {
+                    // Profile is signed out
+                    LogUtil.logDebug(TAG, "onAuthStateChanged:signed_out");
+                }
             }
         };
     }
 
     private void initFacebookSignIn() {
-        PackageInfo info;
-        try {
-            info = getPackageManager().getPackageInfo(getPackageName(), PackageManager.GET_SIGNATURES);
-            for (Signature signature : info.signatures) {
-                MessageDigest md = MessageDigest.getInstance("SHA");
-                md.update(signature.toByteArray());
-                String keyhash = new String(Base64.encode(md.digest(), 0));
-                // String something = new String(Base64.encodeBytes(md.digest()));
-                LogUtil.logError("keyhash", "keyhash= " + keyhash);
-            }
-        } catch (PackageManager.NameNotFoundException e1) {
-            LogUtil.logError("name not found", e1.toString());
-        } catch (NoSuchAlgorithmException e) {
-            LogUtil.logError("no such an algorithm", e.toString());
-        } catch (Exception e) {
-            LogUtil.logError("exception", e.toString());
-        }
         mCallbackManager = CallbackManager.Factory.create();
         LoginManager.getInstance().registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
             @Override
@@ -141,7 +129,12 @@ public class LoginActivity extends BaseActivity<LoginView, LoginPresenter> imple
             }
         });
 
-        findViewById(R.id.facebookSignInButton).setOnClickListener(v -> presenter.onFacebookSignInClick());
+        findViewById(R.id.facebookSignInButton).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                presenter.onFacebookSignInClick();
+            }
+        });
     }
 
     @Override
@@ -198,14 +191,17 @@ public class LoginActivity extends BaseActivity<LoginView, LoginPresenter> imple
     @Override
     public void firebaseAuthWithCredentials(AuthCredential credential) {
         mAuth.signInWithCredential(credential)
-                .addOnCompleteListener(this, task -> {
-                    LogUtil.logDebug(TAG, "signInWithCredential:onComplete:" + task.isSuccessful());
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        LogUtil.logDebug(TAG, "signInWithCredential:onComplete:" + task.isSuccessful());
 
-                    // If sign in fails, display a message to the user. If sign in succeeds
-                    // the auth state listener will be notified and logic to handle the
-                    // signed in user can be handled in the listener.
-                    if (!task.isSuccessful()) {
-                        presenter.handleAuthError(task);
+                        // If sign in fails, display a message to the user. If sign in succeeds
+                        // the auth state listener will be notified and logic to handle the
+                        // signed in user can be handled in the listener.
+                        if (!task.isSuccessful()) {
+                            presenter.handleAuthError(task);
+                        }
                     }
                 });
     }

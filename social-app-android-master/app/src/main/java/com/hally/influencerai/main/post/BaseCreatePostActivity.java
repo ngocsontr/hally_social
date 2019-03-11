@@ -19,6 +19,8 @@ package com.hally.influencerai.main.post;
 import android.annotation.SuppressLint;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.MotionEvent;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -52,15 +54,23 @@ public abstract class BaseCreatePostActivity<V extends BaseCreatePostView, P ext
 
         imageView = findViewById(R.id.imageView);
 
-        imageView.setOnClickListener(v -> onSelectImageClick(v));
-
-        titleEditText.setOnTouchListener((v, event) -> {
-            if (titleEditText.hasFocus() && titleEditText.getError() != null) {
-                titleEditText.setError(null);
-                return true;
+        imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                BaseCreatePostActivity.this.onSelectImageClick(v);
             }
+        });
 
-            return false;
+        titleEditText.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (titleEditText.hasFocus() && titleEditText.getError() != null) {
+                    titleEditText.setError(null);
+                    return true;
+                }
+
+                return false;
+            }
         });
     }
 

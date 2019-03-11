@@ -17,6 +17,8 @@
 package com.hally.influencerai.main.post.editPost;
 
 import android.content.Context;
+import android.content.DialogInterface;
+import android.support.annotation.NonNull;
 
 import com.hally.influencerai.R;
 import com.hally.influencerai.main.post.BaseCreatePostPresenter;
@@ -70,17 +72,20 @@ class EditPostPresenter extends BaseCreatePostPresenter<EditPostView> {
 
     @Override
     protected void savePost(final String title, final String description) {
-        ifViewAttached(view -> {
-            view.showProgress(R.string.message_saving);
+        ifViewAttached(new ViewAction<EditPostView>() {
+            @Override
+            public void run(@NonNull EditPostView view) {
+                view.showProgress(R.string.message_saving);
 
-            post.setTitle(title);
-            post.setDescription(description);
+                post.setTitle(title);
+                post.setDescription(description);
 
-            if (view.getImageUri() != null) {
-                postManager.createOrUpdatePostWithImage(view.getImageUri(), this, post);
-            } else {
-                postManager.createOrUpdatePost(post);
-                onPostSaved(true);
+                if (view.getImageUri() != null) {
+                    postManager.createOrUpdatePostWithImage(view.getImageUri(), EditPostPresenter.this, post);
+                } else {
+                    postManager.createOrUpdatePost(post);
+                    EditPostPresenter.this.onPostSaved(true);
+                }
             }
         });
     }
@@ -90,10 +95,18 @@ class EditPostPresenter extends BaseCreatePostPresenter<EditPostView> {
             @Override
             public void onObjectChanged(Post obj) {
                 if (obj == null) {
-                    ifViewAttached(view -> view.showWarningDialog(R.string.error_post_was_removed, (dialog, which) -> {
-                        view.openMainActivity();
-                        view.finish();
-                    }));
+                    ifViewAttached(new ViewAction<EditPostView>() {
+                        @Override
+                        public void run(@NonNull EditPostView view) {
+                            view.showWarningDialog(R.string.error_post_was_removed, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    view.openMainActivity();
+                                    view.finish();
+                                }
+                            });
+                        }
+                    });
                 } else {
                     updatePostIfChanged(obj);
                 }
@@ -101,10 +114,18 @@ class EditPostPresenter extends BaseCreatePostPresenter<EditPostView> {
 
             @Override
             public void onError(String errorText) {
-                ifViewAttached(view -> view.showWarningDialog(errorText, (dialog, which) -> {
-                    view.openMainActivity();
-                    view.finish();
-                }));
+                ifViewAttached(new ViewAction<EditPostView>() {
+                    @Override
+                    public void run(@NonNull EditPostView view) {
+                        view.showWarningDialog(errorText, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                view.openMainActivity();
+                                view.finish();
+                            }
+                        });
+                    }
+                });
             }
         });
     }

@@ -23,7 +23,9 @@ import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -54,6 +56,7 @@ import com.hally.influencerai.utils.LogUtil;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -284,7 +287,12 @@ public class PostInteractor {
                 }
             }
 
-            Collections.sort(list, (lhs, rhs) -> ((Long) rhs.getCreatedDate()).compareTo(lhs.getCreatedDate()));
+            Collections.sort(list, new Comparator<Post>() {
+                @Override
+                public int compare(Post lhs, Post rhs) {
+                    return ((Long) rhs.getCreatedDate()).compareTo(lhs.getCreatedDate());
+                }
+            });
 
             result.setPosts(list);
             result.setLastItemCreatedDate(lastItemCreatedDate);
@@ -329,29 +337,48 @@ public class PostInteractor {
         final DatabaseHelper databaseHelper = ApplicationHelper.getDatabaseHelper();
         Task<Void> removeImageTask = databaseHelper.removeImage(post.getImageTitle());
 
-        removeImageTask.addOnSuccessListener(aVoid -> {
-            removePost(post).addOnCompleteListener(task -> {
-                onTaskCompleteListener.onTaskComplete(task.isSuccessful());
-                ProfileInteractor.getInstance(context).updateProfileLikeCountAfterRemovingPost(post);
-                removeObjectsRelatedToPost(post.getId());
-                LogUtil.logDebug(TAG, "removePost(), is success: " + task.isSuccessful());
-            });
-            LogUtil.logDebug(TAG, "removeImage(): success");
-        }).addOnFailureListener(exception -> {
-            LogUtil.logError(TAG, "removeImage()", exception);
-            onTaskCompleteListener.onTaskComplete(false);
+        removeImageTask.addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                PostInteractor.this.removePost(post).addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        onTaskCompleteListener.onTaskComplete(task.isSuccessful());
+                        ProfileInteractor.getInstance(context).updateProfileLikeCountAfterRemovingPost(post);
+                        PostInteractor.this.removeObjectsRelatedToPost(post.getId());
+                        LogUtil.logDebug(TAG, "removePost(), is success: " + task.isSuccessful());
+                    }
+                });
+                LogUtil.logDebug(TAG, "removeImage(): success");
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                LogUtil.logError(TAG, "removeImage()", exception);
+                onTaskCompleteListener.onTaskComplete(false);
+            }
         });
     }
 
     private void removeObjectsRelatedToPost(final String postId) {
-        CommentInteractor.getInstance(context).removeCommentsByPost(postId).addOnSuccessListener(aVoid -> LogUtil.logDebug(TAG, "Comments related to post with id: " + postId + " was removed")).addOnFailureListener(new OnFailureListener() {
+        CommentInteractor.getInstance(context).removeCommentsByPost(postId).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                LogUtil.logDebug(TAG, "Comments related to post with id: " + postId + " was removed");
+            }
+        }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
                 LogUtil.logError(TAG, "Failed to remove comments related to post with id: " + postId, e);
             }
         });
 
-        removeLikesByPost(postId).addOnSuccessListener(aVoid -> LogUtil.logDebug(TAG, "Likes related to post with id: " + postId + " was removed")).addOnFailureListener(new OnFailureListener() {
+        removeLikesByPost(postId).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                LogUtil.logDebug(TAG, "Likes related to post with id: " + postId + " was removed");
+            }
+        }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
                 LogUtil.logError(TAG, "Failed to remove likes related to post with id: " + postId, e);
@@ -370,17 +397,23 @@ public class PostInteractor {
         UploadTask uploadTask = databaseHelper.uploadImage(imageUri, imageTitle);
 
         if (uploadTask != null) {
-            uploadTask.addOnFailureListener(exception -> {
-                // Handle unsuccessful uploads
-                onPostCreatedListener.onPostSaved(false);
+            uploadTask.addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception exception) {
+                    // Handle unsuccessful uploads
+                    onPostCreatedListener.onPostSaved(false);
 
-            }).addOnSuccessListener(taskSnapshot -> {
-                // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
+                }
+            }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
 
-                post.setImageTitle(imageTitle);
-                createOrUpdatePost(post);
+                    post.setImageTitle(imageTitle);
+                    PostInteractor.this.createOrUpdatePost(post);
 
-                onPostCreatedListener.onPostSaved(true);
+                    onPostCreatedListener.onPostSaved(true);
+                }
             });
         }
     }

@@ -18,6 +18,7 @@ package com.hally.influencerai.main.postDetails;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
@@ -31,10 +32,17 @@ import com.hally.influencerai.main.base.BaseView;
 import com.hally.influencerai.managers.CommentManager;
 import com.hally.influencerai.managers.PostManager;
 import com.hally.influencerai.managers.ProfileManager;
+import com.hally.influencerai.managers.listeners.OnDataChangedListener;
 import com.hally.influencerai.managers.listeners.OnObjectChangedListenerSimple;
+import com.hally.influencerai.managers.listeners.OnObjectExistListener;
 import com.hally.influencerai.managers.listeners.OnPostChangedListener;
+import com.hally.influencerai.managers.listeners.OnTaskCompleteListener;
+import com.hally.influencerai.model.Comment;
+import com.hally.influencerai.model.Like;
 import com.hally.influencerai.model.Post;
 import com.hally.influencerai.model.Profile;
+
+import java.util.List;
 
 /**
  * Created by Alexey on 03.05.18.
@@ -64,27 +72,33 @@ class PostDetailsPresenter extends BasePresenter<PostDetailsView> {
         postManager.getPost(context, postId, new OnPostChangedListener() {
             @Override
             public void onObjectChanged(Post obj) {
-                ifViewAttached(view -> {
-                    if (obj != null) {
-                        post = obj;
-                        isPostExist = true;
-                        view.initLikeController(post);
-                        fillInUI(post);
-                        view.updateCounters(post);
-                        initLikeButtonState();
-                        updateOptionMenuVisibility();
-                    } else if (!postRemovingProcess) {
-                        isPostExist = false;
-                        view.onPostRemoved();
-                        view.showNotCancelableWarningDialog(context.getString(R.string.error_post_was_removed));
+                ifViewAttached(new ViewAction<PostDetailsView>() {
+                    @Override
+                    public void run(@NonNull PostDetailsView view) {
+                        if (obj != null) {
+                            post = obj;
+                            isPostExist = true;
+                            view.initLikeController(post);
+                            fillInUI(post);
+                            view.updateCounters(post);
+                            initLikeButtonState();
+                            updateOptionMenuVisibility();
+                        } else if (!postRemovingProcess) {
+                            isPostExist = false;
+                            view.onPostRemoved();
+                            view.showNotCancelableWarningDialog(context.getString(R.string.error_post_was_removed));
+                        }
                     }
                 });
             }
 
             @Override
             public void onError(String errorText) {
-                ifViewAttached(view -> {
-                    view.showNotCancelableWarningDialog(errorText);
+                ifViewAttached(new ViewAction<PostDetailsView>() {
+                    @Override
+                    public void run(@NonNull PostDetailsView view) {
+                        view.showNotCancelableWarningDialog(errorText);
+                    }
                 });
             }
         });
@@ -93,21 +107,30 @@ class PostDetailsPresenter extends BasePresenter<PostDetailsView> {
     private void initLikeButtonState() {
         FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         if (firebaseUser != null && post != null) {
-            postManager.hasCurrentUserLike(context, post.getId(), firebaseUser.getUid(), exist -> {
-                ifViewAttached(view -> {
-                    view.initLikeButtonState(exist);
-                });
+            postManager.hasCurrentUserLike(context, post.getId(), firebaseUser.getUid(), new OnObjectExistListener<Like>() {
+                @Override
+                public void onDataChanged(boolean exist) {
+                    PostDetailsPresenter.this.ifViewAttached(new ViewAction<PostDetailsView>() {
+                        @Override
+                        public void run(@NonNull PostDetailsView view) {
+                            view.initLikeButtonState(exist);
+                        }
+                    });
+                }
             });
         }
     }
 
     private void fillInUI(@NonNull Post post) {
-        ifViewAttached(view -> {
-            view.setTitle(post.getTitle());
-            view.setDescription(post.getDescription());
-            view.loadPostDetailImage(post.getImageTitle());
+        ifViewAttached(new ViewAction<PostDetailsView>() {
+            @Override
+            public void run(@NonNull PostDetailsView view) {
+                view.setTitle(post.getTitle());
+                view.setDescription(post.getDescription());
+                view.loadPostDetailImage(post.getImageTitle());
 
-            loadAuthorProfile();
+                PostDetailsPresenter.this.loadAuthorProfile();
+            }
         });
     }
 
@@ -116,12 +139,15 @@ class PostDetailsPresenter extends BasePresenter<PostDetailsView> {
             profileManager.getProfileSingleValue(post.getAuthorId(), new OnObjectChangedListenerSimple<Profile>() {
                 @Override
                 public void onObjectChanged(Profile profile) {
-                    ifViewAttached(view -> {
-                        if (profile.getPhotoUrl() != null) {
-                            view.loadAuthorPhoto(profile.getPhotoUrl());
-                        }
+                    ifViewAttached(new ViewAction<PostDetailsView>() {
+                        @Override
+                        public void run(@NonNull PostDetailsView view) {
+                            if (profile.getPhotoUrl() != null) {
+                                view.loadAuthorPhoto(profile.getPhotoUrl());
+                            }
 
-                        view.setAuthorName(profile.getUsername());
+                            view.setAuthorName(profile.getUsername());
+                        }
                     });
                 }
             });
@@ -130,7 +156,12 @@ class PostDetailsPresenter extends BasePresenter<PostDetailsView> {
 
     public void onAuthorClick(View authorView) {
         if (post != null) {
-            ifViewAttached(view -> view.openProfileActivity(post.getAuthorId(), authorView));
+            ifViewAttached(new ViewAction<PostDetailsView>() {
+                @Override
+                public void run(@NonNull PostDetailsView view) {
+                    view.openProfileActivity(post.getAuthorId(), authorView);
+                }
+            });
         }
     }
 
@@ -154,11 +185,17 @@ class PostDetailsPresenter extends BasePresenter<PostDetailsView> {
     public void updateComment(String newText, String commentId) {
         ifViewAttached(BaseView::showProgress);
         if (post != null) {
-            commentManager.updateComment(commentId, newText, post.getId(), success -> {
-                ifViewAttached(view -> {
-                    view.hideProgress();
-                    view.showSnackBar(R.string.message_comment_was_edited);
-                });
+            commentManager.updateComment(commentId, newText, post.getId(), new OnTaskCompleteListener() {
+                @Override
+                public void onTaskComplete(boolean success) {
+                    PostDetailsPresenter.this.ifViewAttached(new ViewAction<PostDetailsView>() {
+                        @Override
+                        public void run(@NonNull PostDetailsView view) {
+                            view.hideProgress();
+                            view.showSnackBar(R.string.message_comment_was_edited);
+                        }
+                    });
+                }
             });
         }
     }
@@ -168,16 +205,24 @@ class PostDetailsPresenter extends BasePresenter<PostDetailsView> {
         builder.setTitle(R.string.add_complain)
                 .setMessage(R.string.complain_text)
                 .setNegativeButton(R.string.button_title_cancel, null)
-                .setPositiveButton(R.string.add_complain, (dialogInterface, i) -> addComplain());
+                .setPositiveButton(R.string.add_complain, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        PostDetailsPresenter.this.addComplain();
+                    }
+                });
 
         builder.create().show();
     }
 
     private void addComplain() {
         postManager.addComplain(post);
-        ifViewAttached(view -> {
-            view.showComplainMenuAction(false);
-            view.showSnackBar(R.string.complain_sent);
+        ifViewAttached(new ViewAction<PostDetailsView>() {
+            @Override
+            public void run(@NonNull PostDetailsView view) {
+                view.showComplainMenuAction(false);
+                view.showSnackBar(R.string.complain_sent);
+            }
         });
     }
 
@@ -199,25 +244,43 @@ class PostDetailsPresenter extends BasePresenter<PostDetailsView> {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setMessage(R.string.confirm_deletion_post)
                 .setNegativeButton(R.string.button_title_cancel, null)
-                .setPositiveButton(R.string.button_ok, (dialogInterface, i) -> removePost());
+                .setPositiveButton(R.string.button_ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        PostDetailsPresenter.this.removePost();
+                    }
+                });
 
         builder.create().show();
     }
 
     private void removePost() {
         postRemovingProcess = true;
-        ifViewAttached(view -> view.showProgress(R.string.removing));
-        postManager.removePost(post, success -> ifViewAttached(view -> {
-            if (success) {
-                view.onPostRemoved();
-                view.finish();
-            } else {
-                postRemovingProcess = false;
-                view.showSnackBar(R.string.error_fail_remove_post);
+        ifViewAttached(new ViewAction<PostDetailsView>() {
+            @Override
+            public void run(@NonNull PostDetailsView view) {
+                view.showProgress(R.string.removing);
             }
+        });
+        postManager.removePost(post, new OnTaskCompleteListener() {
+            @Override
+            public void onTaskComplete(boolean success) {
+                PostDetailsPresenter.this.ifViewAttached(new ViewAction<PostDetailsView>() {
+                    @Override
+                    public void run(@NonNull PostDetailsView view) {
+                        if (success) {
+                            view.onPostRemoved();
+                            view.finish();
+                        } else {
+                            postRemovingProcess = false;
+                            view.showSnackBar(R.string.error_fail_remove_post);
+                        }
 
-            view.hideProgress();
-        }));
+                        view.hideProgress();
+                    }
+                });
+            }
+        });
 
 
     }
@@ -227,50 +290,73 @@ class PostDetailsPresenter extends BasePresenter<PostDetailsView> {
             return;
         }
 
-        ifViewAttached(view -> {
-            String commentText = view.getCommentText();
+        ifViewAttached(new ViewAction<PostDetailsView>() {
+            @Override
+            public void run(@NonNull PostDetailsView view) {
+                String commentText = view.getCommentText();
 
-            if (commentText.length() > 0 && isPostExist) {
-                createOrUpdateComment(commentText);
-                view.clearCommentField();
+                if (commentText.length() > 0 && isPostExist) {
+                    PostDetailsPresenter.this.createOrUpdateComment(commentText);
+                    view.clearCommentField();
+                }
             }
         });
     }
 
     private void createOrUpdateComment(String commentText) {
-        commentManager.createOrUpdateComment(commentText, post.getId(), success -> {
-            ifViewAttached(view -> {
-                if (success) {
-                    if (post != null && post.getCommentsCount() > 0) {
-                        view.scrollToFirstComment();
+        commentManager.createOrUpdateComment(commentText, post.getId(), new OnTaskCompleteListener() {
+            @Override
+            public void onTaskComplete(boolean success) {
+                PostDetailsPresenter.this.ifViewAttached(new ViewAction<PostDetailsView>() {
+                    @Override
+                    public void run(@NonNull PostDetailsView view) {
+                        if (success) {
+                            if (post != null && post.getCommentsCount() > 0) {
+                                view.scrollToFirstComment();
+                            }
+                        }
                     }
-                }
-            });
+                });
+            }
         });
     }
 
     public void removeComment(String commentId) {
         ifViewAttached(BaseView::showProgress);
-        commentManager.removeComment(commentId, post.getId(), success -> {
-            ifViewAttached(view -> {
-                view.hideProgress();
-                view.showSnackBar(R.string.message_comment_was_removed);
-            });
+        commentManager.removeComment(commentId, post.getId(), new OnTaskCompleteListener() {
+            @Override
+            public void onTaskComplete(boolean success) {
+                PostDetailsPresenter.this.ifViewAttached(new ViewAction<PostDetailsView>() {
+                    @Override
+                    public void run(@NonNull PostDetailsView view) {
+                        view.hideProgress();
+                        view.showSnackBar(R.string.message_comment_was_removed);
+                    }
+                });
+            }
         });
     }
 
     public void editPostAction() {
         if (hasAccessToModifyPost() && checkInternetConnection()) {
-            ifViewAttached(view -> view.openEditPostActivity(post));
+            ifViewAttached(new ViewAction<PostDetailsView>() {
+                @Override
+                public void run(@NonNull PostDetailsView view) {
+                    view.openEditPostActivity(post);
+                }
+            });
         }
     }
 
     public void updateOptionMenuVisibility() {
-        ifViewAttached(view -> {
-            if (post != null) {
-                view.showEditMenuAction(hasAccessToModifyPost());
-                view.showDeleteMenuAction(hasAccessToModifyPost());
-                view.showComplainMenuAction(!post.isHasComplain());
+        ifViewAttached(new ViewAction<PostDetailsView>() {
+            @Override
+            public void run(@NonNull PostDetailsView view) {
+                if (post != null) {
+                    view.showEditMenuAction(PostDetailsPresenter.this.hasAccessToModifyPost());
+                    view.showDeleteMenuAction(PostDetailsPresenter.this.hasAccessToModifyPost());
+                    view.showComplainMenuAction(!post.isHasComplain());
+                }
             }
         });
     }
@@ -284,9 +370,12 @@ class PostDetailsPresenter extends BasePresenter<PostDetailsView> {
     }
 
     public void onPostImageClick() {
-        ifViewAttached(view -> {
-            if (post != null && post.getTitle() != null) {
-                view.openImageDetailScreen(post.getImageTitle());
+        ifViewAttached(new ViewAction<PostDetailsView>() {
+            @Override
+            public void run(@NonNull PostDetailsView view) {
+                if (post != null && post.getTitle() != null) {
+                    view.openImageDetailScreen(post.getImageTitle());
+                }
             }
         });
     }
@@ -295,36 +384,51 @@ class PostDetailsPresenter extends BasePresenter<PostDetailsView> {
         attemptToLoadComments = true;
         runHidingCommentProgressByTimeOut();
 
-        commentManager.getCommentsList(activityContext, postId, list -> {
-            attemptToLoadComments = false;
-            ifViewAttached(view -> {
-                view.onCommentsListChanged(list);
-                view.showCommentProgress(false);
-                view.showCommentsRecyclerView(true);
-                view.showCommentsWarning(false);
-            });
+        commentManager.getCommentsList(activityContext, postId, new OnDataChangedListener<Comment>() {
+            @Override
+            public void onListChanged(List<Comment> list) {
+                attemptToLoadComments = false;
+                PostDetailsPresenter.this.ifViewAttached(new ViewAction<PostDetailsView>() {
+                    @Override
+                    public void run(@NonNull PostDetailsView view) {
+                        view.onCommentsListChanged(list);
+                        view.showCommentProgress(false);
+                        view.showCommentsRecyclerView(true);
+                        view.showCommentsWarning(false);
+                    }
+                });
+            }
         });
     }
 
     private void runHidingCommentProgressByTimeOut() {
         final Handler handler = new Handler();
-        handler.postDelayed(() -> {
-            if (attemptToLoadComments) {
-                ifViewAttached(view -> {
-                    view.showCommentProgress(false);
-                    view.showCommentsWarning(true);
-                });
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (attemptToLoadComments) {
+                    PostDetailsPresenter.this.ifViewAttached(new ViewAction<PostDetailsView>() {
+                        @Override
+                        public void run(@NonNull PostDetailsView view) {
+                            view.showCommentProgress(false);
+                            view.showCommentsWarning(true);
+                        }
+                    });
+                }
             }
         }, TIME_OUT_LOADING_COMMENTS);
     }
 
     public void updateCommentsVisibility(long commentsCount) {
-        ifViewAttached(view -> {
-            if (commentsCount == 0) {
-                view.showCommentsLabel(false);
-                view.showCommentProgress(false);
-            } else {
-                view.showCommentsLabel(true);
+        ifViewAttached(new ViewAction<PostDetailsView>() {
+            @Override
+            public void run(@NonNull PostDetailsView view) {
+                if (commentsCount == 0) {
+                    view.showCommentsLabel(false);
+                    view.showCommentProgress(false);
+                } else {
+                    view.showCommentsLabel(true);
+                }
             }
         });
     }

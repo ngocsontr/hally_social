@@ -85,7 +85,12 @@ public class EditPostActivity extends BaseCreatePostActivity<EditPostView, EditP
         PostManager.getInstance(this.getApplicationContext()).loadImageMediumSize(GlideApp.with(this),
                 imageTitle,
                 imageView,
-                () -> progressBar.setVisibility(View.GONE));
+                new PostManager.OnImageRequestListener() {
+                    @Override
+                    public void onImageRequestFinished() {
+                        progressBar.setVisibility(View.GONE);
+                    }
+                });
     }
 
     @Override

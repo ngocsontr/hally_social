@@ -148,7 +148,12 @@ public class MainActivity extends BaseActivity<MainView, MainPresenter> implemen
     private void initFloatingActionButton() {
         floatingActionButton = findViewById(R.id.addNewPostFab);
         if (floatingActionButton != null) {
-            floatingActionButton.setOnClickListener(v -> presenter.onCreatePostClickAction(floatingActionButton));
+            floatingActionButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    presenter.onCreatePostClickAction(floatingActionButton);
+                }
+            });
         }
     }
 
@@ -186,7 +191,12 @@ public class MainActivity extends BaseActivity<MainView, MainPresenter> implemen
 
     private void initPostCounter() {
         newPostsCounterTextView = findViewById(R.id.newPostsCounterTextView);
-        newPostsCounterTextView.setOnClickListener(v -> refreshPostList());
+        newPostsCounterTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MainActivity.this.refreshPostList();
+            }
+        });
 
         presenter.initPostCounter();
 

@@ -119,7 +119,12 @@ public class UsersListActivity extends BaseActivity<UsersListView, UsersListPres
             swipeContainer = findViewById(R.id.swipeContainer);
             emptyListMessageTextView = findViewById(R.id.emptyListMessageTextView);
 
-            swipeContainer.setOnRefreshListener(() -> presenter.onRefresh(userID, userListType));
+            swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+                @Override
+                public void onRefresh() {
+                    presenter.onRefresh(userID, userListType);
+                }
+            });
 
             initProfilesListRecyclerView();
         }

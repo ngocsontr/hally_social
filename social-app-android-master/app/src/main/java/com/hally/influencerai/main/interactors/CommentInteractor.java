@@ -19,7 +19,10 @@
 package com.hally.influencerai.main.interactors;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -37,6 +40,7 @@ import com.hally.influencerai.utils.LogUtil;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -115,15 +119,21 @@ public class CommentInteractor {
 
     public void updateComment(String commentId, String commentText, String postId, final OnTaskCompleteListener onTaskCompleteListener) {
         DatabaseReference mCommentReference = databaseHelper.getDatabaseReference().child(DatabaseHelper.POST_COMMENTS_DB_KEY).child(postId).child(commentId).child("text");
-        mCommentReference.setValue(commentText).addOnSuccessListener(aVoid -> {
-            if (onTaskCompleteListener != null) {
-                onTaskCompleteListener.onTaskComplete(true);
+        mCommentReference.setValue(commentText).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                if (onTaskCompleteListener != null) {
+                    onTaskCompleteListener.onTaskComplete(true);
+                }
             }
-        }).addOnFailureListener(e -> {
-            if (onTaskCompleteListener != null) {
-                onTaskCompleteListener.onTaskComplete(false);
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                if (onTaskCompleteListener != null) {
+                    onTaskCompleteListener.onTaskComplete(false);
+                }
+                LogUtil.logError(TAG, "updateComment", e);
             }
-            LogUtil.logError(TAG, "updateComment", e);
         });
     }
 
@@ -158,9 +168,17 @@ public class CommentInteractor {
                 .child(DatabaseHelper.POST_COMMENTS_DB_KEY)
                 .child(postId)
                 .child(commentId);
-        reference.removeValue().addOnSuccessListener(aVoid -> decrementCommentsCount(postId, onTaskCompleteListener)).addOnFailureListener(e -> {
-            onTaskCompleteListener.onTaskComplete(false);
-            LogUtil.logError(TAG, "removeComment()", e);
+        reference.removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                CommentInteractor.this.decrementCommentsCount(postId, onTaskCompleteListener);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                onTaskCompleteListener.onTaskComplete(false);
+                LogUtil.logError(TAG, "removeComment()", e);
+            }
         });
     }
 
@@ -178,7 +196,12 @@ public class CommentInteractor {
                     list.add(comment);
                 }
 
-                Collections.sort(list, (lhs, rhs) -> ((Long) rhs.getCreatedDate()).compareTo((Long) lhs.getCreatedDate()));
+                Collections.sort(list, new Comparator<Comment>() {
+                    @Override
+                    public int compare(Comment lhs, Comment rhs) {
+                        return ((Long) rhs.getCreatedDate()).compareTo((Long) lhs.getCreatedDate());
+                    }
+                });
 
                 onDataChangedListener.onListChanged(list);
 

@@ -19,6 +19,7 @@ package com.hally.influencerai.main.profile;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
@@ -34,7 +35,10 @@ import com.hally.influencerai.main.postDetails.PostDetailsActivity;
 import com.hally.influencerai.managers.FollowManager;
 import com.hally.influencerai.managers.PostManager;
 import com.hally.influencerai.managers.ProfileManager;
+import com.hally.influencerai.managers.listeners.OnCountChangedListener;
 import com.hally.influencerai.managers.listeners.OnObjectChangedListenerSimple;
+import com.hally.influencerai.managers.listeners.OnObjectExistListener;
+import com.hally.influencerai.managers.listeners.OnRequestComplete;
 import com.hally.influencerai.model.Post;
 import com.hally.influencerai.model.Profile;
 import com.hally.influencerai.utils.LogUtil;
@@ -61,29 +65,42 @@ class ProfilePresenter extends BasePresenter<ProfileView> {
 
     private void followUser(String targetUserId) {
         ifViewAttached(BaseView::showProgress);
-        followManager.followUser(activity, getCurrentUserId(), targetUserId, success -> {
-            ifViewAttached(view -> {
-                if (success) {
-                    view.setFollowStateChangeResultOk();
-                    checkFollowState(targetUserId);
-                } else {
-                    LogUtil.logDebug(TAG, "followUser, success: " + false);
-                }
-            });
+        followManager.followUser(activity, getCurrentUserId(), targetUserId, new OnRequestComplete() {
+            @Override
+            public void onComplete(boolean success) {
+                ProfilePresenter.this.ifViewAttached(new ViewAction<ProfileView>() {
+                    @Override
+                    public void run(@NonNull ProfileView view) {
+                        if (success) {
+                            view.setFollowStateChangeResultOk();
+                            ProfilePresenter.this.checkFollowState(targetUserId);
+                        } else {
+                            LogUtil.logDebug(TAG, "followUser, success: " + false);
+                        }
+                    }
+                });
+            }
         });
     }
 
     public void unfollowUser(String targetUserId) {
         ifViewAttached(BaseView::showProgress);
-        followManager.unfollowUser(activity, getCurrentUserId(), targetUserId, success ->
-                ifViewAttached(view -> {
-                    if (success) {
-                        view.setFollowStateChangeResultOk();
-                        checkFollowState(targetUserId);
-                    } else {
-                        LogUtil.logDebug(TAG, "unfollowUser, success: " + false);
+        followManager.unfollowUser(activity, getCurrentUserId(), targetUserId, new OnRequestComplete() {
+            @Override
+            public void onComplete(boolean success) {
+                ProfilePresenter.this.ifViewAttached(new ViewAction<ProfileView>() {
+                    @Override
+                    public void run(@NonNull ProfileView view) {
+                        if (success) {
+                            view.setFollowStateChangeResultOk();
+                            ProfilePresenter.this.checkFollowState(targetUserId);
+                        } else {
+                            LogUtil.logDebug(TAG, "unfollowUser, success: " + false);
+                        }
                     }
-                }));
+                });
+            }
+        });
     }
 
     public void onFollowButtonClick(int state, String targetUserId) {
@@ -91,7 +108,12 @@ class ProfilePresenter extends BasePresenter<ProfileView> {
             if (state == FollowButton.FOLLOW_STATE || state == FollowButton.FOLLOW_BACK_STATE) {
                 followUser(targetUserId);
             } else if (state == FollowButton.FOLLOWING_STATE && profile != null) {
-                ifViewAttached(view -> view.showUnfollowConfirmation(profile));
+                ifViewAttached(new ViewAction<ProfileView>() {
+                    @Override
+                    public void run(@NonNull ProfileView view) {
+                        view.showUnfollowConfirmation(profile);
+                    }
+                });
             }
         }
     }
@@ -101,41 +123,79 @@ class ProfilePresenter extends BasePresenter<ProfileView> {
 
         if (currentUserId != null) {
             if (!targetUserId.equals(currentUserId)) {
-                followManager.checkFollowState(currentUserId, targetUserId, followState -> {
-                    ifViewAttached(view -> {
-                        view.hideProgress();
-                        view.updateFollowButtonState(followState);
-                    });
+                followManager.checkFollowState(currentUserId, targetUserId, new FollowManager.CheckStateListener() {
+                    @Override
+                    public void onStateReady(FollowState followState) {
+                        ProfilePresenter.this.ifViewAttached(new ViewAction<ProfileView>() {
+                            @Override
+                            public void run(@NonNull ProfileView view) {
+                                view.hideProgress();
+                                view.updateFollowButtonState(followState);
+                            }
+                        });
+                    }
                 });
             } else {
-                ifViewAttached(view -> view.updateFollowButtonState(FollowState.MY_PROFILE));
+                ifViewAttached(new ViewAction<ProfileView>() {
+                    @Override
+                    public void run(@NonNull ProfileView view) {
+                        view.updateFollowButtonState(FollowState.MY_PROFILE);
+                    }
+                });
             }
         } else {
-            ifViewAttached(view -> view.updateFollowButtonState(FollowState.NO_ONE_FOLLOW));
+            ifViewAttached(new ViewAction<ProfileView>() {
+                @Override
+                public void run(@NonNull ProfileView view) {
+                    view.updateFollowButtonState(FollowState.NO_ONE_FOLLOW);
+                }
+            });
         }
     }
 
     public void getFollowersCount(String targetUserId) {
-        followManager.getFollowersCount(context, targetUserId, count -> {
-            ifViewAttached(view -> view.updateFollowersCount((int) count));
+        followManager.getFollowersCount(context, targetUserId, new OnCountChangedListener() {
+            @Override
+            public void onCountChanged(long count) {
+                ProfilePresenter.this.ifViewAttached(new ViewAction<ProfileView>() {
+                    @Override
+                    public void run(@NonNull ProfileView view) {
+                        view.updateFollowersCount((int) count);
+                    }
+                });
+            }
         });
     }
 
     public void getFollowingsCount(String targetUserId) {
-        followManager.getFollowingsCount(context, targetUserId, count -> {
-            ifViewAttached(view -> view.updateFollowingsCount((int) count));
+        followManager.getFollowingsCount(context, targetUserId, new OnCountChangedListener() {
+            @Override
+            public void onCountChanged(long count) {
+                ProfilePresenter.this.ifViewAttached(new ViewAction<ProfileView>() {
+                    @Override
+                    public void run(@NonNull ProfileView view) {
+                        view.updateFollowingsCount((int) count);
+                    }
+                });
+            }
         });
     }
 
     void onPostClick(Post post, View postItemView) {
-        PostManager.getInstance(context).isPostExistSingleValue(post.getId(), exist -> {
-            ifViewAttached(view -> {
-                if (exist) {
-                    view.openPostDetailsActivity(post, postItemView);
-                } else {
-                    view.showSnackBar(R.string.error_post_was_removed);
-                }
-            });
+        PostManager.getInstance(context).isPostExistSingleValue(post.getId(), new OnObjectExistListener<Post>() {
+            @Override
+            public void onDataChanged(boolean exist) {
+                ProfilePresenter.this.ifViewAttached(new ViewAction<ProfileView>() {
+                    @Override
+                    public void run(@NonNull ProfileView view) {
+                        if (exist) {
+                            view.openPostDetailsActivity(post, postItemView);
+                        } else {
+                            view.showSnackBar(R.string.error_post_was_removed);
+                        }
+                    }
+                });
+            }
         });
     }
 
@@ -166,44 +226,53 @@ class ProfilePresenter extends BasePresenter<ProfileView> {
             @Override
             public void onObjectChanged(Profile obj) {
                 profile = obj;
-                ifViewAttached(view -> {
-                    view.setProfileName(profile.getUsername());
+                ifViewAttached(new ViewAction<ProfileView>() {
+                    @Override
+                    public void run(@NonNull ProfileView view) {
+                        view.setProfileName(profile.getUsername());
 
-                    if (profile.getPhotoUrl() != null) {
-                        view.setProfilePhoto(profile.getPhotoUrl());
-                    } else {
-                        view.setDefaultProfilePhoto();
+                        if (profile.getPhotoUrl() != null) {
+                            view.setProfilePhoto(profile.getPhotoUrl());
+                        } else {
+                            view.setDefaultProfilePhoto();
+                        }
+
+                        int likesCount = (int) profile.getLikesCount();
+                        String likesLabel = context.getResources().getQuantityString(R.plurals.likes_counter_format, likesCount, likesCount);
+                        view.updateLikesCounter(buildCounterSpannable(likesLabel, likesCount));
                     }
-
-                    int likesCount = (int) profile.getLikesCount();
-                    String likesLabel = context.getResources().getQuantityString(R.plurals.likes_counter_format, likesCount, likesCount);
-                    view.updateLikesCounter(buildCounterSpannable(likesLabel, likesCount));
                 });
             }
         });
     }
 
     public void onPostListChanged(int postsCount) {
-        ifViewAttached(view -> {
-            String postsLabel = context.getResources().getQuantityString(R.plurals.posts_counter_format, postsCount, postsCount);
-            view.updatePostsCounter(buildCounterSpannable(postsLabel, postsCount));
-            view.showLikeCounter(true);
-            view.showPostCounter(true);
-            view.hideLoadingPostsProgress();
+        ifViewAttached(new ViewAction<ProfileView>() {
+            @Override
+            public void run(@NonNull ProfileView view) {
+                String postsLabel = context.getResources().getQuantityString(R.plurals.posts_counter_format, postsCount, postsCount);
+                view.updatePostsCounter(ProfilePresenter.this.buildCounterSpannable(postsLabel, postsCount));
+                view.showLikeCounter(true);
+                view.showPostCounter(true);
+                view.hideLoadingPostsProgress();
 
 
+            }
         });
         }
 
     public void checkPostChanges(Intent data) {
-        ifViewAttached(view -> {
-            if (data != null) {
-                PostStatus postStatus = (PostStatus) data.getSerializableExtra(PostDetailsActivity.POST_STATUS_EXTRA_KEY);
+        ifViewAttached(new ViewAction<ProfileView>() {
+            @Override
+            public void run(@NonNull ProfileView view) {
+                if (data != null) {
+                    PostStatus postStatus = (PostStatus) data.getSerializableExtra(PostDetailsActivity.POST_STATUS_EXTRA_KEY);
 
-                if (postStatus.equals(PostStatus.REMOVED)) {
-                    view.onPostRemoved();
-                } else if (postStatus.equals(PostStatus.UPDATED)) {
-                    view.onPostUpdated();
+                    if (postStatus.equals(PostStatus.REMOVED)) {
+                        view.onPostRemoved();
+                    } else if (postStatus.equals(PostStatus.UPDATED)) {
+                        view.onPostUpdated();
+                    }
                 }
             }
         });

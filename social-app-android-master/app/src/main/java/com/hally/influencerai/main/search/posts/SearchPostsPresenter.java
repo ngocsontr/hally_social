@@ -18,6 +18,7 @@
 package com.hally.influencerai.main.search.posts;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 
 import com.hally.influencerai.main.base.BasePresenter;
 import com.hally.influencerai.managers.PostManager;
@@ -68,15 +69,18 @@ public class SearchPostsPresenter extends BasePresenter<SearchPostsView> {
     }
 
     private void handleSearchResult(List<Post> list) {
-        ifViewAttached(view -> {
-            view.hideLocalProgress();
-            view.onSearchResultsReady(list);
+        ifViewAttached(new ViewAction<SearchPostsView>() {
+            @Override
+            public void run(@NonNull SearchPostsView view) {
+                view.hideLocalProgress();
+                view.onSearchResultsReady(list);
 
-            if (list.isEmpty()) {
-                view.showEmptyListLayout();
+                if (list.isEmpty()) {
+                    view.showEmptyListLayout();
+                }
+
+                LogUtil.logDebug(TAG, "found items count: " + list.size());
             }
-
-            LogUtil.logDebug(TAG, "found items count: " + list.size());
         });
     }
 }

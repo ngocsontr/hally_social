@@ -18,6 +18,7 @@ package com.hally.influencerai.main.post;
 
 import android.content.Context;
 import android.net.Uri;
+import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
 import android.text.TextUtils;
 
@@ -51,38 +52,41 @@ public abstract class BaseCreatePostPresenter<V extends BaseCreatePostView> exte
 
     protected void attemptCreatePost(Uri imageUri) {
         // Reset errors.
-        ifViewAttached(view -> {
-            view.setTitleError(null);
-            view.setDescriptionError(null);
+        ifViewAttached(new ViewAction<V>() {
+            @Override
+            public void run(@NonNull V view) {
+                view.setTitleError(null);
+                view.setDescriptionError(null);
 
-            String title = view.getTitleText().trim();
-            String description = view.getDescriptionText().trim();
+                String title = view.getTitleText().trim();
+                String description = view.getDescriptionText().trim();
 
-            boolean cancel = false;
+                boolean cancel = false;
 
-            if (TextUtils.isEmpty(description)) {
-                view.setDescriptionError(context.getString(R.string.warning_empty_description));
-                cancel = true;
-            }
+                if (TextUtils.isEmpty(description)) {
+                    view.setDescriptionError(context.getString(R.string.warning_empty_description));
+                    cancel = true;
+                }
 
-            if (TextUtils.isEmpty(title)) {
-                view.setTitleError(context.getString(R.string.warning_empty_title));
-                cancel = true;
-            } else if (!ValidationUtil.isPostTitleValid(title)) {
-                view.setTitleError(context.getString(R.string.error_post_title_length));
-                cancel = true;
-            }
+                if (TextUtils.isEmpty(title)) {
+                    view.setTitleError(context.getString(R.string.warning_empty_title));
+                    cancel = true;
+                } else if (!ValidationUtil.isPostTitleValid(title)) {
+                    view.setTitleError(context.getString(R.string.error_post_title_length));
+                    cancel = true;
+                }
 
-            if (isImageRequired() && view.getImageUri() == null) {
-                view.showWarningDialog(R.string.warning_empty_image);
-                view.requestImageViewFocus();
-                cancel = true;
-            }
+                if (BaseCreatePostPresenter.this.isImageRequired() && view.getImageUri() == null) {
+                    view.showWarningDialog(R.string.warning_empty_image);
+                    view.requestImageViewFocus();
+                    cancel = true;
+                }
 
-            if (!cancel) {
-                creatingPost = true;
-                view.hideKeyboard();
-                savePost(title, description);
+                if (!cancel) {
+                    creatingPost = true;
+                    view.hideKeyboard();
+                    BaseCreatePostPresenter.this.savePost(title, description);
+                }
             }
         });
     }
@@ -92,7 +96,12 @@ public abstract class BaseCreatePostPresenter<V extends BaseCreatePostView> exte
             if (hasInternetConnection()) {
                 attemptCreatePost(imageUri);
             } else {
-                ifViewAttached(view -> view.showSnackBar(R.string.internet_connection_failed));
+                ifViewAttached(new ViewAction<V>() {
+                    @Override
+                    public void run(@NonNull V view) {
+                        view.showSnackBar(R.string.internet_connection_failed);
+                    }
+                });
             }
         }
     }
@@ -101,14 +110,17 @@ public abstract class BaseCreatePostPresenter<V extends BaseCreatePostView> exte
     public void onPostSaved(boolean success) {
         creatingPost = false;
 
-        ifViewAttached(view -> {
-            view.hideProgress();
-            if (success) {
-                view.onPostSavedSuccess();
-                LogUtil.logDebug(TAG, "Post was saved");
-            } else {
-                view.showSnackBar(getSaveFailMessage());
-                LogUtil.logDebug(TAG, "Failed to save a post");
+        ifViewAttached(new ViewAction<V>() {
+            @Override
+            public void run(@NonNull V view) {
+                view.hideProgress();
+                if (success) {
+                    view.onPostSavedSuccess();
+                    LogUtil.logDebug(TAG, "Post was saved");
+                } else {
+                    view.showSnackBar(BaseCreatePostPresenter.this.getSaveFailMessage());
+                    LogUtil.logDebug(TAG, "Failed to save a post");
+                }
             }
         });
     }

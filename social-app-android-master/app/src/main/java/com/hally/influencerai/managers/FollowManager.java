@@ -52,25 +52,31 @@ public class FollowManager extends FirebaseListenersManager {
     }
 
     public void checkFollowState(String myId, String userId, CheckStateListener checkStateListener) {
-        doesUserFollowMe(myId, userId, userFollowMe -> {
+        doesUserFollowMe(myId, userId, new OnObjectExistListener() {
+            @Override
+            public void onDataChanged(boolean userFollowMe) {
 
-            doIFollowUser(myId, userId, iFollowUser -> {
-                FollowState followState;
+                FollowManager.this.doIFollowUser(myId, userId, new OnObjectExistListener() {
+                    @Override
+                    public void onDataChanged(boolean iFollowUser) {
+                        FollowState followState;
 
-                if (userFollowMe && iFollowUser) {
-                    followState = FollowState.FOLLOW_EACH_OTHER;
-                } else if (userFollowMe) {
-                    followState = FollowState.USER_FOLLOW_ME;
-                } else if (iFollowUser) {
-                    followState = FollowState.I_FOLLOW_USER;
-                } else {
-                    followState = FollowState.NO_ONE_FOLLOW;
-                }
+                        if (userFollowMe && iFollowUser) {
+                            followState = FollowState.FOLLOW_EACH_OTHER;
+                        } else if (userFollowMe) {
+                            followState = FollowState.USER_FOLLOW_ME;
+                        } else if (iFollowUser) {
+                            followState = FollowState.I_FOLLOW_USER;
+                        } else {
+                            followState = FollowState.NO_ONE_FOLLOW;
+                        }
 
-                checkStateListener.onStateReady(followState);
+                        checkStateListener.onStateReady(followState);
 
-                LogUtil.logDebug(TAG, "checkFollowState, state: " + followState);
-            });
+                        LogUtil.logDebug(TAG, "checkFollowState, state: " + followState);
+                    }
+                });
+            }
         });
     }
 

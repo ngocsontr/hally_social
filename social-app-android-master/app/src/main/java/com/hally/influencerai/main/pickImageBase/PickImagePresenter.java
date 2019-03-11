@@ -19,6 +19,7 @@ package com.hally.influencerai.main.pickImageBase;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.support.annotation.NonNull;
 
 import com.hally.influencerai.R;
 import com.hally.influencerai.main.base.BasePresenter;
@@ -60,9 +61,12 @@ public class PickImagePresenter<V extends PickImageView> extends BasePresenter<V
 
         if (!result) {
             int finalMessage = message;
-            ifViewAttached(view -> {
-                view.hideLocalProgress();
-                view.showSnackBar(finalMessage);
+            ifViewAttached(new ViewAction<V>() {
+                @Override
+                public void run(@NonNull V view) {
+                    view.hideLocalProgress();
+                    view.showSnackBar(finalMessage);
+                }
             });
 
         }
@@ -71,19 +75,22 @@ public class PickImagePresenter<V extends PickImageView> extends BasePresenter<V
     }
 
     protected void handleCropImageResult(int requestCode, int resultCode, Intent data) {
-        ifViewAttached(view -> {
-            if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
-                CropImage.ActivityResult result = CropImage.getActivityResult(data);
-                if (resultCode == RESULT_OK) {
-                    if (ValidationUtil.checkImageMinSize(result.getCropRect())) {
-                        Uri imageUri = result.getUri();
-                        view.loadImageToImageView(imageUri);
-                    } else {
-                        view.showSnackBar(R.string.error_smaller_image);
+        ifViewAttached(new ViewAction<V>() {
+            @Override
+            public void run(@NonNull V view) {
+                if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
+                    CropImage.ActivityResult result = CropImage.getActivityResult(data);
+                    if (resultCode == RESULT_OK) {
+                        if (ValidationUtil.checkImageMinSize(result.getCropRect())) {
+                            Uri imageUri = result.getUri();
+                            view.loadImageToImageView(imageUri);
+                        } else {
+                            view.showSnackBar(R.string.error_smaller_image);
+                        }
+                    } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
+                        LogUtil.logError(TAG, "crop image error", result.getError());
+                        view.showSnackBar(R.string.error_fail_crop_image);
                     }
-                } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
-                    LogUtil.logError(TAG, "crop image error", result.getError());
-                    view.showSnackBar(R.string.error_fail_crop_image);
                 }
             }
         });

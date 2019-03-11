@@ -92,24 +92,33 @@ public class PostViewHolder extends RecyclerView.ViewHolder {
         profileManager = ProfileManager.getInstance(context.getApplicationContext());
         postManager = PostManager.getInstance(context.getApplicationContext());
 
-        view.setOnClickListener(v -> {
-            int position = getAdapterPosition();
-            if (onClickListener != null && position != RecyclerView.NO_POSITION) {
-                onClickListener.onItemClick(getAdapterPosition(), v);
+        view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int position = PostViewHolder.this.getAdapterPosition();
+                if (onClickListener != null && position != RecyclerView.NO_POSITION) {
+                    onClickListener.onItemClick(PostViewHolder.this.getAdapterPosition(), v);
+                }
             }
         });
 
-        likeViewGroup.setOnClickListener(view1 -> {
-            int position = getAdapterPosition();
-            if (onClickListener != null && position != RecyclerView.NO_POSITION) {
-                onClickListener.onLikeClick(likeController, position);
+        likeViewGroup.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view1) {
+                int position = PostViewHolder.this.getAdapterPosition();
+                if (onClickListener != null && position != RecyclerView.NO_POSITION) {
+                    onClickListener.onLikeClick(likeController, position);
+                }
             }
         });
 
-        authorImageView.setOnClickListener(v -> {
-            int position = getAdapterPosition();
-            if (onClickListener != null && position != RecyclerView.NO_POSITION) {
-                onClickListener.onAuthorClick(getAdapterPosition(), v);
+        authorImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int position = PostViewHolder.this.getAdapterPosition();
+                if (onClickListener != null && position != RecyclerView.NO_POSITION) {
+                    onClickListener.onAuthorClick(PostViewHolder.this.getAdapterPosition(), v);
+                }
             }
         });
     }
@@ -161,7 +170,12 @@ public class PostViewHolder extends RecyclerView.ViewHolder {
     }
 
     private OnObjectExistListener<Like> createOnLikeObjectExistListener() {
-        return exist -> likeController.initLike(exist);
+        return new OnObjectExistListener<Like>() {
+            @Override
+            public void onDataChanged(boolean exist) {
+                likeController.initLike(exist);
+            }
+        };
     }
 
     public interface OnClickListener {

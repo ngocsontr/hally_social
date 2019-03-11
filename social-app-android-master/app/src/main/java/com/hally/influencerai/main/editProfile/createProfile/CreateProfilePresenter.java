@@ -17,6 +17,7 @@
 package com.hally.influencerai.main.editProfile.createProfile;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -38,14 +39,17 @@ class CreateProfilePresenter extends EditProfilePresenter<CreateProfileView> {
         FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         profile = profileManager.buildProfile(firebaseUser, largeAvatarURL);
 
-        ifViewAttached(view -> {
-            view.setName(profile.getUsername());
+        ifViewAttached(new ViewAction<CreateProfileView>() {
+            @Override
+            public void run(@NonNull CreateProfileView view) {
+                view.setName(profile.getUsername());
 
-            if (profile.getPhotoUrl() != null) {
-                view.setProfilePhoto(profile.getPhotoUrl());
-            } else {
-                view.hideLocalProgress();
-                view.setDefaultProfilePhoto();
+                if (profile.getPhotoUrl() != null) {
+                    view.setProfilePhoto(profile.getPhotoUrl());
+                } else {
+                    view.hideLocalProgress();
+                    view.setDefaultProfilePhoto();
+                }
             }
         });
     }

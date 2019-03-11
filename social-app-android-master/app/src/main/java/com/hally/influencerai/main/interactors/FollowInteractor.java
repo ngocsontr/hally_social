@@ -20,7 +20,10 @@ package com.hally.influencerai.main.interactors;
 
 import android.app.Activity;
 import android.content.Context;
+import android.support.annotation.NonNull;
 
+import com.google.android.gms.tasks.Continuation;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -272,20 +275,36 @@ public class FollowInteractor {
 
     public void unfollowUser(Activity activity, String followerUserId, String followingUserId, final OnRequestComplete onRequestComplete) {
         removeFollowing(followerUserId, followingUserId)
-                .continueWithTask(task -> removeFollower(followerUserId, followingUserId))
-                .addOnCompleteListener(activity, task -> {
-                    onRequestComplete.onComplete(task.isSuccessful());
-                    LogUtil.logDebug(TAG, "unfollowUser " + followingUserId + ", success: " + task.isSuccessful());
+                .continueWithTask(new Continuation<Void, Task<Void>>() {
+                    @Override
+                    public Task<Void> then(@NonNull Task<Void> task) throws Exception {
+                        return FollowInteractor.this.removeFollower(followerUserId, followingUserId);
+                    }
+                })
+                .addOnCompleteListener(activity, new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        onRequestComplete.onComplete(task.isSuccessful());
+                        LogUtil.logDebug(TAG, "unfollowUser " + followingUserId + ", success: " + task.isSuccessful());
+                    }
                 });
 
     }
 
     public void followUser(Activity activity, String followerUserId, String followingUserId, final OnRequestComplete onRequestComplete) {
         addFollowing(followerUserId, followingUserId)
-                .continueWithTask(task -> addFollower(followerUserId, followingUserId))
-                .addOnCompleteListener(activity, task -> {
-                    onRequestComplete.onComplete(task.isSuccessful());
-                    LogUtil.logDebug(TAG, "followUser " + followingUserId + ", success: " + task.isSuccessful());
+                .continueWithTask(new Continuation<Void, Task<Void>>() {
+                    @Override
+                    public Task<Void> then(@NonNull Task<Void> task) throws Exception {
+                        return FollowInteractor.this.addFollower(followerUserId, followingUserId);
+                    }
+                })
+                .addOnCompleteListener(activity, new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        onRequestComplete.onComplete(task.isSuccessful());
+                        LogUtil.logDebug(TAG, "followUser " + followingUserId + ", success: " + task.isSuccessful());
+                    }
                 });
     }
 }

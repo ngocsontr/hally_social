@@ -21,6 +21,7 @@ package com.hally.influencerai.dialogs;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
@@ -72,9 +73,12 @@ public class UnfollowConfirmationDialog extends DialogFragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setView(view)
                 .setNegativeButton(R.string.button_title_cancel, null)
-                .setPositiveButton(R.string.button_title_unfollow, (dialog, which) -> {
-                    callback.onUnfollowButtonClicked();
-                    dialog.cancel();
+                .setPositiveButton(R.string.button_title_unfollow, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        callback.onUnfollowButtonClicked();
+                        dialog.cancel();
+                    }
                 });
 
         return builder.create();

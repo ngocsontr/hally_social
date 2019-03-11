@@ -18,10 +18,12 @@ package com.hally.influencerai.main.login;
 
 import android.content.Context;
 import android.net.Uri;
+import android.support.annotation.NonNull;
 
 import com.facebook.login.LoginResult;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FacebookAuthProvider;
@@ -32,9 +34,10 @@ import com.hally.influencerai.R;
 import com.hally.influencerai.main.base.BasePresenter;
 import com.hally.influencerai.main.interactors.ProfileInteractor;
 import com.hally.influencerai.managers.ProfileManager;
+import com.hally.influencerai.managers.listeners.OnObjectExistListener;
+import com.hally.influencerai.model.Profile;
 import com.hally.influencerai.utils.LogUtil;
 import com.hally.influencerai.utils.PreferencesUtil;
-import com.google.android.gms.tasks.Task;
 
 /**
  * Created by Alexey on 03.05.18.
@@ -47,19 +50,25 @@ class LoginPresenter extends BasePresenter<LoginView> {
     }
 
     public void checkIsProfileExist(final String userId) {
-        ProfileManager.getInstance(context).isProfileExist(userId, exist -> {
-            ifViewAttached(view -> {
-                if (!exist) {
-                    view.startCreateProfileActivity();
-                } else {
-                    PreferencesUtil.setProfileCreated(context, true);
-                    ProfileInteractor.getInstance(context.getApplicationContext())
-                            .addRegistrationToken(FirebaseInstanceId.getInstance().getToken(), userId);
-                }
+        ProfileManager.getInstance(context).isProfileExist(userId, new OnObjectExistListener<Profile>() {
+            @Override
+            public void onDataChanged(boolean exist) {
+                LoginPresenter.this.ifViewAttached(new ViewAction<LoginView>() {
+                    @Override
+                    public void run(@NonNull LoginView view) {
+                        if (!exist) {
+                            view.startCreateProfileActivity();
+                        } else {
+                            PreferencesUtil.setProfileCreated(context, true);
+                            ProfileInteractor.getInstance(context.getApplicationContext())
+                                    .addRegistrationToken(FirebaseInstanceId.getInstance().getToken(), userId);
+                        }
 
-                view.hideProgress();
-                view.finish();
-            });
+                        view.hideProgress();
+                        view.finish();
+                    }
+                });
+            }
         });
     }
 
@@ -76,33 +85,39 @@ class LoginPresenter extends BasePresenter<LoginView> {
     }
 
     public void handleGoogleSignInResult(GoogleSignInResult result) {
-        ifViewAttached(view -> {
-            if (result.isSuccess()) {
-                view.showProgress();
+        ifViewAttached(new ViewAction<LoginView>() {
+            @Override
+            public void run(@NonNull LoginView view) {
+                if (result.isSuccess()) {
+                    view.showProgress();
 
-                GoogleSignInAccount account = result.getSignInAccount();
+                    GoogleSignInAccount account = result.getSignInAccount();
 
-                view.setProfilePhotoUrl(buildGooglePhotoUrl(account.getPhotoUrl()));
+                    view.setProfilePhotoUrl(LoginPresenter.this.buildGooglePhotoUrl(account.getPhotoUrl()));
 
-                AuthCredential credential = GoogleAuthProvider.getCredential(account.getIdToken(), null);
-                view.firebaseAuthWithCredentials(credential);
+                    AuthCredential credential = GoogleAuthProvider.getCredential(account.getIdToken(), null);
+                    view.firebaseAuthWithCredentials(credential);
 
-                LogUtil.logDebug(TAG, "firebaseAuthWithGoogle:" + account.getId());
+                    LogUtil.logDebug(TAG, "firebaseAuthWithGoogle:" + account.getId());
 
-            } else {
-                LogUtil.logDebug(TAG, "SIGN_IN_GOOGLE failed :" + result);
-                view.hideProgress();
+                } else {
+                    LogUtil.logDebug(TAG, "SIGN_IN_GOOGLE failed :" + result);
+                    view.hideProgress();
+                }
             }
         });
     }
 
     public void handleFacebookSignInResult(LoginResult loginResult) {
-        ifViewAttached(view -> {
-            LogUtil.logDebug(TAG, "handleFacebookSignInResult: " + loginResult);
-            view.setProfilePhotoUrl(buildFacebookPhotoUrl(loginResult.getAccessToken().getUserId()));
-            view.showProgress();
-            AuthCredential credential = FacebookAuthProvider.getCredential(loginResult.getAccessToken().getToken());
-            view.firebaseAuthWithCredentials(credential);
+        ifViewAttached(new ViewAction<LoginView>() {
+            @Override
+            public void run(@NonNull LoginView view) {
+                LogUtil.logDebug(TAG, "handleFacebookSignInResult: " + loginResult);
+                view.setProfilePhotoUrl(LoginPresenter.this.buildFacebookPhotoUrl(loginResult.getAccessToken().getUserId()));
+                view.showProgress();
+                AuthCredential credential = FacebookAuthProvider.getCredential(loginResult.getAccessToken().getToken());
+                view.firebaseAuthWithCredentials(credential);
+            }
         });
     }
 
@@ -120,14 +135,17 @@ class LoginPresenter extends BasePresenter<LoginView> {
         Exception exception = task.getException();
         LogUtil.logError(TAG, "signInWithCredential", exception);
 
-        ifViewAttached(view -> {
-            if (exception != null) {
-                view.showWarningDialog(exception.getMessage());
-            } else {
-                view.showSnackBar(R.string.error_authentication);
-            }
+        ifViewAttached(new ViewAction<LoginView>() {
+            @Override
+            public void run(@NonNull LoginView view) {
+                if (exception != null) {
+                    view.showWarningDialog(exception.getMessage());
+                } else {
+                    view.showSnackBar(R.string.error_authentication);
+                }
 
-            view.hideProgress();
+                view.hideProgress();
+            }
         });
     }
 }

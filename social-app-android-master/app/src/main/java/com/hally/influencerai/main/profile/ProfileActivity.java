@@ -191,16 +191,25 @@ public class ProfileActivity extends BaseActivity<ProfileView, ProfilePresenter>
     }
 
     private void initListeners() {
-        followButton.setOnClickListener(v -> {
-            presenter.onFollowButtonClick(followButton.getState(), userID);
+        followButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                presenter.onFollowButtonClick(followButton.getState(), userID);
+            }
         });
 
-        followingsCounterTextView.setOnClickListener(v -> {
-            startUsersListActivity(UsersListType.FOLLOWINGS);
+        followingsCounterTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ProfileActivity.this.startUsersListActivity(UsersListType.FOLLOWINGS);
+            }
         });
 
-        followersCounterTextView.setOnClickListener(v -> {
-            startUsersListActivity(UsersListType.FOLLOWERS);
+        followersCounterTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ProfileActivity.this.startUsersListActivity(UsersListType.FOLLOWERS);
+            }
         });
 
         swipeContainer.setOnRefreshListener(this::onRefreshAction);

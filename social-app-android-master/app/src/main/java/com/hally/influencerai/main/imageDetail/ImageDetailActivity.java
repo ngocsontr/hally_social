@@ -61,12 +61,15 @@ public class ImageDetailActivity extends BaseActivity<ImageDetailView, ImageDeta
         String imageTitle = getIntent().getStringExtra(IMAGE_TITLE_EXTRA_KEY);
         loadImage(imageTitle);
 
-        touchImageView.setOnClickListener(v -> {
-            final int vis = viewGroup.getSystemUiVisibility();
-            if ((vis & View.SYSTEM_UI_FLAG_LOW_PROFILE) != 0) {
-                viewGroup.setSystemUiVisibility(View.SYSTEM_UI_FLAG_VISIBLE);
-            } else {
-                viewGroup.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE);
+        touchImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final int vis = viewGroup.getSystemUiVisibility();
+                if ((vis & View.SYSTEM_UI_FLAG_LOW_PROFILE) != 0) {
+                    viewGroup.setSystemUiVisibility(View.SYSTEM_UI_FLAG_VISIBLE);
+                } else {
+                    viewGroup.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE);
+                }
             }
         });
     }
@@ -87,11 +90,14 @@ public class ImageDetailActivity extends BaseActivity<ImageDetailView, ImageDeta
             actionBar.setDisplayHomeAsUpEnabled(true);
 
             viewGroup.setOnSystemUiVisibilityChangeListener(
-                    vis -> {
-                        if ((vis & View.SYSTEM_UI_FLAG_LOW_PROFILE) != 0) {
-                            actionBar.hide();
-                        } else {
-                            actionBar.show();
+                    new View.OnSystemUiVisibilityChangeListener() {
+                        @Override
+                        public void onSystemUiVisibilityChange(int vis) {
+                            if ((vis & View.SYSTEM_UI_FLAG_LOW_PROFILE) != 0) {
+                                actionBar.hide();
+                            } else {
+                                actionBar.show();
+                            }
                         }
                     });
 

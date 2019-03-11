@@ -62,16 +62,22 @@ public class UserViewHolder extends RecyclerView.ViewHolder {
         photoImageView = view.findViewById(R.id.photoImageView);
         followButton = view.findViewById(R.id.followButton);
 
-        view.setOnClickListener(v -> {
-            int position = getAdapterPosition();
-            if (callback != null && position != RecyclerView.NO_POSITION) {
-                callback.onItemClick(getAdapterPosition(), v);
+        view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int position = UserViewHolder.this.getAdapterPosition();
+                if (callback != null && position != RecyclerView.NO_POSITION) {
+                    callback.onItemClick(UserViewHolder.this.getAdapterPosition(), v);
+                }
             }
         });
 
-        followButton.setOnClickListener(v -> {
-            if (callback != null) {
-                callback.onFollowButtonClick(getAdapterPosition(), followButton);
+        followButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (callback != null) {
+                    callback.onFollowButtonClick(UserViewHolder.this.getAdapterPosition(), followButton);
+                }
             }
         });
     }
@@ -99,9 +105,12 @@ public class UserViewHolder extends RecyclerView.ViewHolder {
         String currentUserId = FirebaseAuth.getInstance().getUid();
         if (currentUserId != null) {
             if (!currentUserId.equals(profile.getId())) {
-                FollowManager.getInstance(context).checkFollowState(currentUserId, profile.getId(), followState -> {
-                    followButton.setVisibility(View.VISIBLE);
-                    followButton.setState(followState);
+                FollowManager.getInstance(context).checkFollowState(currentUserId, profile.getId(), new FollowManager.CheckStateListener() {
+                    @Override
+                    public void onStateReady(FollowState followState) {
+                        followButton.setVisibility(View.VISIBLE);
+                        followButton.setState(followState);
+                    }
                 });
             } else {
                 followButton.setState(FollowState.MY_PROFILE);

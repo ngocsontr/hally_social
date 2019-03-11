@@ -111,7 +111,12 @@ public class FollowingPostsActivity extends BaseActivity<FollowPostsView, Follow
             progressBar = findViewById(R.id.progressBar);
             message_following_posts_empty = findViewById(R.id.message_following_posts_empty);
             swipeContainer = findViewById(R.id.swipeContainer);
-            swipeContainer.setOnRefreshListener(() -> presenter.onRefresh());
+            swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+                @Override
+                public void onRefresh() {
+                    presenter.onRefresh();
+                }
+            });
 
             initPostListRecyclerView();
         }

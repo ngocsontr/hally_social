@@ -89,7 +89,12 @@ public class CommentViewHolder extends RecyclerView.ViewHolder {
             fillComment("", comment, commentTextView, dateTextView);
         }
 
-        avatarImageView.setOnClickListener(v -> callback.onAuthorClick(authorId, v));
+        avatarImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                callback.onAuthorClick(authorId, v);
+            }
+        });
     }
 
     private OnObjectChangedListener<Profile> createOnProfileChangeListener(final ExpandableTextView expandableTextView,

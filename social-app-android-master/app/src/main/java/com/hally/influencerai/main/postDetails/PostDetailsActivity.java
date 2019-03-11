@@ -223,7 +223,12 @@ public class PostDetailsActivity extends BaseActivity<PostDetailsView, PostDetai
     }
 
     private void initListeners() {
-        postImageView.setOnClickListener(v -> presenter.onPostImageClick());
+        postImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                presenter.onPostImageClick();
+            }
+        });
 
         commentEditText.addTextChangedListener(new TextWatcher() {
             @Override
@@ -242,27 +247,53 @@ public class PostDetailsActivity extends BaseActivity<PostDetailsView, PostDetai
             }
         });
 
-        sendButton.setOnClickListener(v -> presenter.onSendButtonClick());
+        sendButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                presenter.onSendButtonClick();
+            }
+        });
 
-        commentsCountTextView.setOnClickListener(view -> scrollToFirstComment());
+        commentsCountTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                PostDetailsActivity.this.scrollToFirstComment();
+            }
+        });
 
-        authorImageView.setOnClickListener(v -> presenter.onAuthorClick(v));
-        authorTextView.setOnClickListener(v -> presenter.onAuthorClick(v));
+        authorImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                presenter.onAuthorClick(v);
+            }
+        });
+        authorTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                presenter.onAuthorClick(v);
+            }
+        });
 
-        likesContainer.setOnClickListener(v -> {
-            if (likeController != null && presenter.isPostExist()) {
-                likeController.handleLikeClickAction(this, presenter.getPost());
+        likesContainer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (likeController != null && presenter.isPostExist()) {
+                    likeController.handleLikeClickAction(PostDetailsActivity.this, presenter.getPost());
+                }
             }
         });
 
         //long click for changing animation
-        likesContainer.setOnLongClickListener(v -> {
-            if (likeController != null) {
-                likeController.changeAnimationType();
-                return true;
-            }
+        likesContainer.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                if (likeController != null) {
+                    likeController.changeAnimationType();
+                    return true;
+                }
 
-            return false;
+                return false;
+            }
         });
     }
 
@@ -363,9 +394,12 @@ public class PostDetailsActivity extends BaseActivity<PostDetailsView, PostDetai
 
     @Override
     public void loadPostDetailImage(String imageTitle) {
-        postManager.loadImageMediumSize(GlideApp.with(this), imageTitle, postImageView, () -> {
-            scheduleStartPostponedTransition(postImageView);
-            progressBar.setVisibility(View.GONE);
+        postManager.loadImageMediumSize(GlideApp.with(this), imageTitle, postImageView, new PostManager.OnImageRequestListener() {
+            @Override
+            public void onImageRequestFinished() {
+                PostDetailsActivity.this.scheduleStartPostponedTransition(postImageView);
+                progressBar.setVisibility(View.GONE);
+            }
         });
     }
 

@@ -19,15 +19,16 @@ package com.hally.influencerai.main.base;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.View;
 
 import com.google.firebase.auth.FirebaseAuth;
-import com.hannesdorfmann.mosby3.mvp.MvpBasePresenter;
-import com.hannesdorfmann.mosby3.mvp.MvpView;
 import com.hally.influencerai.R;
 import com.hally.influencerai.enums.ProfileStatus;
 import com.hally.influencerai.managers.ProfileManager;
+import com.hannesdorfmann.mosby3.mvp.MvpBasePresenter;
+import com.hannesdorfmann.mosby3.mvp.MvpView;
 
 /**
  * Created by Alexey on 03.05.18.
@@ -52,11 +53,14 @@ public class BasePresenter<T extends BaseView & MvpView> extends MvpBasePresente
     public boolean checkInternetConnection(@Nullable View anchorView) {
         boolean hasInternetConnection = hasInternetConnection();
         if (!hasInternetConnection) {
-            ifViewAttached(view -> {
-                if (anchorView != null) {
-                    view.showSnackBar(anchorView, R.string.internet_connection_failed);
-                } else {
-                    view.showSnackBar(R.string.internet_connection_failed);
+            ifViewAttached(new ViewAction<T>() {
+                @Override
+                public void run(@NonNull T view) {
+                    if (anchorView != null) {
+                        view.showSnackBar(anchorView, R.string.internet_connection_failed);
+                    } else {
+                        view.showSnackBar(R.string.internet_connection_failed);
+                    }
                 }
             });
         }

@@ -18,14 +18,20 @@
 package com.hally.influencerai.main.search.users;
 
 import android.app.Activity;
+import android.support.annotation.NonNull;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.hally.influencerai.main.base.BasePresenter;
 import com.hally.influencerai.main.base.BaseView;
 import com.hally.influencerai.managers.FollowManager;
 import com.hally.influencerai.managers.ProfileManager;
+import com.hally.influencerai.managers.listeners.OnDataChangedListener;
+import com.hally.influencerai.managers.listeners.OnRequestComplete;
+import com.hally.influencerai.model.Profile;
 import com.hally.influencerai.utils.LogUtil;
 import com.hally.influencerai.views.FollowButton;
+
+import java.util.List;
 
 /**
  * Created by Alexey on 08.06.18.
@@ -57,29 +63,42 @@ public class SearchUsersPresenter extends BasePresenter<SearchUsersView> {
 
     private void followUser(String targetUserId) {
         ifViewAttached(BaseView::showProgress);
-        followManager.followUser(activity, currentUserId, targetUserId, success -> {
-            ifViewAttached(view -> {
-                view.hideProgress();
-                if (success) {
-                    view.updateSelectedItem();
-                } else {
-                    LogUtil.logDebug(TAG, "followUser, success: " + false);
-                }
-            });
+        followManager.followUser(activity, currentUserId, targetUserId, new OnRequestComplete() {
+            @Override
+            public void onComplete(boolean success) {
+                SearchUsersPresenter.this.ifViewAttached(new ViewAction<SearchUsersView>() {
+                    @Override
+                    public void run(@NonNull SearchUsersView view) {
+                        view.hideProgress();
+                        if (success) {
+                            view.updateSelectedItem();
+                        } else {
+                            LogUtil.logDebug(TAG, "followUser, success: " + false);
+                        }
+                    }
+                });
+            }
         });
     }
 
     public void unfollowUser(String targetUserId) {
         ifViewAttached(BaseView::showProgress);
-        followManager.unfollowUser(activity, currentUserId, targetUserId, success ->
-                ifViewAttached(view -> {
-                    view.hideProgress();
-                    if (success) {
-                        view.updateSelectedItem();
-                    } else {
-                        LogUtil.logDebug(TAG, "unfollowUser, success: " + false);
+        followManager.unfollowUser(activity, currentUserId, targetUserId, new OnRequestComplete() {
+            @Override
+            public void onComplete(boolean success) {
+                SearchUsersPresenter.this.ifViewAttached(new ViewAction<SearchUsersView>() {
+                    @Override
+                    public void run(@NonNull SearchUsersView view) {
+                        view.hideProgress();
+                        if (success) {
+                            view.updateSelectedItem();
+                        } else {
+                            LogUtil.logDebug(TAG, "unfollowUser, success: " + false);
+                        }
                     }
-                }));
+                });
+            }
+        });
     }
 
     public void loadUsersWithEmptySearch() {
@@ -89,18 +108,24 @@ public class SearchUsersPresenter extends BasePresenter<SearchUsersView> {
     public void search(String searchText) {
         if (checkInternetConnection()) {
             ifViewAttached(SearchUsersView::showLocalProgress);
-            profileManager.search(searchText, list -> {
-                ifViewAttached(view -> {
-                    view.hideLocalProgress();
-                    view.onSearchResultsReady(list);
+            profileManager.search(searchText, new OnDataChangedListener<Profile>() {
+                @Override
+                public void onListChanged(List<Profile> list) {
+                    SearchUsersPresenter.this.ifViewAttached(new ViewAction<SearchUsersView>() {
+                        @Override
+                        public void run(@NonNull SearchUsersView view) {
+                            view.hideLocalProgress();
+                            view.onSearchResultsReady(list);
 
-                    if (list.isEmpty()) {
-                        view.showEmptyListLayout();
-                    }
-                });
+                            if (list.isEmpty()) {
+                                view.showEmptyListLayout();
+                            }
+                        }
+                    });
 
-                LogUtil.logDebug(TAG, "search text: " + searchText);
-                LogUtil.logDebug(TAG, "found items count: " + list.size());
+                    LogUtil.logDebug(TAG, "search text: " + searchText);
+                    LogUtil.logDebug(TAG, "found items count: " + list.size());
+                }
             });
         } else {
             ifViewAttached(SearchUsersView::hideLocalProgress);

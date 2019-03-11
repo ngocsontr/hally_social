@@ -19,6 +19,7 @@ package com.hally.influencerai.main.main;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.view.View;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -27,6 +28,7 @@ import com.hally.influencerai.enums.PostStatus;
 import com.hally.influencerai.main.base.BasePresenter;
 import com.hally.influencerai.main.postDetails.PostDetailsActivity;
 import com.hally.influencerai.managers.PostManager;
+import com.hally.influencerai.managers.listeners.OnObjectExistListener;
 import com.hally.influencerai.model.Post;
 
 /**
@@ -52,38 +54,57 @@ class MainPresenter extends BasePresenter<MainView> {
     }
 
     void onPostClicked(final Post post, final View postView) {
-        postManager.isPostExistSingleValue(post.getId(), exist -> ifViewAttached(view -> {
-            if (exist) {
-                view.openPostDetailsActivity(post, postView);
-            } else {
-                view.showFloatButtonRelatedSnackBar(R.string.error_post_was_removed);
+        postManager.isPostExistSingleValue(post.getId(), new OnObjectExistListener<Post>() {
+            @Override
+            public void onDataChanged(boolean exist) {
+                MainPresenter.this.ifViewAttached(new ViewAction<MainView>() {
+                    @Override
+                    public void run(@NonNull MainView view) {
+                        if (exist) {
+                            view.openPostDetailsActivity(post, postView);
+                        } else {
+                            view.showFloatButtonRelatedSnackBar(R.string.error_post_was_removed);
+                        }
+                    }
+                });
             }
-        }));
+        });
     }
 
     void onProfileMenuActionClicked() {
         if (checkAuthorization()) {
             String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-            ifViewAttached(view -> view.openProfileActivity(userId, null));
+            ifViewAttached(new ViewAction<MainView>() {
+                @Override
+                public void run(@NonNull MainView view) {
+                    view.openProfileActivity(userId, null);
+                }
+            });
         }
     }
 
     void onPostCreated() {
-        ifViewAttached(view -> {
-            view.refreshPostList();
-            view.showFloatButtonRelatedSnackBar(R.string.message_post_was_created);
+        ifViewAttached(new ViewAction<MainView>() {
+            @Override
+            public void run(@NonNull MainView view) {
+                view.refreshPostList();
+                view.showFloatButtonRelatedSnackBar(R.string.message_post_was_created);
+            }
         });
     }
 
     void onPostUpdated(Intent data) {
         if (data != null) {
-            ifViewAttached(view -> {
-                PostStatus postStatus = (PostStatus) data.getSerializableExtra(PostDetailsActivity.POST_STATUS_EXTRA_KEY);
-                if (postStatus.equals(PostStatus.REMOVED)) {
-                    view.removePost();
-                    view.showFloatButtonRelatedSnackBar(R.string.message_post_was_removed);
-                } else if (postStatus.equals(PostStatus.UPDATED)) {
-                    view.updatePost();
+            ifViewAttached(new ViewAction<MainView>() {
+                @Override
+                public void run(@NonNull MainView view) {
+                    PostStatus postStatus = (PostStatus) data.getSerializableExtra(PostDetailsActivity.POST_STATUS_EXTRA_KEY);
+                    if (postStatus.equals(PostStatus.REMOVED)) {
+                        view.removePost();
+                        view.showFloatButtonRelatedSnackBar(R.string.message_post_was_removed);
+                    } else if (postStatus.equals(PostStatus.UPDATED)) {
+                        view.updatePost();
+                    }
                 }
             });
         }
@@ -91,17 +112,30 @@ class MainPresenter extends BasePresenter<MainView> {
 
     void updateNewPostCounter() {
         Handler mainHandler = new Handler(context.getMainLooper());
-        mainHandler.post(() -> ifViewAttached(view -> {
-            int newPostsQuantity = postManager.getNewPostsCounter();
-            if (newPostsQuantity > 0) {
-                view.showCounterView(newPostsQuantity);
-            } else {
-                view.hideCounterView();
+        mainHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                MainPresenter.this.ifViewAttached(new ViewAction<MainView>() {
+                    @Override
+                    public void run(@NonNull MainView view) {
+                        int newPostsQuantity = postManager.getNewPostsCounter();
+                        if (newPostsQuantity > 0) {
+                            view.showCounterView(newPostsQuantity);
+                        } else {
+                            view.hideCounterView();
+                        }
+                    }
+                });
             }
-        }));
+        });
     }
 
     public void initPostCounter() {
-        postManager.setPostCounterWatcher(newValue -> updateNewPostCounter());
+        postManager.setPostCounterWatcher(new PostManager.PostCounterWatcher() {
+            @Override
+            public void onPostCounterChanged(int newValue) {
+                MainPresenter.this.updateNewPostCounter();
+            }
+        });
     }
 }

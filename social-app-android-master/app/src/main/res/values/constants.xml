@@ -23,6 +23,10 @@
 
     <string name="facebook_app_id">2106152709499638</string>
 
+    <string name="instagram_client_id">61998f63d5fa49eb81ce700d52b27ff8</string>
+    <string name="instagram_callback_url">https://instagram.com/</string>
+    <string name="instagram_base_url">https://api.instagram.com/</string>
+
     <!--avatar url pattern-->
     <string name="facebook_large_image_url_pattern">https://graph.facebook.com/%1$s/picture?type=large</string>
     <string name="google_large_image_url_pattern">%1$s?sz=%2$d</string>

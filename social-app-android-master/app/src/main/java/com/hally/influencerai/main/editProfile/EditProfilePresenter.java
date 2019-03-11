@@ -18,6 +18,7 @@ package com.hally.influencerai.main.editProfile;
 
 import android.content.Context;
 import android.net.Uri;
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
 import com.hally.influencerai.R;
@@ -25,6 +26,7 @@ import com.hally.influencerai.main.base.BaseView;
 import com.hally.influencerai.main.pickImageBase.PickImagePresenter;
 import com.hally.influencerai.managers.ProfileManager;
 import com.hally.influencerai.managers.listeners.OnObjectChangedListenerSimple;
+import com.hally.influencerai.managers.listeners.OnProfileCreatedListener;
 import com.hally.influencerai.model.Profile;
 import com.hally.influencerai.utils.ValidationUtil;
 
@@ -49,17 +51,20 @@ public class EditProfilePresenter<V extends EditProfileView> extends PickImagePr
             @Override
             public void onObjectChanged(Profile obj) {
                 profile = obj;
-                ifViewAttached(view -> {
-                    if (profile != null) {
-                        view.setName(profile.getUsername());
+                ifViewAttached(new ViewAction<V>() {
+                    @Override
+                    public void run(@NonNull V view) {
+                        if (profile != null) {
+                            view.setName(profile.getUsername());
 
-                        if (profile.getPhotoUrl() != null) {
-                            view.setProfilePhoto(profile.getPhotoUrl());
+                            if (profile.getPhotoUrl() != null) {
+                                view.setProfilePhoto(profile.getPhotoUrl());
+                            }
                         }
-                    }
 
-                    view.hideProgress();
-                    view.setNameError(null);
+                        view.hideProgress();
+                        view.setNameError(null);
+                    }
                 });
             }
         });
@@ -67,39 +72,48 @@ public class EditProfilePresenter<V extends EditProfileView> extends PickImagePr
 
     public void attemptCreateProfile(Uri imageUri) {
         if (checkInternetConnection()) {
-            ifViewAttached(view -> {
-                view.setNameError(null);
+            ifViewAttached(new ViewAction<V>() {
+                @Override
+                public void run(@NonNull V view) {
+                    view.setNameError(null);
 
-                String name = view.getNameText().trim();
-                boolean cancel = false;
+                    String name = view.getNameText().trim();
+                    boolean cancel = false;
 
-                if (TextUtils.isEmpty(name)) {
-                    view.setNameError(context.getString(R.string.error_field_required));
-                    cancel = true;
-                } else if (!ValidationUtil.isNameValid(name)) {
-                    view.setNameError(context.getString(R.string.error_profile_name_length));
-                    cancel = true;
-                }
+                    if (TextUtils.isEmpty(name)) {
+                        view.setNameError(context.getString(R.string.error_field_required));
+                        cancel = true;
+                    } else if (!ValidationUtil.isNameValid(name)) {
+                        view.setNameError(context.getString(R.string.error_profile_name_length));
+                        cancel = true;
+                    }
 
-                if (!cancel) {
-                    view.showProgress();
-                    profile.setUsername(name);
-                    createOrUpdateProfile(imageUri);
+                    if (!cancel) {
+                        view.showProgress();
+                        profile.setUsername(name);
+                        EditProfilePresenter.this.createOrUpdateProfile(imageUri);
+                    }
                 }
             });
         }
     }
 
     private void createOrUpdateProfile(Uri imageUri) {
-        profileManager.createOrUpdateProfile(profile, imageUri, success -> {
-            ifViewAttached(view -> {
-                view.hideProgress();
-                if (success) {
-                    onProfileUpdatedSuccessfully();
-                } else {
-                    view.showSnackBar(R.string.error_fail_create_profile);
-                }
-            });
+        profileManager.createOrUpdateProfile(profile, imageUri, new OnProfileCreatedListener() {
+            @Override
+            public void onProfileCreated(boolean success) {
+                EditProfilePresenter.this.ifViewAttached(new ViewAction<V>() {
+                    @Override
+                    public void run(@NonNull V view) {
+                        view.hideProgress();
+                        if (success) {
+                            EditProfilePresenter.this.onProfileUpdatedSuccessfully();
+                        } else {
+                            view.showSnackBar(R.string.error_fail_create_profile);
+                        }
+                    }
+                });
+            }
         });
     }
 
