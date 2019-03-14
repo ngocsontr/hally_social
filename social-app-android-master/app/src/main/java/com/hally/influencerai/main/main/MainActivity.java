@@ -39,6 +39,7 @@ import android.widget.TextView;
 
 import com.hally.influencerai.R;
 import com.hally.influencerai.adapters.PostsAdapter;
+import com.hally.influencerai.chat.ChatMainActivity;
 import com.hally.influencerai.main.base.BaseActivity;
 import com.hally.influencerai.main.followPosts.FollowingPostsActivity;
 import com.hally.influencerai.main.post.createPost.CreatePostActivity;
@@ -310,6 +311,10 @@ public class MainActivity extends BaseActivity<MainView, MainPresenter> implemen
             case R.id.search:
                 Intent searchIntent = new Intent(this, SearchActivity.class);
                 startActivity(searchIntent);
+                return true;
+
+            case R.id.chat:
+                startActivity(new Intent(this, ChatMainActivity.class));
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

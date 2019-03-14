@@ -49,6 +49,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.hally.influencerai.R;
 import com.hally.influencerai.adapters.PostsByUserAdapter;
+import com.hally.influencerai.chat.ChatMainActivity;
 import com.hally.influencerai.dialogs.UnfollowConfirmationDialog;
 import com.hally.influencerai.enums.FollowState;
 import com.hally.influencerai.main.base.BaseActivity;
@@ -422,9 +423,11 @@ public class ProfileActivity extends BaseActivity<ProfileView, ProfilePresenter>
             MenuInflater inflater = getMenuInflater();
             inflater.inflate(R.menu.profile_menu, menu);
             return true;
+        } else {
+            MenuInflater inflater = getMenuInflater();
+            inflater.inflate(R.menu.profile_chat_menu, menu);
+            return true;
         }
-
-        return super.onCreateOptionsMenu(menu);
     }
 
     @Override
@@ -440,6 +443,10 @@ public class ProfileActivity extends BaseActivity<ProfileView, ProfilePresenter>
                 return true;
             case R.id.createPost:
                 presenter.onCreatePostClick();
+
+            case R.id.chat:
+                startActivity(new Intent(this, ChatMainActivity.class));
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }

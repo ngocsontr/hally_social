@@ -23,7 +23,7 @@ public class PreferencesUtil {
 
     private static final String TAG = PreferencesUtil.class.getSimpleName();
 
-    private static final String SHARED_PREFERENCES_NAME = "com.rozdoum.socialcomponents";
+    private static final String SHARED_PREFERENCES_NAME = "com.hally.socials";
     private static final String PREF_PARAM_IS_PROFILE_CREATED = "isProfileCreated";
     private static final String PREF_PARAM_IS_POSTS_WAS_LOADED_AT_LEAST_ONCE = "isPostsWasLoadedAtLeastOnce";
 
