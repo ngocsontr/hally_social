@@ -2,13 +2,10 @@ package com.hally.influencerai.chat.ui;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -21,10 +18,8 @@ import android.widget.TextView;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.hally.influencerai.R;
-import com.hally.influencerai.chat.data.SharedPreferenceHelper;
 import com.hally.influencerai.chat.data.StaticConfig;
 import com.hally.influencerai.chat.model.Consersation;
 import com.hally.influencerai.chat.model.Message;
@@ -51,8 +46,6 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
     private ImageButton btnSend;
     private EditText editWriteMessage;
     private LinearLayoutManager linearLayoutManager;
-    public static HashMap<String, Bitmap> bitmapAvataFriend;
-    public Bitmap bitmapAvataUser;
 
 
     @Override
@@ -68,21 +61,13 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
         btnSend = (ImageButton) findViewById(R.id.btnSend);
         btnSend.setOnClickListener(this);
 
-        String base64AvataUser = SharedPreferenceHelper.getInstance(this).getUserInfo().avata;
-        if (!base64AvataUser.equals(StaticConfig.STR_DEFAULT_BASE64)) {
-            byte[] decodedString = Base64.decode(base64AvataUser, Base64.DEFAULT);
-            bitmapAvataUser = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
-        } else {
-            bitmapAvataUser = null;
-        }
-
         editWriteMessage = (EditText) findViewById(R.id.editWriteMessage);
         if (idFriend != null && nameFriend != null) {
             getSupportActionBar().setTitle(nameFriend);
             linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
             recyclerChat = (RecyclerView) findViewById(R.id.recyclerChat);
             recyclerChat.setLayoutManager(linearLayoutManager);
-            adapter = new ListMessageAdapter(this, consersation, bitmapAvataFriend, bitmapAvataUser);
+            adapter = new ListMessageAdapter(this, consersation);
             FirebaseDatabase.getInstance().getReference().child("message/" + roomId).addChildEventListener(new ChildEventListener() {
                 @Override
                 public void onChildAdded(DataSnapshot dataSnapshot, String s) {
@@ -127,7 +112,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
             Intent result = new Intent();
-            result.putExtra("idFriend", idFriend.get(0));
+//            result.putExtra("idFriend", idFriend.get(0));
             setResult(RESULT_OK, result);
             this.finish();
         }
@@ -137,7 +122,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onBackPressed() {
         Intent result = new Intent();
-        result.putExtra("idFriend", idFriend.get(0));
+//        result.putExtra("idFriend", idFriend.get(0));
         setResult(RESULT_OK, result);
         this.finish();
     }
@@ -163,16 +148,10 @@ class ListMessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private Context context;
     private Consersation consersation;
-    private HashMap<String, Bitmap> bitmapAvata;
-    private HashMap<String, DatabaseReference> bitmapAvataDB;
-    private Bitmap bitmapAvataUser;
 
-    public ListMessageAdapter(Context context, Consersation consersation, HashMap<String, Bitmap> bitmapAvata, Bitmap bitmapAvataUser) {
+    public ListMessageAdapter(Context context, Consersation consersation) {
         this.context = context;
         this.consersation = consersation;
-        this.bitmapAvata = bitmapAvata;
-        this.bitmapAvataUser = bitmapAvataUser;
-        bitmapAvataDB = new HashMap<>();
     }
 
     @Override
@@ -196,10 +175,10 @@ class ListMessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         if (holder instanceof ItemMessageFriendHolder) {
             avatar = ((ItemMessageFriendHolder) holder).avata;
             text = ((ItemMessageFriendHolder) holder).txtContent;
-            idUser = consersation.getListMessageData().get(position).idReceiver;
+            idUser = consersation.getListMessageData().get(position).idSender;
 
         } else if (holder instanceof ItemMessageUserHolder) {
-            avatar = ((ItemMessageUserHolder) holder).avata;
+            avatar = ((ItemMessageUserHolder) holder).avatar;
             text = ((ItemMessageUserHolder) holder).txtContent;
             idUser = consersation.getListMessageData().get(position).idSender;
         }
@@ -236,12 +215,12 @@ class ListMessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
 class ItemMessageUserHolder extends RecyclerView.ViewHolder {
     public TextView txtContent;
-    public CircleImageView avata;
+    public CircleImageView avatar;
 
     public ItemMessageUserHolder(View itemView) {
         super(itemView);
         txtContent = (TextView) itemView.findViewById(R.id.textContentUser);
-        avata = (CircleImageView) itemView.findViewById(R.id.imageView2);
+        avatar = (CircleImageView) itemView.findViewById(R.id.imageView2);
     }
 }
 

@@ -3,14 +3,12 @@ package com.hally.influencerai.chat.ui;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Base64;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
@@ -59,7 +57,7 @@ public class GroupFragment extends Fragment implements SwipeRefreshLayout.OnRefr
     LovelyProgressDialog progressDialog, waitingLeavingGroup;
 
     public GroupFragment() {
-        // Required empty public constructor
+        onClickFloatButton = new FragGroupClickFloatButton();
     }
 
     @Override
@@ -80,7 +78,6 @@ public class GroupFragment extends Fragment implements SwipeRefreshLayout.OnRefr
         recyclerListGroups.setLayoutManager(layoutManager);
         adapter = new ListGroupsAdapter(getContext(), listGroup);
         recyclerListGroups.setAdapter(adapter);
-        onClickFloatButton = new FragGroupClickFloatButton();
         progressDialog = new LovelyProgressDialog(getContext())
                 .setCancelable(false)
                 .setIcon(R.drawable.ic_dialog_delete_group)
@@ -182,6 +179,11 @@ public class GroupFragment extends Fragment implements SwipeRefreshLayout.OnRefr
     @Override
     public boolean onContextItemSelected(MenuItem item) {
 
+        if (true) {
+            Toast.makeText(getActivity(), "This function was disabled", Toast.LENGTH_LONG).show();
+            return true;
+        }
+
         switch (item.getItemId()) {
             case CONTEXT_MENU_DELETE:
                 int posGroup = item.getIntent().getIntExtra(CONTEXT_MENU_KEY_INTENT_DATA_POS, -1);
@@ -200,7 +202,7 @@ public class GroupFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                 if (((String) listGroup.get(posGroup1).groupInfo.get("admin")).equals(StaticConfig.UID)) {
                     Intent intent = new Intent(getContext(), AddGroupActivity.class);
                     intent.putExtra("groupId", listGroup.get(posGroup1).id);
-                    startActivityForResult(intent, REQUEST_EDIT_GROUP);
+                    startActivity(intent);
                 } else {
                     Toast.makeText(getActivity(), "You are not admin", Toast.LENGTH_LONG).show();
                 }
@@ -404,19 +406,6 @@ class ListGroupsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 Intent intent = new Intent(context, ChatActivity.class);
                 intent.putExtra(StaticConfig.INTENT_KEY_CHAT_FRIEND, groupName);
                 ArrayList<CharSequence> idFriend = new ArrayList<>();
-                ChatActivity.bitmapAvataFriend = new HashMap<>();
-                for (String id : listGroup.get(position).member) {
-                    idFriend.add(id);
-                    String avata = listFriend.getAvataById(id);
-                    if (!avata.equals(StaticConfig.STR_DEFAULT_BASE64)) {
-                        byte[] decodedString = Base64.decode(avata, Base64.DEFAULT);
-                        ChatActivity.bitmapAvataFriend.put(id, BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length));
-                    } else if (avata.equals(StaticConfig.STR_DEFAULT_BASE64)) {
-                        ChatActivity.bitmapAvataFriend.put(id, BitmapFactory.decodeResource(context.getResources(), R.drawable.default_avata));
-                    } else {
-                        ChatActivity.bitmapAvataFriend.put(id, null);
-                    }
-                }
                 intent.putCharSequenceArrayListExtra(StaticConfig.INTENT_KEY_CHAT_ID, idFriend);
                 intent.putExtra(StaticConfig.INTENT_KEY_CHAT_ROOM_ID, listGroup.get(position).id);
                 context.startActivity(intent);

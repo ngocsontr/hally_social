@@ -2,7 +2,6 @@ package com.hally.influencerai.chat.ui;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -10,8 +9,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,6 +32,9 @@ import com.hally.influencerai.chat.data.StaticConfig;
 import com.hally.influencerai.chat.model.Group;
 import com.hally.influencerai.chat.model.ListFriend;
 import com.hally.influencerai.chat.model.Room;
+import com.hally.influencerai.managers.DatabaseHelper;
+import com.hally.influencerai.utils.GlideApp;
+import com.hally.influencerai.utils.ImageUtil;
 import com.yarolegovich.lovelydialog.LovelyInfoDialog;
 import com.yarolegovich.lovelydialog.LovelyProgressDialog;
 
@@ -209,7 +211,8 @@ public class AddGroupActivity extends AppCompatActivity {
             setResult(RESULT_OK, null);
             AddGroupActivity.this.finish();
         } else {
-            FirebaseDatabase.getInstance().getReference().child("user/" + listIDRemove.toArray()[userIndex] + "/group/" + roomId).removeValue()
+            FirebaseDatabase.getInstance().getReference().child(DatabaseHelper.PROFILES_DB_KEY)
+                    .child(listIDRemove.toArray()[userIndex] + "/group/" + roomId).removeValue()
                     .addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
@@ -255,12 +258,14 @@ public class AddGroupActivity extends AppCompatActivity {
                 deleteRoomForUser(roomId, 0);
             }
         } else {
-            FirebaseDatabase.getInstance().getReference().child("user/" + listIDChoose.toArray()[userIndex] + "/group/" + roomId).setValue(roomId).addOnCompleteListener(new OnCompleteListener<Void>() {
-                @Override
-                public void onComplete(@NonNull Task<Void> task) {
-                    addRoomForUser(roomId, userIndex + 1);
-                }
-            }).addOnFailureListener(new OnFailureListener() {
+            FirebaseDatabase.getInstance().getReference().child(DatabaseHelper.PROFILES_DB_KEY)
+                    .child(listIDChoose.toArray()[userIndex] + "/group/" + roomId).setValue(roomId)
+                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            addRoomForUser(roomId, userIndex + 1);
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {
                     dialogWait.dismiss();
@@ -320,13 +325,12 @@ class ListPeopleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         ((ItemFriendHolder) holder).txtName.setText(listFriend.getListFriend().get(position).name);
         ((ItemFriendHolder) holder).txtEmail.setText(listFriend.getListFriend().get(position).email);
-        String avata = listFriend.getListFriend().get(position).avata;
+        String avatar = listFriend.getListFriend().get(position).avata;
         final String id = listFriend.getListFriend().get(position).id;
-        if (!avata.equals(StaticConfig.STR_DEFAULT_BASE64)) {
-            byte[] decodedString = Base64.decode(avata, Base64.DEFAULT);
-            ((ItemFriendHolder) holder).avata.setImageBitmap(BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length));
+        if (TextUtils.isEmpty(avatar)) {
+            ((ItemFriendHolder) holder).avata.setImageResource(R.drawable.default_avata);
         } else {
-            ((ItemFriendHolder) holder).avata.setImageBitmap(BitmapFactory.decodeResource(context.getResources(), R.drawable.default_avata));
+            ImageUtil.loadImage(GlideApp.with(context), avatar, ((ItemFriendHolder) holder).avata);
         }
         ((ItemFriendHolder) holder).checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
