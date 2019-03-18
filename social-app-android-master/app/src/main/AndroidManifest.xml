@@ -32,7 +32,7 @@
             android:label="@string/app_name" />
 
         <activity
-            android:name="com.hally.influencerai.main.main.MainActivity"
+            android:name="com.hally.influencerai.main.splash.SplashActivity"
             android:configChanges="orientation|screenSize"
             android:theme="@style/AppCompat.NoActionBar">
             <intent-filter>
@@ -40,6 +40,17 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+
+        <activity
+            android:name="com.hally.influencerai.main.main.MainActivity"
+            android:configChanges="orientation|screenSize"
+            android:theme="@style/AppCompat.NoActionBar">
+            <!--<intent-filter>-->
+            <!--<action android:name="android.intent.action.MAIN" />-->
+
+            <!--<category android:name="android.intent.category.LAUNCHER" />-->
+            <!--</intent-filter>-->
         </activity>
         <activity
             android:name="com.hally.influencerai.main.postDetails.PostDetailsActivity"

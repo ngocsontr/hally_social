@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Rozdoum
+ * Copyright 2018
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -16,7 +16,6 @@
 
 package com.hally.influencerai.main.post.editPost;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.view.Menu;
@@ -25,7 +24,6 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.hally.influencerai.R;
-import com.hally.influencerai.main.main.MainActivity;
 import com.hally.influencerai.main.post.BaseCreatePostActivity;
 import com.hally.influencerai.managers.PostManager;
 import com.hally.influencerai.model.Post;
@@ -65,13 +63,6 @@ public class EditPostActivity extends BaseCreatePostActivity<EditPostView, EditP
             return new EditPostPresenter(this);
         }
         return presenter;
-    }
-
-    @Override
-    public void openMainActivity() {
-        Intent intent = new Intent(EditPostActivity.this, MainActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        startActivity(intent);
     }
 
     private void fillUIFields(Post post) {

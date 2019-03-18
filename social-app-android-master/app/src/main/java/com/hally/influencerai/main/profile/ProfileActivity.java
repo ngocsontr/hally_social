@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Rozdoum
+ * Copyright 2018
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -55,7 +55,6 @@ import com.hally.influencerai.enums.FollowState;
 import com.hally.influencerai.main.base.BaseActivity;
 import com.hally.influencerai.main.editProfile.EditProfileActivity;
 import com.hally.influencerai.main.login.LoginActivity;
-import com.hally.influencerai.main.main.MainActivity;
 import com.hally.influencerai.main.post.createPost.CreatePostActivity;
 import com.hally.influencerai.main.postDetails.PostDetailsActivity;
 import com.hally.influencerai.main.usersList.UsersListActivity;
@@ -132,7 +131,6 @@ public class ProfileActivity extends BaseActivity<ProfileView, ProfilePresenter>
         presenter.checkFollowState(userID);
 
         loadPostsList();
-        supportPostponeEnterTransition();
     }
 
     @Override
@@ -288,12 +286,6 @@ public class ProfileActivity extends BaseActivity<ProfileView, ProfilePresenter>
         });
     }
 
-    private void startMainActivity() {
-        Intent intent = new Intent(ProfileActivity.this, MainActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        startActivity(intent);
-    }
-
     @Override
     public void startEditProfileActivity() {
         Intent intent = new Intent(ProfileActivity.this, EditProfileActivity.class);
@@ -437,10 +429,12 @@ public class ProfileActivity extends BaseActivity<ProfileView, ProfilePresenter>
             case R.id.editProfile:
                 presenter.onEditProfileClick();
                 return true;
+
             case R.id.signOut:
                 LogoutHelper.signOut(mGoogleApiClient, this);
-                startMainActivity();
+                startLoginActivity();
                 return true;
+
             case R.id.createPost:
                 presenter.onCreatePostClick();
 

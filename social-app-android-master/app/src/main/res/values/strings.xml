@@ -1,5 +1,5 @@
 <!--
-  ~  Copyright 2017 Rozdoum
+  ~  Copyright 2017
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License");
   ~ you may not use this file except in compliance with the License.
@@ -148,6 +148,7 @@
 
     <string name="post_image_transition_name" translatable="false">post_image_transition</string>
     <string name="post_author_image_transition_name" translatable="false">post_author_image_transition_name</string>
+    <string name="post_logo_image_transition_name" translatable="false">post_logo_image_transition_name</string>
     <string name="message_new_post_was_created">New post was created</string>
 
     <plurals name="new_posts_counter_format">

@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Rozdoum
+ * Copyright 2018
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -78,6 +78,15 @@ public class BasePresenter<T extends BaseView & MvpView> extends MvpBasePresente
         ProfileStatus profileStatus = profileManager.checkProfile();
         if (profileStatus.equals(ProfileStatus.NOT_AUTHORIZED) || profileStatus.equals(ProfileStatus.NO_PROFILE)) {
             ifViewAttached(BaseView::startLoginActivity);
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    public boolean hasAuthorization() {
+        ProfileStatus profileStatus = profileManager.checkProfile();
+        if (profileStatus.equals(ProfileStatus.NOT_AUTHORIZED) || profileStatus.equals(ProfileStatus.NO_PROFILE)) {
             return false;
         } else {
             return true;

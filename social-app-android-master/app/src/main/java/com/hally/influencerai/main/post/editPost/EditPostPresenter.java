@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Rozdoum
+ * Copyright 2018
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -21,6 +21,7 @@ import android.content.DialogInterface;
 import android.support.annotation.NonNull;
 
 import com.hally.influencerai.R;
+import com.hally.influencerai.main.base.BaseView;
 import com.hally.influencerai.main.post.BaseCreatePostPresenter;
 import com.hally.influencerai.managers.PostManager;
 import com.hally.influencerai.managers.listeners.OnPostChangedListener;
@@ -101,8 +102,8 @@ class EditPostPresenter extends BaseCreatePostPresenter<EditPostView> {
                             view.showWarningDialog(R.string.error_post_was_removed, new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
-                                    view.openMainActivity();
-                                    view.finish();
+                                    ifViewAttached(BaseView::startMainActivity);
+                                    ifViewAttached(BaseView::finish);
                                 }
                             });
                         }
@@ -120,8 +121,8 @@ class EditPostPresenter extends BaseCreatePostPresenter<EditPostView> {
                         view.showWarningDialog(errorText, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                view.openMainActivity();
-                                view.finish();
+                                ifViewAttached(BaseView::startMainActivity);
+                                ifViewAttached(BaseView::finish);
                             }
                         });
                     }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Rozdoum
+ * Copyright 2017
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -22,6 +22,7 @@ import android.net.Uri;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.widget.ImageView;
+
 import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
@@ -31,11 +32,18 @@ import com.google.firebase.storage.StorageReference;
 import com.hally.influencerai.R;
 import com.hally.influencerai.main.interactors.FollowInteractor;
 import com.hally.influencerai.main.interactors.PostInteractor;
-import com.hally.influencerai.managers.listeners.*;
+import com.hally.influencerai.managers.listeners.OnDataChangedListener;
+import com.hally.influencerai.managers.listeners.OnObjectExistListener;
+import com.hally.influencerai.managers.listeners.OnPostChangedListener;
+import com.hally.influencerai.managers.listeners.OnPostCreatedListener;
+import com.hally.influencerai.managers.listeners.OnPostListChangedListener;
+import com.hally.influencerai.managers.listeners.OnTaskCompleteListener;
 import com.hally.influencerai.model.FollowingPost;
 import com.hally.influencerai.model.Like;
 import com.hally.influencerai.model.Post;
-import com.hally.influencerai.utils.*;
+import com.hally.influencerai.utils.GlideRequests;
+import com.hally.influencerai.utils.ImageUtil;
+import com.hally.influencerai.utils.Utils;
 
 /**
  * Created by Kristina on 10/28/16.

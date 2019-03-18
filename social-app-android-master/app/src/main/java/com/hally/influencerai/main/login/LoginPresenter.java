@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Rozdoum
+ * Copyright 2018
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -39,10 +39,6 @@ import com.hally.influencerai.model.Profile;
 import com.hally.influencerai.utils.LogUtil;
 import com.hally.influencerai.utils.PreferencesUtil;
 
-/**
- * Created by Alexey on 03.05.18.
- */
-
 class LoginPresenter extends BasePresenter<LoginView> {
 
     LoginPresenter(Context context) {
@@ -62,6 +58,7 @@ class LoginPresenter extends BasePresenter<LoginView> {
                             PreferencesUtil.setProfileCreated(context, true);
                             ProfileInteractor.getInstance(context.getApplicationContext())
                                     .addRegistrationToken(FirebaseInstanceId.getInstance().getToken(), userId);
+                            view.startMainActivity();
                         }
 
                         view.hideProgress();

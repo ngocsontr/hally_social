@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Rozdoum
+ * Copyright 2017
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -183,6 +183,16 @@ public class ImageUtil {
     public static void loadLocalImage(GlideRequests glideRequests, Uri uri, ImageView imageView,
                                       RequestListener<Drawable> listener) {
         glideRequests.load(uri)
+                .diskCacheStrategy(DiskCacheStrategy.NONE)
+                .skipMemoryCache(true)
+                .fitCenter()
+                .listener(listener)
+                .into(imageView);
+    }
+
+    public static void loadLocalImage(GlideRequests glideRequests, Integer drawable, ImageView imageView,
+                                      RequestListener<Drawable> listener) {
+        glideRequests.load(drawable)
                 .diskCacheStrategy(DiskCacheStrategy.NONE)
                 .skipMemoryCache(true)
                 .fitCenter()

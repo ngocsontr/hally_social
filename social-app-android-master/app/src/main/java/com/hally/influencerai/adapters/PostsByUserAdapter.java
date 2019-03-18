@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Rozdoum
+ * Copyright 2017
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -22,9 +22,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.hally.influencerai.R;
-import com.hally.influencerai.main.base.BaseActivity;
 import com.hally.influencerai.adapters.holders.PostViewHolder;
 import com.hally.influencerai.controllers.LikeController;
+import com.hally.influencerai.main.base.BaseActivity;
 import com.hally.influencerai.managers.PostManager;
 import com.hally.influencerai.managers.listeners.OnDataChangedListener;
 import com.hally.influencerai.model.Post;

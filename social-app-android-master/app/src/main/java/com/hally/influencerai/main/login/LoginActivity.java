@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Rozdoum
+ * Copyright 2018
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -99,7 +99,7 @@ public class LoginActivity extends BaseActivity<LoginView, LoginPresenter> imple
                     // Profile is signed in
                     LogUtil.logDebug(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
                     presenter.checkIsProfileExist(user.getUid());
-                    LoginActivity.this.setResult(RESULT_OK);
+//                    LoginActivity.this.setResult(RESULT_OK);
                 } else {
                     // Profile is signed out
                     LogUtil.logDebug(TAG, "onAuthStateChanged:signed_out");

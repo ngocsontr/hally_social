@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   ~
-  ~ Copyright 2017 Rozdoum
+  ~ Copyright 2017
   ~
   ~    Licensed under the Apache License, Version 2.0 (the "License");
   ~    you may not use this file except in compliance with the License.
@@ -27,13 +27,6 @@
         <item name="android:windowContentTransitions">true</item>
         <item name="android:windowEnterTransition">@transition/exclude_system_panel_animation</item>
         <item name="actionModeBackground">@color/primary</item>
-    </style>
-
-    <style name="AppTheme.NoActionBar">
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
-        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
-        <item name="android:statusBarColor">@android:color/transparent</item>
     </style>
 
 </resources>

@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Rozdoum
+ * Copyright 2017
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -31,10 +31,11 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
-import com.hannesdorfmann.mosby3.mvp.MvpActivity;
 import com.hally.influencerai.Constants;
 import com.hally.influencerai.R;
 import com.hally.influencerai.main.login.LoginActivity;
+import com.hally.influencerai.main.main.MainActivity;
+import com.hannesdorfmann.mosby3.mvp.MvpActivity;
 
 /**
  * Created by alexey on 05.12.16.
@@ -56,7 +57,16 @@ public abstract class BaseActivity<V extends BaseView, P extends BasePresenter<V
     @Override
     public void startLoginActivity() {
         Intent intent = new Intent(this, LoginActivity.class);
-        startActivityForResult(intent, LoginActivity.LOGIN_REQUEST_CODE);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+//        startActivityForResult(intent, LoginActivity.LOGIN_REQUEST_CODE);
+    }
+
+    @Override
+    public void startMainActivity() {
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
     }
 
     @Override
@@ -174,7 +184,7 @@ public abstract class BaseActivity<V extends BaseView, P extends BasePresenter<V
 
     public void attemptToExitIfRoot(@Nullable View anchorView) {
         if (isTaskRoot()) {
-            if (backPressedTime + Constants.General.DOUBLE_CLICK_TO_EXIT_INTERVAL> System.currentTimeMillis()) {
+            if (backPressedTime + Constants.General.DOUBLE_CLICK_TO_EXIT_INTERVAL > System.currentTimeMillis()) {
                 super.onBackPressed();
             } else {
                 if (anchorView != null) {
