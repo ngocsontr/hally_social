@@ -1,4 +1,5 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -7,10 +8,63 @@
     android:padding="@dimen/intrinsic_padding"
     tools:context="com.hally.influencerai.main.editProfile.EditProfileActivity">
 
+    <RelativeLayout
+        android:id="@+id/imageContainer"
+        android:layout_width="@dimen/profile_photo_side"
+        android:layout_height="@dimen/profile_photo_side"
+        android:layout_gravity="center_vertical">
+
+        <ProgressBar
+            android:id="@+id/avatarProgressBar"
+            android:layout_width="@dimen/progress_bar_size"
+            android:layout_height="@dimen/progress_bar_size"
+            android:layout_centerInParent="true"
+            android:visibility="visible" />
+
+
+        <com.hally.influencerai.views.CircularImageView
+            android:id="@+id/imageView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:transitionName="@string/post_author_image_transition_name"
+            app:border="false"
+            app:shadow="false"
+            tools:src="@drawable/ic_stub"
+            tools:targetApi="lollipop" />
+    </RelativeLayout>
+
+
+    <RadioGroup
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/imageContainer"
+        android:layout_marginBottom="30dp"
+        android:layout_toEndOf="@id/imageContainer"
+        android:gravity="center_horizontal"
+        android:orientation="horizontal">
+
+        <RadioButton
+            android:id="@+id/marketer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="20dp"
+            android:text="Marketer" />
+
+        <RadioButton
+            android:id="@+id/influencer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="true"
+            android:text="Influencer" />
+
+    </RadioGroup>
+
+
     <ScrollView
         android:id="@+id/regForm"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_below="@id/imageContainer">
 
         <LinearLayout
             android:id="@+id/email_login_form"
@@ -19,30 +73,20 @@
             android:focusableInTouchMode="true"
             android:orientation="vertical">
 
-            <RelativeLayout
-                android:id="@+id/imageContainer"
-                android:layout_width="@dimen/profile_photo_side"
-                android:layout_height="@dimen/profile_photo_side"
-                android:layout_gravity="center_horizontal">
-
-                <ProgressBar
-                    android:id="@+id/avatarProgressBar"
-                    android:layout_width="@dimen/progress_bar_size"
-                    android:layout_height="@dimen/progress_bar_size"
-                    android:layout_centerInParent="true"
-                    android:visibility="visible" />
-
-                <ImageView
-                    android:id="@+id/imageView"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:visibility="visible" />
-
-            </RelativeLayout>
 
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <EditText
+                    android:id="@+id/emailEditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/prompt_name"
+                    android:imeOptions="actionDone"
+                    android:inputType="text"
+                    android:maxLines="1" />
 
                 <EditText
                     android:id="@+id/nameEditText"
@@ -51,10 +95,11 @@
                     android:hint="@string/prompt_name"
                     android:imeOptions="actionDone"
                     android:inputType="text"
-                    android:maxLines="1"/>
+                    android:maxLines="1" />
 
             </android.support.design.widget.TextInputLayout>
 
         </LinearLayout>
     </ScrollView>
-</LinearLayout>
+
+</RelativeLayout>
