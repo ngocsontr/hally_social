@@ -1,8 +1,6 @@
 
 package com.hally.influencerai.main.splash;
 
-import android.app.Activity;
-import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
@@ -36,14 +34,15 @@ class SplashPresenter extends BasePresenter<SplashView> {
                         ifViewAttached(BaseView::finish);
                     } else {
                         ifViewAttached((SplashView view) -> {
-                            Intent intent = new Intent(context, LoginActivity.class);
-                            ActivityOptions options = ActivityOptions.
-                                    makeSceneTransitionAnimation((Activity) context, new android.util.Pair<>(
-                                            view.getLogoView(),
-                                            context.getString(R.string.post_logo_image_transition_name)));
-                            context.startActivity(intent, options.toBundle());
+//                            Intent intent = new Intent(context, LoginActivity.class);
+//                            ActivityOptions options = ActivityOptions.
+//                                    makeSceneTransitionAnimation((Activity) context, new android.util.Pair<>(
+//                                            view.getLogoView(),
+//                                            context.getString(R.string.post_logo_image_transition_name)));
+//                            context.startActivity(intent, options.toBundle());
+                            context.startActivity(new Intent(context, LoginActivity.class));
                         });
-
+                        ifViewAttached(BaseView::finish);
                     }
                 }
 

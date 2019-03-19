@@ -17,7 +17,6 @@ public class SplashActivity extends BaseActivity<SplashView, SplashPresenter> im
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
         routeToAppropriateScreen();
-        supportPostponeEnterTransition();
     }
 
     @NonNull

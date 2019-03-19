@@ -118,6 +118,7 @@ public class EditProfilePresenter<V extends EditProfileView> extends PickImagePr
     }
 
     protected void onProfileUpdatedSuccessfully() {
+        ifViewAttached(BaseView::startMainActivity);
         ifViewAttached(BaseView::finish);
     }
 
