@@ -11,4 +11,5 @@ public interface SplashView extends BaseView {
 
     View getLogoView();
 
+    View getBackground();
 }

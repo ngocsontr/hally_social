@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="professional_array">
+        <item>News</item>
+        <item>Beauty</item>
+        <item>Comedy</item>
+        <item>Sports</item>
+        <item>Fanpage</item>
+        <item>Celebrity</item>
+        <item>Food &amp; Drink</item>
+        <item>Kid &amp; Family</item>
+        <item>Technology</item>
+        <item>Real Estate</item>
+        <item>Pets &amp; Animals</item>
+        <item>Games &amp; Gadgets</item>
+        <item>Autos &amp; Vehicles</item>
+        <item>Fitness &amp; Health</item>
+        <item>Leisure &amp; Travel</item>
+        <item>Finance &amp; Banking</item>
+        <item>Fashion &amp; Lifestyle</item>
+        <item>Arts &amp; Entertainment</item>
+        <item>Business &amp; Industrial</item>
+    </string-array>
+
+</resources>

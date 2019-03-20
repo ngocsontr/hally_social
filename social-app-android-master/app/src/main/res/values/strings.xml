@@ -16,7 +16,7 @@
   -->
 
 <resources>
-    <string name="app_name">Hally\'s Social</string>
+    <string name="app_name">Influencer AI</string>
     <string name="label_create_post_activity">Create post</string>
     <string name="label_post_detail_activity">Post detail</string>
     <string name="label_image_detail_activity">Image</string>
@@ -67,8 +67,13 @@
     <string name="button_title_continue">Continue</string>
 
     <!-- Strings related to registration and login -->
-    <string name="prompt_email">Email</string>
-    <string name="prompt_name">Name</string>
+    <string name="prompt_influencer">Influencer</string>
+    <string name="prompt_marketer">Marketer</string>
+    <string name="prompt_email">Email address</string>
+    <string name="prompt_name">User name</string>
+    <string name="prompt_location">Location</string>
+    <string name="prompt_description">Description</string>
+    <string name="prompt_professional">Professions</string>
     <string name="prompt_password">Password</string>
     <string name="prompt_conf_password">Confirm password</string>
     <string name="action_create_profile">Continue</string>

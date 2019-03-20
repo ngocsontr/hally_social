@@ -9,7 +9,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scaleType="centerCrop"
-        android:src="@drawable/login_bg_gradient" />
+        android:src="@drawable/login_bg_gradient"
+        android:transitionName="@string/post_image_transition_name" />
 
     <LinearLayout
         android:id="@+id/buttonsContainer"
@@ -26,7 +27,7 @@
             android:layout_height="150dp"
             android:layout_marginBottom="@dimen/login_screen_button_margin"
             android:scaleType="fitCenter"
-            android:src="@drawable/influencer_logo"
+            android:src="@mipmap/ic_launcher"
             android:transitionName="@string/post_logo_image_transition_name" />
 
         <TextView

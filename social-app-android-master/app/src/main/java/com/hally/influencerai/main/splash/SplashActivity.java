@@ -38,4 +38,9 @@ public class SplashActivity extends BaseActivity<SplashView, SplashPresenter> im
     public View getLogoView() {
         return findViewById(R.id.app_logo);
     }
+
+    @Override
+    public View getBackground() {
+        return findViewById(R.id.app_background);
+    }
 }

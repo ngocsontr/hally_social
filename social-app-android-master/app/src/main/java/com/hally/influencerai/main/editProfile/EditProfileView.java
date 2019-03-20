@@ -30,4 +30,6 @@ public interface EditProfileView extends PickImageView {
     String getNameText();
 
     void setNameError(String string);
+
+    void createProfessionalList();
 }

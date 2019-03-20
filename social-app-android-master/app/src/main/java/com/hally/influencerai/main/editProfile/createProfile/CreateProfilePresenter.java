@@ -54,6 +54,16 @@ class CreateProfilePresenter extends EditProfilePresenter<CreateProfileView> {
         });
     }
 
+    public void initProfessionalList() {
+        ifViewAttached(new ViewAction<CreateProfileView>() {
+            @Override
+            public void run(@NonNull CreateProfileView view) {
+                view.createProfessionalList();
+            }
+        });
+    }
+
+
     @Override
     protected void onProfileUpdatedSuccessfully() {
         super.onProfileUpdatedSuccessfully();

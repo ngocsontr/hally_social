@@ -122,4 +122,12 @@ public class EditProfilePresenter<V extends EditProfileView> extends PickImagePr
         ifViewAttached(BaseView::finish);
     }
 
+    public void initProfessionalList() {
+        ifViewAttached(new ViewAction<V>() {
+            @Override
+            public void run(@NonNull V view) {
+                view.createProfessionalList();
+            }
+        });
+    }
 }

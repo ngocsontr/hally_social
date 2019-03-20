@@ -38,6 +38,9 @@ import com.hally.influencerai.R;
 import com.hally.influencerai.main.pickImageBase.PickImageActivity;
 import com.hally.influencerai.utils.GlideApp;
 import com.hally.influencerai.utils.ImageUtil;
+import com.nex3z.togglebuttongroup.MultiSelectToggleGroup;
+import com.nex3z.togglebuttongroup.SingleSelectToggleGroup;
+import com.nex3z.togglebuttongroup.button.LabelToggle;
 
 public class EditProfileActivity<V extends EditProfileView, P extends EditProfilePresenter<V>> extends PickImageActivity<V, P> implements EditProfileView {
     private static final String TAG = EditProfileActivity.class.getSimpleName();
@@ -46,6 +49,8 @@ public class EditProfileActivity<V extends EditProfileView, P extends EditProfil
     private EditText nameEditText;
     protected ImageView imageView;
     private ProgressBar avatarProgressBar;
+    private SingleSelectToggleGroup userTypeChoices;
+    private MultiSelectToggleGroup groupProfessional;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +63,8 @@ public class EditProfileActivity<V extends EditProfileView, P extends EditProfil
         avatarProgressBar = findViewById(R.id.avatarProgressBar);
         imageView = findViewById(R.id.imageView);
         nameEditText = findViewById(R.id.nameEditText);
+        userTypeChoices = findViewById(R.id.user_type_choices);
+        groupProfessional = findViewById(R.id.group_professional);
 
         imageView.setOnClickListener(this::onSelectImageClick);
 
@@ -75,6 +82,7 @@ public class EditProfileActivity<V extends EditProfileView, P extends EditProfil
 
     protected void initContent() {
         presenter.loadProfile();
+        presenter.initProfessionalList();
     }
 
     @Override
@@ -131,6 +139,17 @@ public class EditProfileActivity<V extends EditProfileView, P extends EditProfil
     public void setNameError(@Nullable String string) {
         nameEditText.setError(string);
         nameEditText.requestFocus();
+    }
+
+    @Override
+    public void createProfessionalList() {
+        groupProfessional.removeAllViews();
+        String[] proList = getResources().getStringArray(R.array.professional_array);
+        for (String category : proList) {
+            LabelToggle toggle = new LabelToggle(this);
+            toggle.setText(category);
+            groupProfessional.addView(toggle);
+        }
     }
 
     @Override

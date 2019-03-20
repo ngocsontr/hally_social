@@ -31,12 +31,16 @@ public class CreateProfileActivity extends EditProfileActivity<CreateProfileView
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(false);
+        }
     }
 
     @Override
     protected void initContent() {
         String largeAvatarURL = getIntent().getStringExtra(LARGE_IMAGE_URL_EXTRA_KEY);
         presenter.buildProfile(largeAvatarURL);
+        presenter.initProfessionalList();
     }
 
     @NonNull
