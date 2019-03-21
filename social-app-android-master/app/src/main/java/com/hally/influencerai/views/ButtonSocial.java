@@ -80,17 +80,16 @@ public class ButtonSocial extends AppCompatButton {
         setStyle(context, colorNormal);
 
         // Don't add padding when text isn't present
-        if (attrs.getAttributeValue("http://schemas.android.com/apk/res/android", "text") != null) {
-            mIconPadding = (int) Utils.convertDpToPixel(20, context);
-        }
+        String text = attrs.getAttributeValue("http://schemas.android.com/apk/res/android", "text");
+        mIconPadding = (int) Utils.convertDpToPixel(text != null ? 20 : 0, context);
 
         textColor = array.getColor(R.styleable.SocialButton_android_textColor, Color.WHITE);
-        mIconPadding = array.getDimensionPixelSize(R.styleable.SocialButton_iconPadding, (int) Utils.convertDpToPixel(20, context));
-        mIconCenterAligned = array.getBoolean(R.styleable.SocialButton_iconCenterAligned, true);
-        mIconSize = array.getDimensionPixelSize(R.styleable.SocialButton_iconSize, (int) Utils.convertDpToPixel(20, context));
-        mRoundedCorner = array.getBoolean(R.styleable.SocialButton_roundedCorner, false);
-        mRoundedCornerRadius = array.getDimensionPixelSize(R.styleable.SocialButton_roundedCornerRadius, (int) Utils.convertDpToPixel(40, context));
-        mTransparentBackground = array.getBoolean(R.styleable.SocialButton_transparentBackground, false);
+        mIconPadding = array.getDimensionPixelSize(R.styleable.SocialButton_iconPadding, mIconPadding);
+        mIconCenterAligned = array.getBoolean(R.styleable.SocialButton_iconCenterAligned, mIconCenterAligned);
+        mIconSize = array.getDimensionPixelSize(R.styleable.SocialButton_iconSize, mIconSize);
+        mRoundedCorner = array.getBoolean(R.styleable.SocialButton_roundedCorner, mRoundedCorner);
+        mRoundedCornerRadius = array.getDimensionPixelSize(R.styleable.SocialButton_roundedCornerRadius, mRoundedCornerRadius);
+        mTransparentBackground = array.getBoolean(R.styleable.SocialButton_transparentBackground, mTransparentBackground);
         array.recycle();
 
         if (mIcon != null) {

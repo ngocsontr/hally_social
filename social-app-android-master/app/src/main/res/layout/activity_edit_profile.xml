@@ -76,6 +76,65 @@
             android:orientation="vertical">
 
             <android.support.v7.widget.CardView
+                android:id="@+id/social_card_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                card_view:cardBackgroundColor="@android:color/white"
+                card_view:cardCornerRadius="5dp"
+                card_view:cardElevation="@dimen/post_card_elevation"
+                card_view:cardUseCompatPadding="true">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/intrinsic_padding"
+                    android:text="@string/prompt_socical_infor" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/huge_intrinsic_padding"
+                    android:focusableInTouchMode="true"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:padding="@dimen/intrinsic_padding">
+
+                    <com.hally.influencerai.views.ButtonSocial
+                        android:id="@+id/facebookSignInButton"
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+                        app:iconCenterAligned="true"
+                        app:social="facebook" />
+
+                    <com.hally.influencerai.views.ButtonSocial
+                        android:id="@+id/youtubeSignInButton"
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+                        android:layout_marginStart="@dimen/intrinsic_padding"
+                        app:iconCenterAligned="true"
+                        app:social="youtube" />
+
+                    <com.hally.influencerai.views.ButtonSocial
+                        android:id="@+id/twitterSignInButton"
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+                        android:layout_marginStart="@dimen/intrinsic_padding"
+                        app:iconCenterAligned="true"
+                        app:social="twitter" />
+
+                    <com.hally.influencerai.views.ButtonSocial
+                        android:id="@+id/instagramSignInButton"
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+                        android:layout_marginStart="@dimen/intrinsic_padding"
+                        app:iconCenterAligned="true"
+                        app:social="instagram" />
+
+                </LinearLayout>
+
+            </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.CardView
                 android:id="@+id/biology_card_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -91,6 +150,12 @@
                     android:focusableInTouchMode="true"
                     android:orientation="vertical"
                     android:padding="@dimen/intrinsic_padding">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/large_intrinsic_padding"
+                        android:text="@string/prompt_profile_infor" />
 
                     <com.rengwuxian.materialedittext.MaterialEditText
                         android:id="@+id/emailEditText"
@@ -158,57 +223,16 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/large_intrinsic_padding"
                         android:text="@string/prompt_professional" />
 
                     <com.nex3z.togglebuttongroup.MultiSelectToggleGroup
                         android:id="@+id/group_professional"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="16dp"
                         app:tbgChildSpacing="20dp"
                         app:tbgFlow="true"
-                        app:tbgRowSpacing="8dp">
-
-                        <com.nex3z.togglebuttongroup.button.LabelToggle
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Artist" />
-
-                        <com.nex3z.togglebuttongroup.button.LabelToggle
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Prmer" />
-
-                        <com.nex3z.togglebuttongroup.button.LabelToggle
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Programmer" />
-
-                        <com.nex3z.togglebuttongroup.button.LabelToggle
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Programmer wshojwr  w1" />
-
-                        <com.nex3z.togglebuttongroup.button.LabelToggle
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Programmer" />
-
-                        <com.nex3z.togglebuttongroup.button.LabelToggle
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Technology" />
-
-                        <com.nex3z.togglebuttongroup.button.LabelToggle
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Facebook" />
-
-                        <com.nex3z.togglebuttongroup.button.LabelToggle
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="31231231232124124P" />
-                    </com.nex3z.togglebuttongroup.MultiSelectToggleGroup>
+                        app:tbgRowSpacing="8dp" />
 
                 </LinearLayout>
 

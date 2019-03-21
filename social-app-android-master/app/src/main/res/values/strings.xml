@@ -74,6 +74,8 @@
     <string name="prompt_location">Location</string>
     <string name="prompt_description">Description</string>
     <string name="prompt_professional">Professions</string>
+    <string name="prompt_profile_infor">Profile information</string>
+    <string name="prompt_socical_infor">Social connecting</string>
     <string name="prompt_password">Password</string>
     <string name="prompt_conf_password">Confirm password</string>
     <string name="action_create_profile">Continue</string>

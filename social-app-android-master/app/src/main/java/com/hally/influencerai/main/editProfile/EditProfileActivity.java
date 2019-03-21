@@ -38,6 +38,7 @@ import com.hally.influencerai.R;
 import com.hally.influencerai.main.pickImageBase.PickImageActivity;
 import com.hally.influencerai.utils.GlideApp;
 import com.hally.influencerai.utils.ImageUtil;
+import com.hally.influencerai.utils.LogUtil;
 import com.nex3z.togglebuttongroup.MultiSelectToggleGroup;
 import com.nex3z.togglebuttongroup.SingleSelectToggleGroup;
 import com.nex3z.togglebuttongroup.button.LabelToggle;
@@ -67,6 +68,18 @@ public class EditProfileActivity<V extends EditProfileView, P extends EditProfil
         groupProfessional = findViewById(R.id.group_professional);
 
         imageView.setOnClickListener(this::onSelectImageClick);
+        userTypeChoices.setOnCheckedChangeListener(new SingleSelectToggleGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(SingleSelectToggleGroup group, int checkedId) {
+                LogUtil.logInfo(TAG, "" + group + checkedId);
+            }
+        });
+        groupProfessional.setOnCheckedChangeListener(new MultiSelectToggleGroup.OnCheckedStateChangeListener() {
+            @Override
+            public void onCheckedStateChanged(MultiSelectToggleGroup group, int checkedId, boolean isChecked) {
+                LogUtil.logInfo(TAG, "" + group + group.getCheckedIds() + isChecked);
+            }
+        });
 
         initContent();
     }
