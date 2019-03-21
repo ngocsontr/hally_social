@@ -38,6 +38,7 @@ import com.hally.influencerai.managers.listeners.OnObjectExistListener;
 import com.hally.influencerai.model.Profile;
 import com.hally.influencerai.utils.LogUtil;
 import com.hally.influencerai.utils.PreferencesUtil;
+import com.hally.influencerai.utils.Utils;
 
 class LoginPresenter extends BasePresenter<LoginView> {
 
@@ -144,5 +145,17 @@ class LoginPresenter extends BasePresenter<LoginView> {
                 view.hideProgress();
             }
         });
+    }
+
+    public void onViewBottomClick(int id) {
+        String url = "http://www.google.com";
+        switch (id) {
+            case R.id.bottomPrivacy:
+            case R.id.bottomTermNCon:
+            case R.id.bottomContactUs:
+                // TODO: 3/21/2019 add reflect url after
+
+        }
+        Utils.openBrower(context, url);
     }
 }

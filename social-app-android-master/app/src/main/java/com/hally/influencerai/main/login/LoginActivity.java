@@ -70,13 +70,26 @@ public class LoginActivity extends BaseActivity<LoginView, LoginPresenter> imple
         initGoogleSignIn();
         initFirebaseAuth();
         initFacebookSignIn();
+        initClickView();
+    }
+
+    private void initClickView() {
+        View.OnClickListener onClickListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                presenter.onViewBottomClick(view.getId());
+            }
+        };
+        findViewById(R.id.bottomPrivacy).setOnClickListener(onClickListener);
+        findViewById(R.id.bottomTermNCon).setOnClickListener(onClickListener);
+        findViewById(R.id.bottomContactUs).setOnClickListener(onClickListener);
     }
 
     private void initGoogleSignIn() {
         mGoogleApiClient = GoogleApiHelper.createGoogleApiClient(this);
         mAuth = FirebaseAuth.getInstance();
 
-        findViewById(R.id.googleSignInButton).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.youtubeSignInButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 presenter.onGoogleSignInClick();

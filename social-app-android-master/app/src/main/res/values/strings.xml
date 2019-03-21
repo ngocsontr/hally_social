@@ -92,6 +92,7 @@
     <string name="button_login_with_instagram">Login with Instagram</string>
     <string name="button_login_with_facebook">Login with Facebook</string>
     <string name="button_login_with_google">Login with Google</string>
+    <string name="button_login_with_youtube">Login with Youtube</string>
     <string name="login_privacy"><u>Privacy</u></string>
     <string name="login_term_n_condition"><u>Term and Conditions</u></string>
     <string name="login_contact_us"><u>Contact us</u></string>

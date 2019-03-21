@@ -37,116 +37,37 @@
             android:layout_marginBottom="@dimen/login_screen_title_margin"
             android:text="@string/app_name" />
 
-        <RelativeLayout
-            android:id="@+id/instagramSignInButton"
-            android:layout_width="@dimen/base_login_button_width"
-            android:layout_height="@dimen/base_login_button_height"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="@dimen/login_screen_button_margin"
-            android:background="@drawable/facebook_button_bg"
-            android:elevation="4dp"
-            android:visibility="gone">
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
-                android:layout_centerVertical="true"
-                android:paddingLeft="@dimen/large_intrinsic_padding"
-                android:paddingRight="@dimen/large_intrinsic_padding"
-                app:srcCompat="@drawable/ic_bt_login_twitter" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:text="@string/button_login_with_twitter"
-                android:textColor="@drawable/login_button_text_selector" />
-
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:id="@+id/twitterSignInButton"
-            android:layout_width="@dimen/base_login_button_width"
-            android:layout_height="@dimen/base_login_button_height"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="@dimen/login_screen_button_margin"
-            android:background="@drawable/google_button_bg"
-            android:elevation="4dp"
-            android:visibility="gone">
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
-                android:layout_centerVertical="true"
-                android:paddingLeft="@dimen/large_intrinsic_padding"
-                android:paddingRight="@dimen/large_intrinsic_padding"
-                app:srcCompat="@drawable/ic_bt_login_instagram" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:text="@string/button_login_with_instagram"
-                android:textColor="@drawable/login_button_text_selector" />
-
-        </RelativeLayout>
-
-
-        <RelativeLayout
+        <com.hally.influencerai.views.ButtonSocial
             android:id="@+id/facebookSignInButton"
             android:layout_width="@dimen/base_login_button_width"
-            android:layout_height="@dimen/base_login_button_height"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="@dimen/login_screen_button_margin"
-            android:background="@drawable/facebook_button_bg"
-            android:elevation="4dp">
+            android:layout_height="wrap_content"
+            android:text="@string/button_login_with_facebook"
+            app:social="facebook" />
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
-                android:layout_centerVertical="true"
-                android:paddingLeft="@dimen/large_intrinsic_padding"
-                android:paddingRight="@dimen/large_intrinsic_padding"
-                app:srcCompat="@drawable/ic_bt_login_facebook" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:text="@string/button_login_with_facebook"
-                android:textColor="@drawable/login_button_text_selector" />
-
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:id="@+id/googleSignInButton"
+        <com.hally.influencerai.views.ButtonSocial
+            android:id="@+id/youtubeSignInButton"
             android:layout_width="@dimen/base_login_button_width"
-            android:layout_height="@dimen/base_login_button_height"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="@dimen/login_screen_button_margin"
-            android:background="@drawable/google_button_bg"
-            android:elevation="4dp">
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/intrinsic_padding"
+            android:text="@string/button_login_with_youtube"
+            app:social="youtube" />
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
-                android:layout_centerVertical="true"
-                android:paddingLeft="@dimen/large_intrinsic_padding"
-                android:paddingRight="@dimen/large_intrinsic_padding"
-                app:srcCompat="@drawable/ic_bt_login_google" />
+        <com.hally.influencerai.views.ButtonSocial
+            android:id="@+id/twitterSignInButton"
+            android:layout_width="@dimen/base_login_button_width"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/intrinsic_padding"
+            android:text="@string/button_login_with_twitter"
+            app:social="twitter" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:text="@string/button_login_with_google"
-                android:textColor="@drawable/login_button_text_selector" />
-
-        </RelativeLayout>
+        <com.hally.influencerai.views.ButtonSocial
+            android:id="@+id/instagramSignInButton"
+            android:layout_width="@dimen/base_login_button_width"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/intrinsic_padding"
+            android:text="@string/button_login_with_instagram"
+            app:social="instagram" />
 
     </LinearLayout>
 
@@ -160,6 +81,7 @@
         android:orientation="horizontal">
 
         <TextView
+            android:id="@+id/bottomPrivacy"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginRight="20dp"
@@ -167,6 +89,7 @@
             android:textColor="@drawable/login_button_text_selector" />
 
         <TextView
+            android:id="@+id/bottomTermNCon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginRight="20dp"
@@ -174,6 +97,7 @@
             android:textColor="@drawable/login_button_text_selector" />
 
         <TextView
+            android:id="@+id/bottomContactUs"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/login_contact_us"

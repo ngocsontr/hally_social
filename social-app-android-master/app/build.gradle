@@ -1,5 +1,5 @@
 /*
- *  Copyright 2017 
+ *  Copyright 2019
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -76,7 +76,7 @@ dependencies {
 
     // Social
     implementation 'com.google.android.gms:play-services-auth:16.0.1'
-    implementation 'com.facebook.android:facebook-android-sdk:[4,5)'
+    implementation 'com.facebook.android:facebook-android-sdk:4.41.0'
 
     // Support custom view
     annotationProcessor 'com.github.bumptech.glide:compiler:4.8.0'
