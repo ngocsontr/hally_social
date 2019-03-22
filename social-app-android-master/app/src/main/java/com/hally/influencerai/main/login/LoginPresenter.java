@@ -36,6 +36,7 @@ import com.hally.influencerai.main.interactors.ProfileInteractor;
 import com.hally.influencerai.managers.ProfileManager;
 import com.hally.influencerai.managers.listeners.OnObjectExistListener;
 import com.hally.influencerai.model.Profile;
+import com.hally.influencerai.model.SocialUser;
 import com.hally.influencerai.utils.LogUtil;
 import com.hally.influencerai.utils.PreferencesUtil;
 import com.hally.influencerai.utils.Utils;
@@ -82,6 +83,12 @@ class LoginPresenter extends BasePresenter<LoginView> {
         }
     }
 
+    public void onInstagramSignInClick() {
+        if (checkInternetConnection()) {
+            ifViewAttached(LoginView::signInWithInstagram);
+        }
+    }
+
     public void handleGoogleSignInResult(GoogleSignInResult result) {
         ifViewAttached(new ViewAction<LoginView>() {
             @Override
@@ -118,6 +125,16 @@ class LoginPresenter extends BasePresenter<LoginView> {
             }
         });
     }
+
+    public void handleSocialSignInResult(SocialUser user) {
+        ifViewAttached(new ViewAction<LoginView>() {
+            @Override
+            public void run(@NonNull LoginView view) {
+                view.startCreateProfileActivity(user);
+            }
+        });
+    }
+
 
     private String buildGooglePhotoUrl(Uri photoUrl) {
         return String.format(context.getString(R.string.google_large_image_url_pattern),
@@ -158,4 +175,5 @@ class LoginPresenter extends BasePresenter<LoginView> {
         }
         Utils.openBrower(context, url);
     }
+
 }

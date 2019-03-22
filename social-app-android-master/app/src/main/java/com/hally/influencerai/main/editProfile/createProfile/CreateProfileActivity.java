@@ -38,8 +38,7 @@ public class CreateProfileActivity extends EditProfileActivity<CreateProfileView
 
     @Override
     protected void initContent() {
-        String largeAvatarURL = getIntent().getStringExtra(LARGE_IMAGE_URL_EXTRA_KEY);
-        presenter.buildProfile(largeAvatarURL);
+        presenter.buildProfile(socialUser);
         presenter.initProfessionalList();
     }
 
@@ -54,7 +53,7 @@ public class CreateProfileActivity extends EditProfileActivity<CreateProfileView
 
     @Override
     public void setDefaultProfilePhoto() {
-        imageView.setImageResource(R.drawable.ic_stub);
+        avatarImageView.setImageResource(R.drawable.ic_stub);
     }
 
     @Override

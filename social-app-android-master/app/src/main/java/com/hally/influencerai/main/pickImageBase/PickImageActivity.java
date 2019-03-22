@@ -49,7 +49,7 @@ public abstract class PickImageActivity<V extends PickImageView, P extends PickI
 
     protected abstract ProgressBar getProgressView();
 
-    protected abstract ImageView getImageView();
+    protected abstract ImageView getAvatarImageView();
 
     protected abstract void onImagePikedAction();
 
@@ -87,7 +87,7 @@ public abstract class PickImageActivity<V extends PickImageView, P extends PickI
         }
 
         this.imageUri = imageUri;
-        ImageUtil.loadLocalImage(GlideApp.with(this), imageUri, getImageView(), new RequestListener<Drawable>() {
+        ImageUtil.loadLocalImage(GlideApp.with(this), imageUri, getAvatarImageView(), new RequestListener<Drawable>() {
             @Override
             public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
                 return false;

@@ -46,6 +46,7 @@
         <activity
             android:name="com.hally.influencerai.main.splash.SplashActivity"
             android:configChanges="orientation|screenSize"
+            android:screenOrientation="portrait"
             android:theme="@style/AppCompat.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -57,13 +58,7 @@
         <activity
             android:name="com.hally.influencerai.main.main.MainActivity"
             android:configChanges="orientation|screenSize"
-            android:theme="@style/AppCompat.NoActionBar">
-            <!--<intent-filter>-->
-            <!--<action android:name="android.intent.action.MAIN" />-->
-
-            <!--<category android:name="android.intent.category.LAUNCHER" />-->
-            <!--</intent-filter>-->
-        </activity>
+            android:theme="@style/AppCompat.NoActionBar" />
         <activity
             android:name="com.hally.influencerai.main.postDetails.PostDetailsActivity"
             android:configChanges="orientation|screenSize"
@@ -80,6 +75,7 @@
         <activity
             android:name="com.hally.influencerai.main.login.LoginActivity"
             android:label="@string/title_activity_login"
+            android:screenOrientation="portrait"
             android:theme="@style/AppCompat.NoActionBar" />
         <activity
             android:name="com.hally.influencerai.main.editProfile.createProfile.CreateProfileActivity"

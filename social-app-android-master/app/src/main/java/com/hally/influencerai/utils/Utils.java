@@ -14,7 +14,6 @@ import android.util.DisplayMetrics;
 import android.view.Display;
 import android.view.WindowManager;
 
-
 public class Utils {
 
     public static int getDisplayWidth(Context context) {

@@ -18,6 +18,7 @@ package com.hally.influencerai.main.login;
 
 import com.google.firebase.auth.AuthCredential;
 import com.hally.influencerai.main.base.BaseView;
+import com.hally.influencerai.model.SocialUser;
 
 /**
  * Created by Alexey on 03.05.18.
@@ -30,7 +31,11 @@ public interface LoginView extends BaseView {
 
     void signInWithFacebook();
 
+    void signInWithInstagram();
+
     void setProfilePhotoUrl(String url);
 
     void firebaseAuthWithCredentials(AuthCredential credential);
+
+    void startCreateProfileActivity(SocialUser user);
 }

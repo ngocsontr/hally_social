@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~  Copyright 2017
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License");
@@ -27,6 +26,7 @@
     <string name="instagram_client_id">61998f63d5fa49eb81ce700d52b27ff8</string>
     <string name="instagram_callback_url">https://instagram.com/</string>
     <string name="instagram_base_url">https://api.instagram.com/</string>
+    <string name="instagram_client_secret">7df5834abce54baca64f3b87809e48c5</string>
 
     <!--avatar url pattern-->
     <string name="facebook_large_image_url_pattern">https://graph.facebook.com/%1$s/picture?type=large</string>

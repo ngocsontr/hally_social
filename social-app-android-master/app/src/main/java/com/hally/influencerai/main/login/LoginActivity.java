@@ -21,12 +21,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.view.View;
 
-import com.facebook.CallbackManager;
-import com.facebook.FacebookCallback;
-import com.facebook.FacebookException;
-import com.facebook.FacebookSdk;
-import com.facebook.login.LoginManager;
-import com.facebook.login.LoginResult;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
@@ -38,13 +32,17 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.hally.influencerai.R;
+import com.hally.influencerai.helper.facebookSignIn.FacebookHelper;
+import com.hally.influencerai.helper.facebookSignIn.FacebookResponse;
+import com.hally.influencerai.helper.instagramSignIn.InstagramHelper;
+import com.hally.influencerai.helper.instagramSignIn.InstagramResponse;
 import com.hally.influencerai.main.base.BaseActivity;
+import com.hally.influencerai.main.editProfile.EditProfileActivity;
 import com.hally.influencerai.main.editProfile.createProfile.CreateProfileActivity;
+import com.hally.influencerai.model.SocialUser;
 import com.hally.influencerai.utils.GoogleApiHelper;
 import com.hally.influencerai.utils.LogUtil;
 import com.hally.influencerai.utils.LogoutHelper;
-
-import java.util.Arrays;
 
 public class LoginActivity extends BaseActivity<LoginView, LoginPresenter> implements LoginView, GoogleApiClient.OnConnectionFailedListener {
     private static final String TAG = LoginActivity.class.getSimpleName();
@@ -54,14 +52,14 @@ public class LoginActivity extends BaseActivity<LoginView, LoginPresenter> imple
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
     private GoogleApiClient mGoogleApiClient;
+    private InstagramHelper mInstagramHelper;
+    private FacebookHelper mFacebookHelper;
 
-    private CallbackManager mCallbackManager;
     private String profilePhotoUrlLarge;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        FacebookSdk.sdkInitialize(getApplicationContext());
         setContentView(R.layout.activity_login);
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
@@ -70,19 +68,8 @@ public class LoginActivity extends BaseActivity<LoginView, LoginPresenter> imple
         initGoogleSignIn();
         initFirebaseAuth();
         initFacebookSignIn();
+        initInstagramSignIn();
         initClickView();
-    }
-
-    private void initClickView() {
-        View.OnClickListener onClickListener = new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                presenter.onViewBottomClick(view.getId());
-            }
-        };
-        findViewById(R.id.bottomPrivacy).setOnClickListener(onClickListener);
-        findViewById(R.id.bottomTermNCon).setOnClickListener(onClickListener);
-        findViewById(R.id.bottomContactUs).setOnClickListener(onClickListener);
     }
 
     private void initGoogleSignIn() {
@@ -122,25 +109,31 @@ public class LoginActivity extends BaseActivity<LoginView, LoginPresenter> imple
     }
 
     private void initFacebookSignIn() {
-        mCallbackManager = CallbackManager.Factory.create();
-        LoginManager.getInstance().registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
-            @Override
-            public void onSuccess(LoginResult loginResult) {
-                LogUtil.logDebug(TAG, "facebook:onSuccess:" + loginResult);
-                presenter.handleFacebookSignInResult(loginResult);
-            }
+        mFacebookHelper = new FacebookHelper("id,name,email,gender,birthday,picture,cover", this,
+                new FacebookResponse() {
+                    @Override
+                    public void onFacebookSignInFail(Exception error) {
+                        LogUtil.logError(TAG, "facebook signIn:onError", error);
+                        showSnackBar(error.getMessage());
+                    }
 
-            @Override
-            public void onCancel() {
-                LogUtil.logDebug(TAG, "facebook:onCancel");
-            }
+                    @Override
+                    public void onFacebookSignInSuccess() {
 
-            @Override
-            public void onError(FacebookException error) {
-                LogUtil.logError(TAG, "faceboosignInWithCredentialk:onError", error);
-                showSnackBar(error.getMessage());
-            }
-        });
+                    }
+
+                    @Override
+                    public void onFacebookProfileReceived(SocialUser facebookUser) {
+                        LogUtil.logDebug(TAG, "Facebook:onSuccess: " + facebookUser);
+                        presenter.handleSocialSignInResult(facebookUser);
+                    }
+
+                    @Override
+                    public void onFacebookSignOut() {
+
+                    }
+                }
+        );
 
         findViewById(R.id.facebookSignInButton).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -148,6 +141,45 @@ public class LoginActivity extends BaseActivity<LoginView, LoginPresenter> imple
                 presenter.onFacebookSignInClick();
             }
         });
+    }
+
+    private void initInstagramSignIn() {
+        //instagram initializer
+        mInstagramHelper = new InstagramHelper(
+                getResources().getString(R.string.instagram_client_id),
+                getResources().getString(R.string.instagram_client_secret),
+                getResources().getString(R.string.instagram_callback_url), this,
+                new InstagramResponse() {
+                    @Override
+                    public void onInstagramSignInSuccess(SocialUser instagramUser) {
+                        LogUtil.logDebug(TAG, "Instagram:onSuccess: " + instagramUser);
+                        presenter.handleSocialSignInResult(instagramUser);
+                    }
+
+                    @Override
+                    public void onInstagramSignInFail(String error) {
+                        LogUtil.logError(TAG, "onInstagramSignInFail:onError " + error);
+                        showSnackBar(error);
+                    }
+                });
+        findViewById(R.id.instagramSignInButton).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                presenter.onInstagramSignInClick();
+            }
+        });
+    }
+
+    private void initClickView() {
+        View.OnClickListener onClickListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                presenter.onViewBottomClick(view.getId());
+            }
+        };
+        findViewById(R.id.bottomPrivacy).setOnClickListener(onClickListener);
+        findViewById(R.id.bottomTermNCon).setOnClickListener(onClickListener);
+        findViewById(R.id.bottomContactUs).setOnClickListener(onClickListener);
     }
 
     @Override
@@ -185,8 +217,8 @@ public class LoginActivity extends BaseActivity<LoginView, LoginPresenter> imple
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        mFacebookHelper.onActivityResult(requestCode, resultCode, data);
 
-        mCallbackManager.onActivityResult(requestCode, resultCode, data);
         // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
         if (requestCode == SIGN_IN_GOOGLE) {
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
@@ -198,6 +230,13 @@ public class LoginActivity extends BaseActivity<LoginView, LoginPresenter> imple
     public void startCreateProfileActivity() {
         Intent intent = new Intent(LoginActivity.this, CreateProfileActivity.class);
         intent.putExtra(CreateProfileActivity.LARGE_IMAGE_URL_EXTRA_KEY, profilePhotoUrlLarge);
+        startActivity(intent);
+    }
+
+    @Override
+    public void startCreateProfileActivity(SocialUser user) {
+        Intent intent = new Intent(LoginActivity.this, CreateProfileActivity.class);
+        intent.putExtra(EditProfileActivity.SOCIAL_USER_EXTRA_KEY, user);
         startActivity(intent);
     }
 
@@ -241,7 +280,12 @@ public class LoginActivity extends BaseActivity<LoginView, LoginPresenter> imple
 
     @Override
     public void signInWithFacebook() {
-        LoginManager.getInstance().logInWithReadPermissions(LoginActivity.this, Arrays.asList("email", "public_profile"));
+        mFacebookHelper.performSignIn(this);
+    }
+
+    @Override
+    public void signInWithInstagram() {
+        mInstagramHelper.performSignIn();
     }
 }
 

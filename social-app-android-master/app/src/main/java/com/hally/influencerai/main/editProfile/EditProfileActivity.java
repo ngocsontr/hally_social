@@ -36,6 +36,7 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.hally.influencerai.R;
 import com.hally.influencerai.main.pickImageBase.PickImageActivity;
+import com.hally.influencerai.model.SocialUser;
 import com.hally.influencerai.utils.GlideApp;
 import com.hally.influencerai.utils.ImageUtil;
 import com.hally.influencerai.utils.LogUtil;
@@ -46,9 +47,15 @@ import com.nex3z.togglebuttongroup.button.LabelToggle;
 public class EditProfileActivity<V extends EditProfileView, P extends EditProfilePresenter<V>> extends PickImageActivity<V, P> implements EditProfileView {
     private static final String TAG = EditProfileActivity.class.getSimpleName();
 
+    public static final String SOCIAL_USER_EXTRA_KEY = "SOCIAL_USER_EXTRA_KEY";
+
+    protected SocialUser socialUser;
     // UI references.
+    private EditText emailEditText;
     private EditText nameEditText;
-    protected ImageView imageView;
+    private EditText locationEditText;
+    private EditText desEditText;
+    protected ImageView avatarImageView;
     private ProgressBar avatarProgressBar;
     private SingleSelectToggleGroup userTypeChoices;
     private MultiSelectToggleGroup groupProfessional;
@@ -60,14 +67,18 @@ public class EditProfileActivity<V extends EditProfileView, P extends EditProfil
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
+        socialUser = getIntent().getParcelableExtra(SOCIAL_USER_EXTRA_KEY);
 
         avatarProgressBar = findViewById(R.id.avatarProgressBar);
-        imageView = findViewById(R.id.imageView);
+        avatarImageView = findViewById(R.id.imageView);
+        emailEditText = findViewById(R.id.emailEditText);
         nameEditText = findViewById(R.id.nameEditText);
+        locationEditText = findViewById(R.id.locationEditText);
+        desEditText = findViewById(R.id.descriptionEditText);
         userTypeChoices = findViewById(R.id.user_type_choices);
         groupProfessional = findViewById(R.id.group_professional);
 
-        imageView.setOnClickListener(this::onSelectImageClick);
+        avatarImageView.setOnClickListener(this::onSelectImageClick);
         userTypeChoices.setOnCheckedChangeListener(new SingleSelectToggleGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(SingleSelectToggleGroup group, int checkedId) {
@@ -104,8 +115,8 @@ public class EditProfileActivity<V extends EditProfileView, P extends EditProfil
     }
 
     @Override
-    public ImageView getImageView() {
-        return imageView;
+    public ImageView getAvatarImageView() {
+        return avatarImageView;
     }
 
     @Override
@@ -128,7 +139,7 @@ public class EditProfileActivity<V extends EditProfileView, P extends EditProfil
 
     @Override
     public void setProfilePhoto(String photoUrl) {
-        ImageUtil.loadImage(GlideApp.with(this), photoUrl, imageView, new RequestListener<Drawable>() {
+        ImageUtil.loadImage(GlideApp.with(this), photoUrl, avatarImageView, new RequestListener<Drawable>() {
             @Override
             public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
                 avatarProgressBar.setVisibility(View.GONE);
@@ -163,6 +174,15 @@ public class EditProfileActivity<V extends EditProfileView, P extends EditProfil
             toggle.setText(category);
             groupProfessional.addView(toggle);
         }
+    }
+
+    @SuppressLint("SetTextI18n")
+    @Override
+    public void buildProfile(SocialUser profile) {
+        setProfilePhoto(profile.getAvatar());
+        emailEditText.setText(profile.getEmail());
+        nameEditText.setText(profile.getUsername());
+        desEditText.setText(profile.getDescription() + "\r\n" + profile.getAbout() + "\r\n" + profile.getWebsite());
     }
 
     @Override

@@ -163,7 +163,7 @@
                         android:layout_height="wrap_content"
                         android:hint="@string/prompt_email"
                         android:imeOptions="actionNext"
-                        android:inputType="text"
+                        android:inputType="textEmailAddress"
                         android:maxLines="1"
                         app:met_accentTypeface="font/roboto_light_italic.ttf"
                         app:met_floatingLabel="highlight" />
@@ -177,7 +177,10 @@
                         android:inputType="text"
                         android:maxLines="1"
                         app:met_accentTypeface="font/roboto_light_italic.ttf"
-                        app:met_floatingLabel="highlight" />
+                        app:met_autoValidate="true"
+                        app:met_checkCharactersCountAtBeginning="true"
+                        app:met_floatingLabel="highlight"
+                        app:met_minCharacters="8" />
 
                     <com.rengwuxian.materialedittext.MaterialEditText
                         android:id="@+id/locationEditText"
@@ -197,7 +200,6 @@
                         android:hint="@string/prompt_description"
                         android:imeOptions="actionNext"
                         android:inputType="text"
-                        android:maxLines="1"
                         app:met_accentTypeface="font/roboto_light_italic.ttf"
                         app:met_floatingLabel="highlight" />
                 </LinearLayout>

@@ -19,10 +19,9 @@ package com.hally.influencerai.main.editProfile.createProfile;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.hally.influencerai.main.editProfile.EditProfilePresenter;
+import com.hally.influencerai.model.SocialUser;
 import com.hally.influencerai.utils.PreferencesUtil;
 
 /**
@@ -35,21 +34,21 @@ class CreateProfilePresenter extends EditProfilePresenter<CreateProfileView> {
         super(context);
     }
 
-    public void buildProfile(String largeAvatarURL) {
-        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-        profile = profileManager.buildProfile(firebaseUser, largeAvatarURL);
+    public void buildProfile(SocialUser profile) {
+//        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+//        profile = profileManager.buildProfile(firebaseUser, largeAvatarURL);
 
         ifViewAttached(new ViewAction<CreateProfileView>() {
             @Override
             public void run(@NonNull CreateProfileView view) {
-                view.setName(profile.getUsername());
-
-                if (profile.getPhotoUrl() != null) {
-                    view.setProfilePhoto(profile.getPhotoUrl());
-                } else {
-                    view.hideLocalProgress();
-                    view.setDefaultProfilePhoto();
-                }
+                view.buildProfile(profile);
+//
+//                if (profile.getPhotoUrl() != null) {
+//                    view.setProfilePhoto(profile.getPhotoUrl());
+//                } else {
+//                    view.hideLocalProgress();
+//                    view.setDefaultProfilePhoto();
+//                }
             }
         });
     }

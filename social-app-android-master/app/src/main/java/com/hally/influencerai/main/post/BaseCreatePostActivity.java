@@ -80,7 +80,7 @@ public abstract class BaseCreatePostActivity<V extends BaseCreatePostView, P ext
     }
 
     @Override
-    protected ImageView getImageView() {
+    protected ImageView getAvatarImageView() {
         return imageView;
     }
 
