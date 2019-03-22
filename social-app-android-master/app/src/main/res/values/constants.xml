@@ -23,6 +23,9 @@
     <string name="facebook_app_id">1818488218257595</string>
     <string name="fb_login_protocol_scheme">fb1818488218257595</string>
 
+    <string name="twitter_api_key">ZLiRTn1UbKjImUeWL2KVVynZi</string>
+    <string name="twitter_secret_key">NpzummsFJChUmQ6wQz4Bc9jHWceyhduONMfhwcSyPXwUN7gIr1</string>
+
     <string name="instagram_client_id">61998f63d5fa49eb81ce700d52b27ff8</string>
     <string name="instagram_callback_url">https://instagram.com/</string>
     <string name="instagram_base_url">https://api.instagram.com/</string>

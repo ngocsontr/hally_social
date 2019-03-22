@@ -89,6 +89,12 @@ class LoginPresenter extends BasePresenter<LoginView> {
         }
     }
 
+    public void onTwitterSignInClick() {
+        if (checkInternetConnection()) {
+            ifViewAttached(LoginView::signInWithTwitter);
+        }
+    }
+
     public void handleGoogleSignInResult(GoogleSignInResult result) {
         ifViewAttached(new ViewAction<LoginView>() {
             @Override

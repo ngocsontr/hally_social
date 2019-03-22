@@ -33,6 +33,8 @@ public interface LoginView extends BaseView {
 
     void signInWithInstagram();
 
+    void signInWithTwitter();
+
     void setProfilePhotoUrl(String url);
 
     void firebaseAuthWithCredentials(AuthCredential credential);
