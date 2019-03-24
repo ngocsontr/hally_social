@@ -128,7 +128,7 @@ public class LoginActivity extends BaseActivity<LoginView, LoginPresenter> imple
                     }
 
                     @Override
-                    public void onFacebookProfileReceived(com.hally.influencerai.model.SocialUser facebookUser) {
+                    public void onFacebookProfileReceived(SocialUser facebookUser) {
                         LogUtil.logDebug(TAG, "Facebook:onSuccess: " + facebookUser);
                         presenter.handleSocialSignInResult(facebookUser);
                     }
@@ -156,7 +156,7 @@ public class LoginActivity extends BaseActivity<LoginView, LoginPresenter> imple
                 getResources().getString(R.string.instagram_callback_url), this,
                 new InstagramResponse() {
                     @Override
-                    public void onInstagramSignInSuccess(com.hally.influencerai.model.SocialUser instagramUser) {
+                    public void onInstagramSignInSuccess(SocialUser instagramUser) {
                         LogUtil.logDebug(TAG, "Instagram:onSuccess: " + instagramUser);
                         presenter.handleSocialSignInResult(instagramUser);
                     }
@@ -191,7 +191,7 @@ public class LoginActivity extends BaseActivity<LoginView, LoginPresenter> imple
 
             @Override
             public void onTwitterProfileReceived(SocialUser instagramUser) {
-                LogUtil.logDebug(TAG, "Instagram:onSuccess: " + instagramUser);
+                LogUtil.logDebug(TAG, "Twitter:onSuccess: " + instagramUser);
                 presenter.handleSocialSignInResult(instagramUser);
 
             }
@@ -271,7 +271,7 @@ public class LoginActivity extends BaseActivity<LoginView, LoginPresenter> imple
     }
 
     @Override
-    public void startCreateProfileActivity(com.hally.influencerai.model.SocialUser user) {
+    public void startCreateProfileActivity(SocialUser user) {
         Intent intent = new Intent(LoginActivity.this, CreateProfileActivity.class);
         intent.putExtra(EditProfileActivity.SOCIAL_USER_EXTRA_KEY, user);
         startActivity(intent);
