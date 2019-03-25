@@ -16,12 +16,9 @@
 
 package com.hally.influencerai;
 
-/**
- * Created by alexey on 08.12.16.
- */
-
 public class Constants {
 
+    public static final boolean DEBUG = true;
     public static class Profile {
         public static final int MAX_AVATAR_SIZE = 1280; //px, side of square
         public static final int MIN_AVATAR_SIZE = 100; //px, side of square

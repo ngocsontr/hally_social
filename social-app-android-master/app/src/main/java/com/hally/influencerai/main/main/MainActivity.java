@@ -141,8 +141,8 @@ public class MainActivity extends BaseActivity<MainView, MainPresenter> implemen
             swipeContainer = findViewById(R.id.swipeContainer);
 
             initFloatingActionButton();
-            initPostListRecyclerView();
-            initPostCounter();
+//            initPostListRecyclerView();
+//            initPostCounter();
         }
     }
 
