@@ -3,6 +3,10 @@ package com.hally.influencerai.managers.network;
 import android.content.Context;
 
 import com.hally.influencerai.Constants;
+import com.hally.influencerai.model.User;
+
+import retrofit2.Call;
+import retrofit2.Callback;
 
 /**
  * Created by HallyTran on 3/25/2019.
@@ -18,4 +22,9 @@ public class ApiUtils {
                 .create(APIService.class);
     }
 
+    public static void registerUser(Context context, User user, Callback<User> callback) {
+        APIService service = getAPIService(context);
+        Call<User> userCall = service.registerUser(user);
+        userCall.enqueue(callback);
+    }
 }

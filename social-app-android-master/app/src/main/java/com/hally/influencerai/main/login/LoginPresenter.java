@@ -35,11 +35,17 @@ import com.hally.influencerai.main.base.BasePresenter;
 import com.hally.influencerai.main.interactors.ProfileInteractor;
 import com.hally.influencerai.managers.ProfileManager;
 import com.hally.influencerai.managers.listeners.OnObjectExistListener;
+import com.hally.influencerai.managers.network.ApiUtils;
 import com.hally.influencerai.model.Profile;
 import com.hally.influencerai.model.SocialUser;
+import com.hally.influencerai.model.User;
 import com.hally.influencerai.utils.LogUtil;
 import com.hally.influencerai.utils.PreferencesUtil;
 import com.hally.influencerai.utils.Utils;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 class LoginPresenter extends BasePresenter<LoginView> {
 
@@ -136,10 +142,44 @@ class LoginPresenter extends BasePresenter<LoginView> {
         ifViewAttached(new ViewAction<LoginView>() {
             @Override
             public void run(@NonNull LoginView view) {
-                view.startCreateProfileActivity(user);
+//                view.startCreateProfileActivity(user);
+                attemptCreateProfile(user);
                 view.hideProgress();
             }
         });
+    }
+
+    public void attemptCreateProfile(SocialUser socialUser) {
+        if (checkInternetConnection()) {
+            ifViewAttached(new ViewAction<LoginView>() {
+                @Override
+                public void run(@NonNull LoginView view) {
+                    User user = new User();
+                    user.setSocialId(socialUser.getId());
+                    user.setUsername(socialUser.getUsername());
+                    user.setEmail(socialUser.getEmail());
+//                    user.setAvatar(socialUser.getAvatar());
+                    user.setDescription(socialUser.getDescription());
+                    user.setSnsAccessToken(socialUser.getAccessToken());
+                    user.setLink("null");
+                    user.setUserType(String.valueOf(socialUser.getUserType().value));
+
+                    ApiUtils.registerUser(context, user, new Callback<User>() {
+                        @Override
+                        public void onResponse(Call<User> call, Response<User> response) {
+//                            EditProfilePresenter.this.onProfileUpdatedSuccessfully();
+                            LogUtil.logDebug(TAG, "onResponse: Response<User>: " + response);
+                        }
+
+                        @Override
+                        public void onFailure(Call<User> call, Throwable t) {
+                            view.startCreateProfileActivity(socialUser);
+                            view.showSnackBar(R.string.error_fail_create_profile);
+                        }
+                    });
+                }
+            });
+        }
     }
 
 

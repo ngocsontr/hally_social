@@ -197,7 +197,7 @@ public class EditProfileActivity<V extends EditProfileView, P extends EditProfil
         // Handle item selection
         switch (item.getItemId()) {
             case R.id.save:
-                presenter.attemptCreateProfile(imageUri);
+                presenter.attemptCreateProfile(socialUser);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

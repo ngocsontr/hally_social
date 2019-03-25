@@ -65,6 +65,15 @@ public class User {
     @SerializedName("user_socials")
     @Expose
     private List<UserSocial> userSocials = null;
+    @SerializedName("sns_account_id")
+    @Expose
+    private String socialId;
+    @SerializedName("sns_access_token")
+    @Expose
+    private String snsAccessToken;
+    @SerializedName("link")
+    @Expose
+    private String link;
 
     public Integer getId() {
         return id;
@@ -218,4 +227,27 @@ public class User {
         this.userSocials = userSocials;
     }
 
+    public void setSocialId(String socialId) {
+        this.socialId = socialId;
+    }
+
+    public String getSocialId() {
+        return socialId;
+    }
+
+    public void setSnsAccessToken(String snsAccessToken) {
+        this.snsAccessToken = snsAccessToken;
+    }
+
+    public String getSnsAccessToken() {
+        return snsAccessToken;
+    }
+
+    public void setLink(String link) {
+        this.link = link;
+    }
+
+    public String getLink() {
+        return link;
+    }
 }

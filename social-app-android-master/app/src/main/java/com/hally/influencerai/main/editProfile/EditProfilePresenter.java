@@ -27,8 +27,15 @@ import com.hally.influencerai.main.pickImageBase.PickImagePresenter;
 import com.hally.influencerai.managers.ProfileManager;
 import com.hally.influencerai.managers.listeners.OnObjectChangedListenerSimple;
 import com.hally.influencerai.managers.listeners.OnProfileCreatedListener;
+import com.hally.influencerai.managers.network.ApiUtils;
 import com.hally.influencerai.model.Profile;
+import com.hally.influencerai.model.SocialUser;
+import com.hally.influencerai.model.User;
 import com.hally.influencerai.utils.ValidationUtil;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Created by Alexey on 03.05.18.
@@ -98,6 +105,37 @@ public class EditProfilePresenter<V extends EditProfileView> extends PickImagePr
         }
     }
 
+
+    public void attemptCreateProfile(SocialUser socialUser) {
+        if (checkInternetConnection()) {
+            ifViewAttached(new ViewAction<V>() {
+                @Override
+                public void run(@NonNull V view) {
+                    User user = new User();
+                    user.setSocialId(socialUser.getId());
+                    user.setUsername(socialUser.getUsername());
+                    user.setEmail(socialUser.getEmail());
+                    user.setAvatar(socialUser.getAvatar());
+                    user.setDescription(socialUser.getDescription());
+                    user.setSnsAccessToken(socialUser.getAccessToken());
+                    user.setUserType(String.valueOf(socialUser.getUserType().value));
+
+                    ApiUtils.registerUser(context, user, new Callback<User>() {
+                        @Override
+                        public void onResponse(Call<User> call, Response<User> response) {
+                            EditProfilePresenter.this.onProfileUpdatedSuccessfully();
+                        }
+
+                        @Override
+                        public void onFailure(Call<User> call, Throwable t) {
+                            view.showSnackBar(R.string.error_fail_create_profile);
+                        }
+                    });
+                }
+            });
+        }
+    }
+
     private void createOrUpdateProfile(Uri imageUri) {
         profileManager.createOrUpdateProfile(profile, imageUri, new OnProfileCreatedListener() {
             @Override
@@ -130,4 +168,5 @@ public class EditProfilePresenter<V extends EditProfileView> extends PickImagePr
             }
         });
     }
+
 }

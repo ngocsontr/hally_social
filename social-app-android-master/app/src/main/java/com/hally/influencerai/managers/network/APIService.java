@@ -1,9 +1,13 @@
 package com.hally.influencerai.managers.network;
 
 import com.hally.influencerai.model.Login;
+import com.hally.influencerai.model.User;
 
 import retrofit2.Call;
+import retrofit2.http.Body;
 import retrofit2.http.GET;
+import retrofit2.http.Header;
+import retrofit2.http.POST;
 
 /**
  * Created by HallyTran on 3/25/2019.
@@ -12,8 +16,8 @@ import retrofit2.http.GET;
 public interface APIService {
 
     @GET("/api/v1/user_login_api")
-    Call<Login> getServiceInfo();
+    Call<Login> getLoginInfo(@Header("Authorization") String credentials);
 
-//    @GET("/api/v1/user_update_info_api")
-//    Call<ServiceInfo> getServiceInfo();
+    @POST("/api/v1/user_register_api")
+    Call<User> registerUser(@Body User user);
 }
