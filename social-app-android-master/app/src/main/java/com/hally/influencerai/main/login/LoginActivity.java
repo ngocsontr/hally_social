@@ -186,7 +186,7 @@ public class LoginActivity extends BaseActivity<LoginView, LoginPresenter> imple
 
             @Override
             public void onTwitterProfileReceived(SocialUser instagramUser) {
-                LogUtil.logDebug(TAG, "Instagram:onSuccess: " + instagramUser);
+                LogUtil.logDebug(TAG, "Twitter:onSuccess: " + instagramUser);
                 presenter.handleSocialSignInResult(instagramUser);
             }
         }
