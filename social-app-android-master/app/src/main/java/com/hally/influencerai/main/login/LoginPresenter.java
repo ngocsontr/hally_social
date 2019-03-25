@@ -55,7 +55,7 @@ class LoginPresenter extends BasePresenter<LoginView> {
                     @Override
                     public void run(@NonNull LoginView view) {
                         if (!exist) {
-                            view.startCreateProfileActivity();
+//                            view.startCreateProfileActivity();
                         } else {
                             PreferencesUtil.setProfileCreated(context, true);
                             ProfileInteractor.getInstance(context.getApplicationContext())
@@ -104,10 +104,10 @@ class LoginPresenter extends BasePresenter<LoginView> {
 
                     GoogleSignInAccount account = result.getSignInAccount();
 
-                    view.setProfilePhotoUrl(LoginPresenter.this.buildGooglePhotoUrl(account.getPhotoUrl()));
+//                    view.setProfilePhotoUrl(LoginPresenter.this.buildGooglePhotoUrl(account.getPhotoUrl()));
 
                     AuthCredential credential = GoogleAuthProvider.getCredential(account.getIdToken(), null);
-                    view.firebaseAuthWithCredentials(credential);
+//                    view.firebaseAuthWithCredentials(credential);
 
                     LogUtil.logDebug(TAG, "firebaseAuthWithGoogle:" + account.getId());
 
@@ -124,10 +124,10 @@ class LoginPresenter extends BasePresenter<LoginView> {
             @Override
             public void run(@NonNull LoginView view) {
                 LogUtil.logDebug(TAG, "handleFacebookSignInResult: " + loginResult);
-                view.setProfilePhotoUrl(LoginPresenter.this.buildFacebookPhotoUrl(loginResult.getAccessToken().getUserId()));
+//                view.setProfilePhotoUrl(LoginPresenter.this.buildFacebookPhotoUrl(loginResult.getAccessToken().getUserId()));
                 view.showProgress();
                 AuthCredential credential = FacebookAuthProvider.getCredential(loginResult.getAccessToken().getToken());
-                view.firebaseAuthWithCredentials(credential);
+//                view.firebaseAuthWithCredentials(credential);
             }
         });
     }
@@ -137,6 +137,7 @@ class LoginPresenter extends BasePresenter<LoginView> {
             @Override
             public void run(@NonNull LoginView view) {
                 view.startCreateProfileActivity(user);
+                view.hideProgress();
             }
         });
     }

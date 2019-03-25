@@ -35,7 +35,6 @@ import com.hally.influencerai.R;
 import com.hally.influencerai.adapters.SearchUsersAdapter;
 import com.hally.influencerai.adapters.holders.UserViewHolder;
 import com.hally.influencerai.main.base.BaseFragment;
-import com.hally.influencerai.main.login.LoginActivity;
 import com.hally.influencerai.main.profile.ProfileActivity;
 import com.hally.influencerai.main.search.Searchable;
 import com.hally.influencerai.model.Profile;
@@ -44,7 +43,6 @@ import com.hally.influencerai.views.FollowButton;
 
 import java.util.List;
 
-import static android.app.Activity.RESULT_OK;
 import static com.hally.influencerai.main.usersList.UsersListActivity.UPDATE_FOLLOWING_STATE_REQ;
 import static com.hally.influencerai.main.usersList.UsersListActivity.UPDATE_FOLLOWING_STATE_RESULT_OK;
 
@@ -103,9 +101,9 @@ public class SearchUsersFragment extends BaseFragment<SearchUsersView, SearchUse
             updateSelectedItem();
         }
 
-        if (requestCode == LoginActivity.LOGIN_REQUEST_CODE && resultCode == RESULT_OK) {
-            presenter.search(lastSearchText);
-        }
+//        if (requestCode == LoginActivity.LOGIN_REQUEST_CODE && resultCode == RESULT_OK) {
+//            presenter.search(lastSearchText);
+//        }
     }
 
     @Override

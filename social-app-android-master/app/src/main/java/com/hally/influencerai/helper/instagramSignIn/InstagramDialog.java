@@ -3,6 +3,7 @@ package com.hally.influencerai.helper.instagramSignIn;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Point;
@@ -68,6 +69,12 @@ public class InstagramDialog extends Dialog {
         CookieSyncManager.createInstance(getContext());
         CookieManager cookieManager = CookieManager.getInstance();
         cookieManager.removeAllCookie();
+        setOnDismissListener(new OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+                mListener.onDismiss();
+            }
+        });
     }
 
     /**
@@ -87,7 +94,6 @@ public class InstagramDialog extends Dialog {
     /**
      * Creating webview for instagram dialog login
      */
-
     private void setUpWebView() {
         mWebView = new WebView(getContext());
         mWebView.setVerticalScrollBarEnabled(false);
@@ -151,5 +157,8 @@ public class InstagramDialog extends Dialog {
 
         //If error occurs while sign in
         void onError(String error);
+
+        //If dialog dismiss
+        void onDismiss();
     }
 }

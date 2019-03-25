@@ -36,7 +36,6 @@ import com.hally.influencerai.R;
 import com.hally.influencerai.adapters.UsersAdapter;
 import com.hally.influencerai.adapters.holders.UserViewHolder;
 import com.hally.influencerai.main.base.BaseActivity;
-import com.hally.influencerai.main.login.LoginActivity;
 import com.hally.influencerai.main.profile.ProfileActivity;
 import com.hally.influencerai.views.FollowButton;
 
@@ -108,9 +107,9 @@ public class UsersListActivity extends BaseActivity<UsersListView, UsersListPres
             updateSelectedItem();
         }
 
-        if (requestCode == LoginActivity.LOGIN_REQUEST_CODE && resultCode == RESULT_OK) {
-            presenter.loadUsersList(userID, userListType, true);
-        }
+//        if (requestCode == LoginActivity.LOGIN_REQUEST_CODE && resultCode == RESULT_OK) {
+//            presenter.loadUsersList(userID, userListType, true);
+//        }
     }
 
     private void initContentView() {

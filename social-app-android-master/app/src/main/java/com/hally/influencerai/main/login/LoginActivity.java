@@ -21,19 +21,11 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.view.View;
 
-import com.google.android.gms.auth.api.Auth;
-import com.google.android.gms.auth.api.signin.GoogleSignInResult;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthCredential;
-import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.hally.influencerai.R;
 import com.hally.influencerai.helper.facebookSignIn.FacebookHelper;
 import com.hally.influencerai.helper.facebookSignIn.FacebookResponse;
+import com.hally.influencerai.helper.googleAuthSignin.GoogleAuthResponse;
+import com.hally.influencerai.helper.googleAuthSignin.GoogleSignInHelper;
 import com.hally.influencerai.helper.instagramSignIn.InstagramHelper;
 import com.hally.influencerai.helper.instagramSignIn.InstagramResponse;
 import com.hally.influencerai.helper.twitterSignIn.TwitterHelper;
@@ -42,24 +34,18 @@ import com.hally.influencerai.main.base.BaseActivity;
 import com.hally.influencerai.main.editProfile.EditProfileActivity;
 import com.hally.influencerai.main.editProfile.createProfile.CreateProfileActivity;
 import com.hally.influencerai.model.SocialUser;
-import com.hally.influencerai.utils.GoogleApiHelper;
 import com.hally.influencerai.utils.LogUtil;
-import com.hally.influencerai.utils.LogoutHelper;
 import com.twitter.sdk.android.core.TwitterException;
 
-public class LoginActivity extends BaseActivity<LoginView, LoginPresenter> implements LoginView, GoogleApiClient.OnConnectionFailedListener {
+public class LoginActivity extends BaseActivity<LoginView, LoginPresenter> implements LoginView {
     private static final String TAG = LoginActivity.class.getSimpleName();
-    private static final int SIGN_IN_GOOGLE = 9001;
-    public static final int LOGIN_REQUEST_CODE = 10001;
 
-    private FirebaseAuth mAuth;
-    private FirebaseAuth.AuthStateListener mAuthListener;
-    private GoogleApiClient mGoogleApiClient;
+    private GoogleSignInHelper mGoogleAuthHelper;
     private InstagramHelper mInstagramHelper;
     private FacebookHelper mFacebookHelper;
     private TwitterHelper mTwitterHelper;
 
-    private String profilePhotoUrlLarge;
+    private boolean mIsClicked = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,7 +56,6 @@ public class LoginActivity extends BaseActivity<LoginView, LoginPresenter> imple
         }
 
         initGoogleSignIn();
-        initFirebaseAuth();
         initFacebookSignIn();
         initInstagramSignIn();
         initTwitterSignIn();
@@ -78,39 +63,36 @@ public class LoginActivity extends BaseActivity<LoginView, LoginPresenter> imple
     }
 
     private void initGoogleSignIn() {
-        mGoogleApiClient = GoogleApiHelper.createGoogleApiClient(this);
-        mAuth = FirebaseAuth.getInstance();
+        mGoogleAuthHelper = new GoogleSignInHelper(this, null, new GoogleAuthResponse() {
+            @Override
+            public void onGoogleAuthSignIn(SocialUser googleUser) {
+                LogUtil.logDebug(TAG, "Google:onSuccess: " + googleUser);
+                presenter.handleSocialSignInResult(googleUser);
+            }
+
+            @Override
+            public void onGoogleAuthSignInFailed() {
+                LogUtil.logDebug(TAG, "Google:onGoogleAuthSignInFailed");
+                showSnackBar(R.string.error_google_play_services);
+                hideProgress();
+            }
+
+            @Override
+            public void onGoogleAuthSignOut(boolean isSuccess) {
+
+            }
+        });
 
         findViewById(R.id.youtubeSignInButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                presenter.onGoogleSignInClick();
-            }
-        });
-    }
-
-    private void initFirebaseAuth() {
-        mAuth = FirebaseAuth.getInstance();
-
-        if (mAuth.getCurrentUser() != null) {
-            LogoutHelper.signOut(mGoogleApiClient, this);
-        }
-
-        mAuthListener = new FirebaseAuth.AuthStateListener() {
-            @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                final FirebaseUser user = firebaseAuth.getCurrentUser();
-                if (user != null) {
-                    // Profile is signed in
-                    LogUtil.logDebug(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
-                    presenter.checkIsProfileExist(user.getUid());
-//                    LoginActivity.this.setResult(RESULT_OK);
-                } else {
-                    // Profile is signed out
-                    LogUtil.logDebug(TAG, "onAuthStateChanged:signed_out");
+                if (!mIsClicked) {
+                    mIsClicked = true;
+                    showProgress();
+                    presenter.onGoogleSignInClick();
                 }
             }
-        };
+        });
     }
 
     private void initFacebookSignIn() {
@@ -118,8 +100,9 @@ public class LoginActivity extends BaseActivity<LoginView, LoginPresenter> imple
                 new FacebookResponse() {
                     @Override
                     public void onFacebookSignInFail(Exception error) {
-                        LogUtil.logError(TAG, "facebook signIn:onError", error);
+                        LogUtil.logError(TAG, "Facebook signIn:onError", error);
                         showSnackBar(error.getMessage());
+                        hideProgress();
                     }
 
                     @Override
@@ -128,7 +111,7 @@ public class LoginActivity extends BaseActivity<LoginView, LoginPresenter> imple
                     }
 
                     @Override
-                    public void onFacebookProfileReceived(com.hally.influencerai.model.SocialUser facebookUser) {
+                    public void onFacebookProfileReceived(SocialUser facebookUser) {
                         LogUtil.logDebug(TAG, "Facebook:onSuccess: " + facebookUser);
                         presenter.handleSocialSignInResult(facebookUser);
                     }
@@ -143,7 +126,11 @@ public class LoginActivity extends BaseActivity<LoginView, LoginPresenter> imple
         findViewById(R.id.facebookSignInButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                presenter.onFacebookSignInClick();
+                if (!mIsClicked) {
+                    mIsClicked = true;
+                    showProgress();
+                    presenter.onFacebookSignInClick();
+                }
             }
         });
     }
@@ -156,7 +143,7 @@ public class LoginActivity extends BaseActivity<LoginView, LoginPresenter> imple
                 getResources().getString(R.string.instagram_callback_url), this,
                 new InstagramResponse() {
                     @Override
-                    public void onInstagramSignInSuccess(com.hally.influencerai.model.SocialUser instagramUser) {
+                    public void onInstagramSignInSuccess(SocialUser instagramUser) {
                         LogUtil.logDebug(TAG, "Instagram:onSuccess: " + instagramUser);
                         presenter.handleSocialSignInResult(instagramUser);
                     }
@@ -166,11 +153,19 @@ public class LoginActivity extends BaseActivity<LoginView, LoginPresenter> imple
                         LogUtil.logError(TAG, "onInstagramSignInFail:onError " + error);
                         showSnackBar(error);
                     }
+
+                    @Override
+                    public void onInstagramDismiss() {
+                        mIsClicked = false;
+                    }
                 });
         findViewById(R.id.instagramSignInButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                presenter.onInstagramSignInClick();
+                if (!mIsClicked) {
+                    mIsClicked = true;
+                    presenter.onInstagramSignInClick();
+                }
             }
         });
     }
@@ -193,7 +188,6 @@ public class LoginActivity extends BaseActivity<LoginView, LoginPresenter> imple
             public void onTwitterProfileReceived(SocialUser instagramUser) {
                 LogUtil.logDebug(TAG, "Instagram:onSuccess: " + instagramUser);
                 presenter.handleSocialSignInResult(instagramUser);
-
             }
         }
         );
@@ -201,7 +195,10 @@ public class LoginActivity extends BaseActivity<LoginView, LoginPresenter> imple
         findViewById(R.id.twitterSignInButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                presenter.onTwitterSignInClick();
+                if (!mIsClicked) {
+                    mIsClicked = true;
+                    presenter.onTwitterSignInClick();
+                }
             }
         });
     }
@@ -218,29 +215,6 @@ public class LoginActivity extends BaseActivity<LoginView, LoginPresenter> imple
         findViewById(R.id.bottomContactUs).setOnClickListener(onClickListener);
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        mAuth.addAuthStateListener(mAuthListener);
-
-        if (mGoogleApiClient != null) {
-            mGoogleApiClient.connect();
-        }
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        if (mAuthListener != null) {
-            mAuth.removeAuthStateListener(mAuthListener);
-        }
-
-        if (mGoogleApiClient != null && mGoogleApiClient.isConnected()) {
-            mGoogleApiClient.stopAutoManage(this);
-            mGoogleApiClient.disconnect();
-        }
-    }
-
     @NonNull
     @Override
     public LoginPresenter createPresenter() {
@@ -253,66 +227,22 @@ public class LoginActivity extends BaseActivity<LoginView, LoginPresenter> imple
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        mGoogleAuthHelper.onActivityResult(requestCode, resultCode, data);
         mFacebookHelper.onActivityResult(requestCode, resultCode, data);
         mTwitterHelper.onActivityResult(requestCode, resultCode, data);
-
-        // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
-        if (requestCode == SIGN_IN_GOOGLE) {
-            GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
-            presenter.handleGoogleSignInResult(result);
-        }
+        mIsClicked = false;
     }
 
     @Override
-    public void startCreateProfileActivity() {
-        Intent intent = new Intent(LoginActivity.this, CreateProfileActivity.class);
-        intent.putExtra(CreateProfileActivity.LARGE_IMAGE_URL_EXTRA_KEY, profilePhotoUrlLarge);
-        startActivity(intent);
-    }
-
-    @Override
-    public void startCreateProfileActivity(com.hally.influencerai.model.SocialUser user) {
+    public void startCreateProfileActivity(SocialUser user) {
         Intent intent = new Intent(LoginActivity.this, CreateProfileActivity.class);
         intent.putExtra(EditProfileActivity.SOCIAL_USER_EXTRA_KEY, user);
         startActivity(intent);
     }
 
     @Override
-    public void firebaseAuthWithCredentials(AuthCredential credential) {
-        mAuth.signInWithCredential(credential)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        LogUtil.logDebug(TAG, "signInWithCredential:onComplete:" + task.isSuccessful());
-
-                        // If sign in fails, display a message to the user. If sign in succeeds
-                        // the auth state listener will be notified and logic to handle the
-                        // signed in user can be handled in the listener.
-                        if (!task.isSuccessful()) {
-                            presenter.handleAuthError(task);
-                        }
-                    }
-                });
-    }
-
-    @Override
-    public void setProfilePhotoUrl(String url) {
-        profilePhotoUrlLarge = url;
-    }
-
-    @Override
-    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-        // An unresolvable error has occurred and Google APIs (including Sign-In) will not
-        // be available.
-        LogUtil.logDebug(TAG, "onConnectionFailed:" + connectionResult);
-        showSnackBar(R.string.error_google_play_services);
-        hideProgress();
-    }
-
-    @Override
     public void signInWithGoogle() {
-        Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
-        startActivityForResult(signInIntent, SIGN_IN_GOOGLE);
+        mGoogleAuthHelper.performSignIn(this);
     }
 
     @Override

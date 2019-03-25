@@ -21,4 +21,6 @@ public interface InstagramResponse {
      * @param error error message from {@link InstagramHelper}
      */
     void onInstagramSignInFail(String error);
+
+    void onInstagramDismiss();
 }

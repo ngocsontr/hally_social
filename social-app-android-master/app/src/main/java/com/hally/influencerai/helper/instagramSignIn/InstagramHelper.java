@@ -91,6 +91,11 @@ public class InstagramHelper {
             public void onError(String error) {//error while signing in
                 mListener.onInstagramSignInFail("Authorization failed");
             }
+
+            @Override
+            public void onDismiss() {
+                mListener.onInstagramDismiss();
+            }
         });
         mProgress = new ProgressDialog(context);
         mProgress.setCancelable(false);

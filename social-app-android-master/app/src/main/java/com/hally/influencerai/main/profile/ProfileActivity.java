@@ -54,7 +54,6 @@ import com.hally.influencerai.dialogs.UnfollowConfirmationDialog;
 import com.hally.influencerai.enums.FollowState;
 import com.hally.influencerai.main.base.BaseActivity;
 import com.hally.influencerai.main.editProfile.EditProfileActivity;
-import com.hally.influencerai.main.login.LoginActivity;
 import com.hally.influencerai.main.post.createPost.CreatePostActivity;
 import com.hally.influencerai.main.postDetails.PostDetailsActivity;
 import com.hally.influencerai.main.usersList.UsersListActivity;
@@ -182,9 +181,9 @@ public class ProfileActivity extends BaseActivity<ProfileView, ProfilePresenter>
                     presenter.checkPostChanges(data);
                     break;
 
-                case LoginActivity.LOGIN_REQUEST_CODE:
-                    presenter.checkFollowState(userID);
-                    break;
+//                case LoginActivity.LOGIN_REQUEST_CODE:
+//                    presenter.checkFollowState(userID);
+//                    break;
             }
         }
     }
