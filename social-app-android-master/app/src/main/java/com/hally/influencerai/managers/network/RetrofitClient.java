@@ -29,6 +29,7 @@ public class RetrofitClient {
                     public Response intercept(Chain chain) throws IOException {
                         Request request = chain.request().newBuilder()
                                 .addHeader("UUID", Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID))
+                                .addHeader("X-Requested-With", "XMLHttpRequest")
                                 .build();
                         return chain.proceed(request);
                     }

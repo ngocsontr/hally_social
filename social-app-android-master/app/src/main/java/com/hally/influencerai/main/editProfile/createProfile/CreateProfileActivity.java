@@ -18,6 +18,7 @@ package com.hally.influencerai.main.editProfile.createProfile;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -26,7 +27,6 @@ import com.hally.influencerai.R;
 import com.hally.influencerai.main.editProfile.EditProfileActivity;
 
 public class CreateProfileActivity extends EditProfileActivity<CreateProfileView, CreateProfilePresenter> implements CreateProfileView {
-    public static final String LARGE_IMAGE_URL_EXTRA_KEY = "CreateProfileActivity.LARGE_IMAGE_URL_EXTRA_KEY";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +40,9 @@ public class CreateProfileActivity extends EditProfileActivity<CreateProfileView
     protected void initContent() {
         presenter.buildProfile(socialUser);
         presenter.initProfessionalList();
+        if (TextUtils.isEmpty(socialUser.getLocation())) {
+            presenter.initLocation();
+        }
     }
 
     @NonNull
@@ -49,11 +52,6 @@ public class CreateProfileActivity extends EditProfileActivity<CreateProfileView
             return new CreateProfilePresenter(this);
         }
         return presenter;
-    }
-
-    @Override
-    public void setDefaultProfilePhoto() {
-        avatarImageView.setImageResource(R.drawable.ic_stub);
     }
 
     @Override
@@ -72,6 +70,14 @@ public class CreateProfileActivity extends EditProfileActivity<CreateProfileView
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
+    public void setLocation(String location) {
+        if (TextUtils.isEmpty(socialUser.getLocation())) {
+            socialUser.setLocation(location);
+            locationEditText.setText(socialUser.getLocation());
         }
     }
 }

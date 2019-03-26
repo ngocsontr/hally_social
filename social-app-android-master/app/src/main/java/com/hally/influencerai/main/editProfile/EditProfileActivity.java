@@ -53,7 +53,7 @@ public class EditProfileActivity<V extends EditProfileView, P extends EditProfil
     // UI references.
     private EditText emailEditText;
     private EditText nameEditText;
-    private EditText locationEditText;
+    protected EditText locationEditText;
     private EditText desEditText;
     protected ImageView avatarImageView;
     private ProgressBar avatarProgressBar;
@@ -182,6 +182,7 @@ public class EditProfileActivity<V extends EditProfileView, P extends EditProfil
         setProfilePhoto(profile.getAvatar());
         emailEditText.setText(profile.getEmail());
         nameEditText.setText(profile.getUsername());
+        locationEditText.setText(profile.getLocation());
         desEditText.setText(profile.getDescription() + "\r\n" + profile.getAbout() + "\r\n" + profile.getWebsite());
     }
 

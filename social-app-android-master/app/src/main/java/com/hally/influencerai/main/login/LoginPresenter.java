@@ -158,7 +158,7 @@ class LoginPresenter extends BasePresenter<LoginView> {
                     user.setSocialId(socialUser.getId());
                     user.setUsername(socialUser.getUsername());
                     user.setEmail(socialUser.getEmail());
-//                    user.setAvatar(socialUser.getAvatar());
+                    user.setAvatar(socialUser.getAvatar());
                     user.setDescription(socialUser.getDescription());
                     user.setSnsAccessToken(socialUser.getAccessToken());
                     user.setLink("null");
@@ -167,8 +167,18 @@ class LoginPresenter extends BasePresenter<LoginView> {
                     ApiUtils.registerUser(context, user, new Callback<User>() {
                         @Override
                         public void onResponse(Call<User> call, Response<User> response) {
-//                            EditProfilePresenter.this.onProfileUpdatedSuccessfully();
                             LogUtil.logDebug(TAG, "onResponse: Response<User>: " + response);
+                            User resUser = response.body();
+                            if (resUser != null) {
+                                if (resUser.getRequireUpdateInfo().equals("1")) {
+                                    view.startCreateProfileActivity(socialUser);
+                                } else {
+                                    view.startMainActivity();
+                                }
+                            } else {
+                                view.startCreateProfileActivity(socialUser);
+                                view.showSnackBar(R.string.error_fail_create_profile);
+                            }
                         }
 
                         @Override

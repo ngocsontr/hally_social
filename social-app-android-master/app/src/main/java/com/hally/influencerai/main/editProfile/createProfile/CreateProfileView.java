@@ -18,12 +18,7 @@ package com.hally.influencerai.main.editProfile.createProfile;
 
 import com.hally.influencerai.main.editProfile.EditProfileView;
 
-/**
- * Created by Alexey on 03.05.18.
- */
-
 public interface CreateProfileView extends EditProfileView {
 
-    void setDefaultProfilePhoto();
-
+    void setLocation(String location);
 }

@@ -57,7 +57,8 @@ public class TwitterHelper {
         //initialize sdk
         TwitterConfig authConfig = new TwitterConfig.Builder(context)
                 .logger(new DefaultLogger(Log.DEBUG))
-                .twitterAuthConfig(new TwitterAuthConfig(context.getResources().getString(twitterApiKey),
+                .twitterAuthConfig(
+                        new TwitterAuthConfig(context.getResources().getString(twitterApiKey),
                         context.getResources().getString(twitterSecreteKey)))
                 .debug(true)
                 .build();
@@ -109,17 +110,16 @@ public class TwitterHelper {
         call.enqueue(new Callback<User>() {
             @Override
             public void success(Result<User> userResult) {
-                //Do something with result
-
                 //parse the response
                 SocialUser user = new SocialUser();
                 user.setUserType(UserType.TWITTER);
                 user.setUsername(userResult.data.name);
                 user.setEmail(userResult.data.email);
                 user.setDescription(userResult.data.description);
+                user.setLocation(userResult.data.location);
                 user.setAvatar(userResult.data.profileImageUrl);
                 user.setCoverPicUrl(userResult.data.profileBannerUrl);
-                user.setId(String.valueOf(userResult.data.id));
+                user.setId(userResult.data.idStr);
 
                 mListener.onTwitterProfileReceived(user);
             }
