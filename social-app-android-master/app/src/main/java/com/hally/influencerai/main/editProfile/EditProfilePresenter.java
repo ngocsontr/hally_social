@@ -17,21 +17,17 @@
 package com.hally.influencerai.main.editProfile;
 
 import android.content.Context;
-import android.net.Uri;
 import android.support.annotation.NonNull;
-import android.text.TextUtils;
 
 import com.hally.influencerai.R;
 import com.hally.influencerai.main.base.BaseView;
 import com.hally.influencerai.main.pickImageBase.PickImagePresenter;
 import com.hally.influencerai.managers.ProfileManager;
-import com.hally.influencerai.managers.listeners.OnObjectChangedListenerSimple;
-import com.hally.influencerai.managers.listeners.OnProfileCreatedListener;
 import com.hally.influencerai.managers.network.ApiUtils;
 import com.hally.influencerai.model.Profile;
-import com.hally.influencerai.model.SocialUser;
+import com.hally.influencerai.model.UpdateUserRes;
 import com.hally.influencerai.model.User;
-import com.hally.influencerai.utils.ValidationUtil;
+import com.hally.influencerai.utils.LogUtil;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -53,81 +49,88 @@ public class EditProfilePresenter<V extends EditProfileView> extends PickImagePr
     }
 
     public void loadProfile() {
-        ifViewAttached(BaseView::showProgress);
-        profileManager.getProfileSingleValue(getCurrentUserId(), new OnObjectChangedListenerSimple<Profile>() {
-            @Override
-            public void onObjectChanged(Profile obj) {
-                profile = obj;
-                ifViewAttached(new ViewAction<V>() {
-                    @Override
-                    public void run(@NonNull V view) {
-                        if (profile != null) {
-                            view.setName(profile.getUsername());
-
-                            if (profile.getPhotoUrl() != null) {
-                                view.setProfilePhoto(profile.getPhotoUrl());
-                            }
-                        }
-
-                        view.hideProgress();
-                        view.setNameError(null);
-                    }
-                });
-            }
-        });
+//        ifViewAttached(BaseView::showProgress);
+//        profileManager.getProfileSingleValue(getCurrentUserId(), new OnObjectChangedListenerSimple<Profile>() {
+//            @Override
+//            public void onObjectChanged(Profile obj) {
+//                profile = obj;
+//                ifViewAttached(new ViewAction<V>() {
+//                    @Override
+//                    public void run(@NonNull V view) {
+//                        if (profile != null) {
+//                            view.setName(profile.getUsername());
+//
+//                            if (profile.getPhotoUrl() != null) {
+//                                view.setProfilePhoto(profile.getPhotoUrl());
+//                            }
+//                        }
+//
+//                        view.hideProgress();
+//                        view.setNameError(null);
+//                    }
+//                });
+//            }
+//        });
     }
 
-    public void attemptCreateProfile(Uri imageUri) {
-        if (checkInternetConnection()) {
-            ifViewAttached(new ViewAction<V>() {
-                @Override
-                public void run(@NonNull V view) {
-                    view.setNameError(null);
+//    public void attemptCreateProfileemptCreateProfile(Uri imageUri) {
+//        if (checkInternetConnection()) {
+//            ifViewAttached(new ViewAction<V>() {
+//                @Override
+//                public void run(@NonNull V view) {
+//                    view.setNameError(null);
+//
+//                    String name = view.getNameText().trim();
+//                    boolean cancel = false;
+//
+//                    if (TextUtils.isEmpty(name)) {
+//                        view.setNameError(context.getString(R.string.error_field_required));
+//                        cancel = true;
+//                    } else if (!ValidationUtil.isNameValid(name)) {
+//                        view.setNameError(context.getString(R.string.error_profile_name_length));
+//                        cancel = true;
+//                    }
+//
+//                    if (!cancel) {
+//                        view.showProgress();
+//                        profile.setUsername(name);
+//                        EditProfilePresenter.this.createOrUpdateProfile(imageUri);
+//                    }
+//                }
+//            });
+//        }
+//    }
 
-                    String name = view.getNameText().trim();
-                    boolean cancel = false;
 
-                    if (TextUtils.isEmpty(name)) {
-                        view.setNameError(context.getString(R.string.error_field_required));
-                        cancel = true;
-                    } else if (!ValidationUtil.isNameValid(name)) {
-                        view.setNameError(context.getString(R.string.error_profile_name_length));
-                        cancel = true;
-                    }
-
-                    if (!cancel) {
-                        view.showProgress();
-                        profile.setUsername(name);
-                        EditProfilePresenter.this.createOrUpdateProfile(imageUri);
-                    }
-                }
-            });
-        }
-    }
-
-
-    public void attemptCreateProfile(SocialUser socialUser) {
+    public void attemptCreateProfile(User socialUser) {
         if (checkInternetConnection()) {
             ifViewAttached(new ViewAction<V>() {
                 @Override
                 public void run(@NonNull V view) {
                     User user = new User();
-                    user.setSocialId(socialUser.getId());
+                    user.setSocialId(socialUser.getSocialId());
                     user.setUsername(socialUser.getUsername());
                     user.setEmail(socialUser.getEmail());
                     user.setAvatar(socialUser.getAvatar());
                     user.setDescription(socialUser.getDescription());
-                    user.setSnsAccessToken(socialUser.getAccessToken());
-                    user.setUserType(String.valueOf(socialUser.getUserType().value));
+                    user.setSnsAccessToken(socialUser.getSnsAccessToken());
+                    user.setSocialType(socialUser.getSocialType());
 
-                    ApiUtils.registerUser(context, user, new Callback<User>() {
+                    ApiUtils.updateUser(context, user, new Callback<UpdateUserRes>() {
                         @Override
-                        public void onResponse(Call<User> call, Response<User> response) {
-                            EditProfilePresenter.this.onProfileUpdatedSuccessfully();
+                        public void onResponse(Call<UpdateUserRes> call, Response<UpdateUserRes> response) {
+                            if (response.errorBody() != null) {
+                                LogUtil.logDebug(TAG, "onResponse:error " + response.errorBody());
+                                EditProfilePresenter.this.onProfileUpdatedSuccessfully();
+                                return;
+                            }
+                            UpdateUserRes updateUserRes = response.body();
+                            if (updateUserRes.isSuccess())
+                                EditProfilePresenter.this.onProfileUpdatedSuccessfully();
                         }
 
                         @Override
-                        public void onFailure(Call<User> call, Throwable t) {
+                        public void onFailure(Call<UpdateUserRes> call, Throwable t) {
                             view.showSnackBar(R.string.error_fail_create_profile);
                         }
                     });
@@ -136,24 +139,24 @@ public class EditProfilePresenter<V extends EditProfileView> extends PickImagePr
         }
     }
 
-    private void createOrUpdateProfile(Uri imageUri) {
-        profileManager.createOrUpdateProfile(profile, imageUri, new OnProfileCreatedListener() {
-            @Override
-            public void onProfileCreated(boolean success) {
-                EditProfilePresenter.this.ifViewAttached(new ViewAction<V>() {
-                    @Override
-                    public void run(@NonNull V view) {
-                        view.hideProgress();
-                        if (success) {
-                            EditProfilePresenter.this.onProfileUpdatedSuccessfully();
-                        } else {
-                            view.showSnackBar(R.string.error_fail_create_profile);
-                        }
-                    }
-                });
-            }
-        });
-    }
+//    private void createOrUpdateProfile(Uri imageUri) {
+//        profileManager.createOrUpdateProfile(profile, imageUri, new OnProfileCreatedListener() {
+//            @Override
+//            public void onProfileCreated(boolean success) {
+//                EditProfilePresenter.this.ifViewAttached(new ViewAction<V>() {
+//                    @Override
+//                    public void run(@NonNull V view) {
+//                        view.hideProgress();
+//                        if (success) {
+//                            EditProfilePresenter.this.onProfileUpdatedSuccessfully();
+//                        } else {
+//                            view.showSnackBar(R.string.error_fail_create_profile);
+//                        }
+//                    }
+//                });
+//            }
+//        });
+//    }
 
     protected void onProfileUpdatedSuccessfully() {
         ifViewAttached(BaseView::startMainActivity);

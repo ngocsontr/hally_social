@@ -38,9 +38,9 @@ public class CreateProfileActivity extends EditProfileActivity<CreateProfileView
 
     @Override
     protected void initContent() {
-        presenter.buildProfile(socialUser);
+        presenter.buildProfile(user);
         presenter.initProfessionalList();
-        if (TextUtils.isEmpty(socialUser.getLocation())) {
+        if (TextUtils.isEmpty(user.getLocation())) {
             presenter.initLocation();
         }
     }
@@ -66,7 +66,7 @@ public class CreateProfileActivity extends EditProfileActivity<CreateProfileView
         // Handle item selection
         switch (item.getItemId()) {
             case R.id.continueButton:
-                presenter.attemptCreateProfile(imageUri);
+                presenter.attemptCreateProfile(user);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -75,9 +75,9 @@ public class CreateProfileActivity extends EditProfileActivity<CreateProfileView
 
     @Override
     public void setLocation(String location) {
-        if (TextUtils.isEmpty(socialUser.getLocation())) {
-            socialUser.setLocation(location);
-            locationEditText.setText(socialUser.getLocation());
+        if (TextUtils.isEmpty(user.getLocation())) {
+            user.setLocation(location);
+            locationEditText.setText(user.getLocation());
         }
     }
 }

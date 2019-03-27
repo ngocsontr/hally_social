@@ -221,4 +221,5 @@
     <string name="hint_username">Enter a new username</string>
     <string name="hint_email_reset">Enter your email</string>
     <string name="enter_group_name">Enter group name</string>
+    <string name="facebook_request_field">id,name,email,gender,birthday,picture,cover</string>
 </resources>

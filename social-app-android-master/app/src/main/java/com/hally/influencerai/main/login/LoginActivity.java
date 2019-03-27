@@ -33,7 +33,7 @@ import com.hally.influencerai.helper.twitterSignIn.TwitterResponse;
 import com.hally.influencerai.main.base.BaseActivity;
 import com.hally.influencerai.main.editProfile.EditProfileActivity;
 import com.hally.influencerai.main.editProfile.createProfile.CreateProfileActivity;
-import com.hally.influencerai.model.SocialUser;
+import com.hally.influencerai.model.User;
 import com.hally.influencerai.utils.LogUtil;
 import com.twitter.sdk.android.core.TwitterException;
 
@@ -65,7 +65,7 @@ public class LoginActivity extends BaseActivity<LoginView, LoginPresenter> imple
     private void initGoogleSignIn() {
         mGoogleAuthHelper = new GoogleSignInHelper(this, null, new GoogleAuthResponse() {
             @Override
-            public void onGoogleAuthSignIn(SocialUser googleUser) {
+            public void onGoogleAuthSignIn(User googleUser) {
                 LogUtil.logDebug(TAG, "Google:onSuccess: " + googleUser);
                 presenter.handleSocialSignInResult(googleUser);
             }
@@ -96,7 +96,7 @@ public class LoginActivity extends BaseActivity<LoginView, LoginPresenter> imple
     }
 
     private void initFacebookSignIn() {
-        mFacebookHelper = new FacebookHelper("id,name,email,gender,birthday,picture,cover", this,
+        mFacebookHelper = new FacebookHelper(getString(R.string.facebook_request_field), this,
                 new FacebookResponse() {
                     @Override
                     public void onFacebookSignInFail(Exception error) {
@@ -111,7 +111,7 @@ public class LoginActivity extends BaseActivity<LoginView, LoginPresenter> imple
                     }
 
                     @Override
-                    public void onFacebookProfileReceived(SocialUser facebookUser) {
+                    public void onFacebookProfileReceived(User facebookUser) {
                         LogUtil.logDebug(TAG, "Facebook:onSuccess: " + facebookUser);
                         presenter.handleSocialSignInResult(facebookUser);
                     }
@@ -143,7 +143,7 @@ public class LoginActivity extends BaseActivity<LoginView, LoginPresenter> imple
                 getResources().getString(R.string.instagram_callback_url), this,
                 new InstagramResponse() {
                     @Override
-                    public void onInstagramSignInSuccess(SocialUser instagramUser) {
+                    public void onInstagramSignInSuccess(User instagramUser) {
                         LogUtil.logDebug(TAG, "Instagram:onSuccess: " + instagramUser);
                         presenter.handleSocialSignInResult(instagramUser);
                     }
@@ -176,7 +176,7 @@ public class LoginActivity extends BaseActivity<LoginView, LoginPresenter> imple
             @Override
             public void onTwitterError(TwitterException error) {
                 LogUtil.logError(TAG, "onTwitterSignInFail:onError " + error);
-                showSnackBar(error.toString());
+//                showSnackBar(error.toString());
             }
 
             @Override
@@ -185,7 +185,7 @@ public class LoginActivity extends BaseActivity<LoginView, LoginPresenter> imple
             }
 
             @Override
-            public void onTwitterProfileReceived(SocialUser instagramUser) {
+            public void onTwitterProfileReceived(User instagramUser) {
                 LogUtil.logDebug(TAG, "Twitter:onSuccess: " + instagramUser);
                 presenter.handleSocialSignInResult(instagramUser);
             }
@@ -234,7 +234,7 @@ public class LoginActivity extends BaseActivity<LoginView, LoginPresenter> imple
     }
 
     @Override
-    public void startCreateProfileActivity(SocialUser user) {
+    public void startCreateProfileActivity(User user) {
         Intent intent = new Intent(LoginActivity.this, CreateProfileActivity.class);
         intent.putExtra(EditProfileActivity.SOCIAL_USER_EXTRA_KEY, user);
         startActivity(intent);

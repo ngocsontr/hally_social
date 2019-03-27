@@ -212,7 +212,8 @@ public class MainActivity extends BaseActivity<MainView, MainPresenter> implemen
 
     @Override
     public void hideCounterView() {
-        if (!counterAnimationInProgress && newPostsCounterTextView.getVisibility() == View.VISIBLE) {
+        if (newPostsCounterTextView != null && !counterAnimationInProgress
+                && newPostsCounterTextView.getVisibility() == View.VISIBLE) {
             counterAnimationInProgress = true;
             AlphaAnimation alphaAnimation = AnimationUtils.hideViewByAlpha(newPostsCounterTextView);
             alphaAnimation.setAnimationListener(new Animation.AnimationListener() {

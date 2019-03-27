@@ -36,7 +36,7 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.hally.influencerai.R;
 import com.hally.influencerai.main.pickImageBase.PickImageActivity;
-import com.hally.influencerai.model.SocialUser;
+import com.hally.influencerai.model.User;
 import com.hally.influencerai.utils.GlideApp;
 import com.hally.influencerai.utils.ImageUtil;
 import com.hally.influencerai.utils.LogUtil;
@@ -49,7 +49,7 @@ public class EditProfileActivity<V extends EditProfileView, P extends EditProfil
 
     public static final String SOCIAL_USER_EXTRA_KEY = "SOCIAL_USER_EXTRA_KEY";
 
-    protected SocialUser socialUser;
+    protected User user;
     // UI references.
     private EditText emailEditText;
     private EditText nameEditText;
@@ -67,7 +67,7 @@ public class EditProfileActivity<V extends EditProfileView, P extends EditProfil
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
-        socialUser = getIntent().getParcelableExtra(SOCIAL_USER_EXTRA_KEY);
+        user = getIntent().getParcelableExtra(SOCIAL_USER_EXTRA_KEY);
 
         avatarProgressBar = findViewById(R.id.avatarProgressBar);
         avatarImageView = findViewById(R.id.imageView);
@@ -178,7 +178,7 @@ public class EditProfileActivity<V extends EditProfileView, P extends EditProfil
 
     @SuppressLint("SetTextI18n")
     @Override
-    public void buildProfile(SocialUser profile) {
+    public void buildProfile(User profile) {
         setProfilePhoto(profile.getAvatar());
         emailEditText.setText(profile.getEmail());
         nameEditText.setText(profile.getUsername());
@@ -198,7 +198,7 @@ public class EditProfileActivity<V extends EditProfileView, P extends EditProfil
         // Handle item selection
         switch (item.getItemId()) {
             case R.id.save:
-                presenter.attemptCreateProfile(socialUser);
+                presenter.attemptCreateProfile(user);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

@@ -19,6 +19,14 @@ package com.hally.influencerai;
 public class Constants {
 
     public static final boolean DEBUG = true;
+
+    public static class UserType {
+        public static final int FACEBOOK = 1;
+        public static final int TWITTER = 2;
+        public static final int INSTAGRAM = 3;
+        public static final int YOUTUBE = 4;
+    }
+
     public static class Profile {
         public static final int MAX_AVATAR_SIZE = 1280; //px, side of square
         public static final int MIN_AVATAR_SIZE = 100; //px, side of square

@@ -4,7 +4,7 @@ package com.hally.influencerai.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Register {
+public class RegisterUserRes {
 
     @SerializedName("token")
     @Expose

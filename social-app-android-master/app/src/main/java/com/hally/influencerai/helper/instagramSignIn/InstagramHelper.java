@@ -5,8 +5,8 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
-import com.hally.influencerai.enums.UserType;
-import com.hally.influencerai.model.SocialUser;
+import com.hally.influencerai.Constants;
+import com.hally.influencerai.model.User;
 
 import org.json.JSONObject;
 import org.json.JSONTokener;
@@ -26,7 +26,7 @@ import java.net.URL;
 public class InstagramHelper {
 
     private InstagramDialog mDialog;//Dialog open to display login screen of instagram
-    private SocialUser mSocialUser;//Save users data
+    private User mUser;//Save users data
     private InstagramResponse mListener;
 
     private ProgressDialog mProgress;
@@ -146,15 +146,15 @@ public class InstagramHelper {
 
                     mAccessToken = jsonObj.getString("access_token");
 
-                    mSocialUser = new SocialUser();
-                    mSocialUser.setUserType(UserType.INSTAGRAM);
-                    mSocialUser.setAccessToken(jsonObj.getString("access_token"));
-                    mSocialUser.setUsername(jsonObj.getJSONObject("user").getString("username"));
-                    mSocialUser.setDescription(jsonObj.getJSONObject("user").getString("bio"));
-                    mSocialUser.setWebsite(jsonObj.getJSONObject("user").getString("website"));
-                    mSocialUser.setAvatar(jsonObj.getJSONObject("user").getString("profile_picture"));
-                    mSocialUser.setFullName(jsonObj.getJSONObject("user").getString("full_name"));
-                    mSocialUser.setId(jsonObj.getJSONObject("user").getString("id"));
+                    mUser = new User();
+                    mUser.setSocialType(Constants.UserType.INSTAGRAM);
+                    mUser.setSnsAccessToken(jsonObj.getString("access_token"));
+                    mUser.setUsername(jsonObj.getJSONObject("user").getString("username"));
+                    mUser.setDescription(jsonObj.getJSONObject("user").getString("bio"));
+                    mUser.setWebsite(jsonObj.getJSONObject("user").getString("website"));
+                    mUser.setAvatar(jsonObj.getJSONObject("user").getString("profile_picture"));
+                    mUser.setFullName(jsonObj.getJSONObject("user").getString("full_name"));
+                    mUser.setSocialId(jsonObj.getJSONObject("user").getString("id"));
 
                 } catch (Exception ex) {
                     what = WHAT_ERROR;
@@ -167,7 +167,7 @@ public class InstagramHelper {
                     //if exception occur
                     mListener.onInstagramSignInFail("Instagram Failed to get access token");
                 } else {
-                    mListener.onInstagramSignInSuccess(mSocialUser);
+                    mListener.onInstagramSignInSuccess(mUser);
                 }
             }
         }.start();

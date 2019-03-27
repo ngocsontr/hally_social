@@ -18,9 +18,9 @@ import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
+import com.hally.influencerai.Constants;
 import com.hally.influencerai.R;
-import com.hally.influencerai.enums.UserType;
-import com.hally.influencerai.model.SocialUser;
+import com.hally.influencerai.model.User;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -124,19 +124,19 @@ public class FacebookHelper {
     }
 
     /**
-     * Parse the response received into {@link SocialUser} object.
+     * Parse the response received into {@link User} object.
      *
      * @param accessToken
      * @param object      response received.
-     * @return {@link SocialUser} with required fields.
+     * @return {@link User} with required fields.
      * @throws JSONException
      */
-    private SocialUser parseResponse(AccessToken accessToken, JSONObject object) throws JSONException {
-        SocialUser user = new SocialUser();
+    private User parseResponse(AccessToken accessToken, JSONObject object) throws JSONException {
+        User user = new User();
 
-        user.setUserType(UserType.FACEBOOK);
-        user.setAccessToken(accessToken.getToken());
-        if (object.has("id")) user.setId(object.getString("id"));
+        user.setSocialType(Constants.UserType.FACEBOOK);
+        user.setSnsAccessToken(accessToken.getToken());
+        if (object.has("id")) user.setSocialId(object.getString("id"));
         if (object.has("email")) user.setEmail(object.getString("email"));
         if (object.has("name")) user.setUsername(object.getString("name"));
         if (object.has("gender"))
@@ -150,7 +150,7 @@ public class FacebookHelper {
             user.setCoverPicUrl(object.getJSONObject("cover").getString("source"));
 //        if (object.has("picture"))
         user.setAvatar(String.format(mContext.getString(R.string.facebook_large_image_url_pattern),
-                user.getId()));
+                user.getSocialId()));
         return user;
     }
 

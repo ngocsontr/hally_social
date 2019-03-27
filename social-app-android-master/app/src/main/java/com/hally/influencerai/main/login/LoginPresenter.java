@@ -19,6 +19,7 @@ package com.hally.influencerai.main.login;
 import android.content.Context;
 import android.net.Uri;
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
 
 import com.facebook.login.LoginResult;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -37,11 +38,13 @@ import com.hally.influencerai.managers.ProfileManager;
 import com.hally.influencerai.managers.listeners.OnObjectExistListener;
 import com.hally.influencerai.managers.network.ApiUtils;
 import com.hally.influencerai.model.Profile;
-import com.hally.influencerai.model.SocialUser;
+import com.hally.influencerai.model.RegisterUserRes;
 import com.hally.influencerai.model.User;
 import com.hally.influencerai.utils.LogUtil;
 import com.hally.influencerai.utils.PreferencesUtil;
 import com.hally.influencerai.utils.Utils;
+
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -130,7 +133,7 @@ class LoginPresenter extends BasePresenter<LoginView> {
             @Override
             public void run(@NonNull LoginView view) {
                 LogUtil.logDebug(TAG, "handleFacebookSignInResult: " + loginResult);
-//                view.setProfilePhotoUrl(LoginPresenter.this.buildFacebookPhotoUrl(loginResult.getAccessToken().getUserId()));
+//                view.setProfilePhotoUrl(LoginPresenter.this.buildFacebookPhotoUrl(loginResult.getSnsAccessToken().getUserId()));
                 view.showProgress();
                 AuthCredential credential = FacebookAuthProvider.getCredential(loginResult.getAccessToken().getToken());
 //                view.firebaseAuthWithCredentials(credential);
@@ -138,7 +141,7 @@ class LoginPresenter extends BasePresenter<LoginView> {
         });
     }
 
-    public void handleSocialSignInResult(SocialUser user) {
+    public void handleSocialSignInResult(User user) {
         ifViewAttached(new ViewAction<LoginView>() {
             @Override
             public void run(@NonNull LoginView view) {
@@ -149,41 +152,51 @@ class LoginPresenter extends BasePresenter<LoginView> {
         });
     }
 
-    public void attemptCreateProfile(SocialUser socialUser) {
+    public void attemptCreateProfile(User socialUser) {
         if (checkInternetConnection()) {
             ifViewAttached(new ViewAction<LoginView>() {
                 @Override
                 public void run(@NonNull LoginView view) {
                     User user = new User();
-                    user.setSocialId(socialUser.getId());
-                    user.setSocialType(String.valueOf(socialUser.getUserType().value));
-                    user.setUsername(socialUser.getUsername());
-//                    user.setEmail(socialUser.getEmail());
-                    user.setAvatar(socialUser.getAvatar());
-                    user.setDescription(socialUser.getDescription());
-//                    user.setSnsAccessToken(socialUser.getAccessToken());
+                    user.setSocialId(socialUser.getSocialId());
+                    user.setSocialType(socialUser.getSocialType());
+                    if (!TextUtils.isEmpty(socialUser.getUsername()))
+                        user.setUsername(socialUser.getUsername());
+                    if (!TextUtils.isEmpty(socialUser.getEmail()))
+                        user.setEmail(user.getEmail());
+                    if (!TextUtils.isEmpty(socialUser.getAvatar()))
+                        user.setAvatar(socialUser.getAvatar());
+                    if (!TextUtils.isEmpty(socialUser.getDescription()))
+                        user.setDescription(socialUser.getDescription());
+                    if (!TextUtils.isEmpty(socialUser.getSnsAccessToken()))
+                        user.setSnsAccessToken(user.getSnsAccessToken());
 
-                    ApiUtils.registerUser(context, user, new Callback<User>() {
+                    ApiUtils.registerUser(context, user, new Callback<List<RegisterUserRes>>() {
                         @Override
-                        public void onResponse(Call<User> call, Response<User> response) {
-                            LogUtil.logDebug(TAG, "onResponse: Response<User>: " + response);
-                            User resUser = response.body();
+                        public void onResponse(Call<List<RegisterUserRes>> call, Response<List<RegisterUserRes>> response) {
+                            LogUtil.logDebug(TAG, "onResponse: Call: " + call);
+                            List<RegisterUserRes> users = response.body();
+                            String token = users.get(0).getToken();
+                            User resUser = users.get(1).getUser();
+                            LogUtil.logDebug(TAG, "onResponse: token: " + token);
+                            LogUtil.logDebug(TAG, "onResponse: User: " + resUser);
                             if (resUser != null) {
-                                if (resUser.getRequireUpdateInfo().equals("1")) {
-                                    view.startCreateProfileActivity(socialUser);
+                                if (resUser.isRequireUpdateInfo()) {
+                                    view.startCreateProfileActivity(resUser);
                                 } else {
                                     view.startMainActivity();
                                 }
                             } else {
-                                view.startCreateProfileActivity(socialUser);
                                 view.showSnackBar(R.string.error_fail_create_profile);
+//                                view.startCreateProfileActivity(socialUser);
                             }
                         }
 
                         @Override
-                        public void onFailure(Call<User> call, Throwable t) {
-                            view.startCreateProfileActivity(socialUser);
+                        public void onFailure(Call<List<RegisterUserRes>> call, Throwable t) {
+                            LogUtil.logDebug(TAG, "onFailure: Message: " + t.getMessage());
                             view.showSnackBar(R.string.error_fail_create_profile);
+//                            view.startCreateProfileActivity(socialUser);
                         }
                     });
                 }

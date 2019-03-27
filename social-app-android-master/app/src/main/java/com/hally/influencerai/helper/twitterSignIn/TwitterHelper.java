@@ -6,8 +6,8 @@ import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
 import android.util.Log;
 
-import com.hally.influencerai.enums.UserType;
-import com.hally.influencerai.model.SocialUser;
+import com.hally.influencerai.Constants;
+import com.hally.influencerai.model.User;
 import com.twitter.sdk.android.core.Callback;
 import com.twitter.sdk.android.core.DefaultLogger;
 import com.twitter.sdk.android.core.Result;
@@ -19,7 +19,6 @@ import com.twitter.sdk.android.core.TwitterCore;
 import com.twitter.sdk.android.core.TwitterException;
 import com.twitter.sdk.android.core.TwitterSession;
 import com.twitter.sdk.android.core.identity.TwitterAuthClient;
-import com.twitter.sdk.android.core.models.User;
 import com.twitter.sdk.android.core.services.AccountService;
 
 import retrofit2.Call;
@@ -106,20 +105,20 @@ public class TwitterHelper {
     private void getUserData() {
         TwitterApiClient twitterApiClient = TwitterCore.getInstance().getApiClient();
         AccountService statusesService = twitterApiClient.getAccountService();
-        Call<User> call = statusesService.verifyCredentials(true, true, true);
-        call.enqueue(new Callback<User>() {
+        Call<com.twitter.sdk.android.core.models.User> call = statusesService.verifyCredentials(true, true, true);
+        call.enqueue(new Callback<com.twitter.sdk.android.core.models.User>() {
             @Override
-            public void success(Result<User> userResult) {
+            public void success(Result<com.twitter.sdk.android.core.models.User> userResult) {
                 //parse the response
-                SocialUser user = new SocialUser();
-                user.setUserType(UserType.TWITTER);
+                User user = new User();
+                user.setSocialType(Constants.UserType.TWITTER);
                 user.setUsername(userResult.data.name);
                 user.setEmail(userResult.data.email);
                 user.setDescription(userResult.data.description);
                 user.setLocation(userResult.data.location);
                 user.setAvatar(userResult.data.profileImageUrl);
                 user.setCoverPicUrl(userResult.data.profileBannerUrl);
-                user.setId(userResult.data.idStr);
+                user.setSocialId(userResult.data.idStr);
 
                 mListener.onTwitterProfileReceived(user);
             }

@@ -17,8 +17,7 @@ import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
 import com.hally.influencerai.Constants;
 import com.hally.influencerai.R;
-import com.hally.influencerai.enums.UserType;
-import com.hally.influencerai.model.SocialUser;
+import com.hally.influencerai.model.User;
 import com.hally.influencerai.utils.LogUtil;
 
 /**
@@ -93,13 +92,13 @@ public class GoogleSignInHelper implements GoogleApiClient.OnConnectionFailedLis
         }
     }
 
-    private SocialUser parseToGoogleUser(GoogleSignInAccount account) {
-        SocialUser user = new SocialUser();
-        user.setUserType(UserType.YOUTUBE);
-        user.setId(account.getId());
+    private User parseToGoogleUser(GoogleSignInAccount account) {
+        User user = new User();
+        user.setSocialType(Constants.UserType.YOUTUBE);
+        user.setSocialId(account.getId());
         user.setUsername(account.getDisplayName());
         user.setFullName(account.getFamilyName() + account.getGivenName());
-        user.setAccessToken(account.getIdToken());
+        user.setSnsAccessToken(account.getIdToken());
         user.setEmail(account.getEmail());
         user.setAvatar(String.format(mContext.getString(R.string.google_large_image_url_pattern),
                 account.getPhotoUrl(), Constants.Profile.MAX_AVATAR_SIZE));

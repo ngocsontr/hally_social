@@ -1,16 +1,21 @@
-
 package com.hally.influencerai.model;
+
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-public class User {
-
+/**
+ * Created by HallyTran on 3/22/2019.
+ * transon97uet@gmail.com
+ */
+public class User implements Parcelable {
     @SerializedName("id")
     @Expose
-    private Integer id;
+    private int id;
     @SerializedName("username")
     @Expose
     private String username;
@@ -61,10 +66,7 @@ public class User {
     private String userType;
     @SerializedName("require_update_info")
     @Expose
-    private String requireUpdateInfo;
-    @SerializedName("user_socials")
-    @Expose
-    private List<UserSocial> userSocials = null;
+    private boolean requireUpdateInfo;
     @SerializedName("sns_account_id")
     @Expose
     private String socialId;
@@ -76,13 +78,63 @@ public class User {
     private String link;
     @SerializedName("social_type")
     @Expose
-    private String socialType;
+    private int socialType;
+    @SerializedName("user_socials")
+    @Expose
+    private List<UserSocial> userSocials = null;
+
+    private String website;
+    private String about;
+    private String coverPicUrl;
+
+    public User() {
+    }
+
+    protected User(Parcel in) {
+        id = in.readInt();
+        username = in.readString();
+        fullName = in.readString();
+        dateOfBirth = in.readString();
+        gender = in.readString();
+        country = in.readString();
+        location = in.readString();
+        email = in.readString();
+        avatar = in.readString();
+        description = in.readString();
+        createdAt = in.readString();
+        updatedAt = in.readString();
+        deletedAt = in.readString();
+        lastLogin = in.readString();
+        ip = in.readString();
+        isActive = in.readString();
+        userType = in.readString();
+        requireUpdateInfo = in.readByte() != 0;
+        socialId = in.readString();
+        snsAccessToken = in.readString();
+        link = in.readString();
+        socialType = in.readInt();
+        website = in.readString();
+        about = in.readString();
+        coverPicUrl = in.readString();
+    }
+
+    public static final Creator<User> CREATOR = new Creator<User>() {
+        @Override
+        public User createFromParcel(Parcel in) {
+            return new User(in);
+        }
+
+        @Override
+        public User[] newArray(int size) {
+            return new User[size];
+        }
+    };
 
     public Integer getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -214,11 +266,11 @@ public class User {
         this.userType = userType;
     }
 
-    public String getRequireUpdateInfo() {
+    public boolean isRequireUpdateInfo() {
         return requireUpdateInfo;
     }
 
-    public void setRequireUpdateInfo(String requireUpdateInfo) {
+    public void setRequireUpdateInfo(boolean requireUpdateInfo) {
         this.requireUpdateInfo = requireUpdateInfo;
     }
 
@@ -254,11 +306,102 @@ public class User {
         return link;
     }
 
-    public void setSocialType(String socialType) {
+    public void setSocialType(int socialType) {
         this.socialType = socialType;
     }
 
-    public String getSocialType() {
+    public int getSocialType() {
         return socialType;
+    }
+
+    public String getWebsite() {
+        return website;
+    }
+
+    public void setWebsite(String website) {
+        this.website = website;
+    }
+
+    public String getAbout() {
+        return about;
+    }
+
+    public void setAbout(String about) {
+        this.about = about;
+    }
+
+    public String getCoverPicUrl() {
+        return coverPicUrl;
+    }
+
+    public void setCoverPicUrl(String coverPicUrl) {
+        this.coverPicUrl = coverPicUrl;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+
+        dest.writeInt(id);
+        dest.writeString(username);
+        dest.writeString(fullName);
+        dest.writeString(dateOfBirth);
+        dest.writeString(gender);
+        dest.writeString(country);
+        dest.writeString(location);
+        dest.writeString(email);
+        dest.writeString(avatar);
+        dest.writeString(description);
+        dest.writeString(createdAt);
+        dest.writeString(updatedAt);
+        dest.writeString(deletedAt);
+        dest.writeString(lastLogin);
+        dest.writeString(ip);
+        dest.writeString(isActive);
+        dest.writeString(userType);
+        dest.writeByte((byte) (requireUpdateInfo ? 1 : 0));
+        dest.writeString(socialId);
+        dest.writeString(snsAccessToken);
+        dest.writeString(link);
+        dest.writeInt(socialType);
+        dest.writeString(website);
+        dest.writeString(about);
+        dest.writeString(coverPicUrl);
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", fullName='" + fullName + '\'' +
+                ", dateOfBirth='" + dateOfBirth + '\'' +
+                ", gender='" + gender + '\'' +
+                ", country='" + country + '\'' +
+                ", location='" + location + '\'' +
+                ", email='" + email + '\'' +
+                ", avatar='" + avatar + '\'' +
+                ", description='" + description + '\'' +
+                ", createdAt='" + createdAt + '\'' +
+                ", updatedAt='" + updatedAt + '\'' +
+                ", deletedAt='" + deletedAt + '\'' +
+                ", lastLogin='" + lastLogin + '\'' +
+                ", ip='" + ip + '\'' +
+                ", isActive='" + isActive + '\'' +
+                ", userType='" + userType + '\'' +
+                ", requireUpdateInfo='" + requireUpdateInfo + '\'' +
+                ", socialId='" + socialId + '\'' +
+                ", snsAccessToken='" + snsAccessToken + '\'' +
+                ", link='" + link + '\'' +
+                ", socialType=" + socialType +
+                ", userSocials=" + userSocials +
+                ", website='" + website + '\'' +
+                ", about='" + about + '\'' +
+                ", coverPicUrl='" + coverPicUrl + '\'' +
+                '}';
     }
 }

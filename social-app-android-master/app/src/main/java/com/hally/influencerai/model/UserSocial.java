@@ -128,4 +128,20 @@ public class UserSocial {
         this.flatformId = flatformId;
     }
 
+    @Override
+    public String toString() {
+        return "UserSocial{" +
+                "id=" + id +
+                ", link='" + link + '\'' +
+                ", email='" + email + '\'' +
+                ", createdAt='" + createdAt + '\'' +
+                ", updatedAt='" + updatedAt + '\'' +
+                ", deletedAt='" + deletedAt + '\'' +
+                ", socialType='" + socialType + '\'' +
+                ", accessToken='" + accessToken + '\'' +
+                ", userId='" + userId + '\'' +
+                ", extraData='" + extraData + '\'' +
+                ", flatformId='" + flatformId + '\'' +
+                '}';
+    }
 }

@@ -2,7 +2,7 @@ package com.hally.influencerai.helper.twitterSignIn;
 
 import android.support.annotation.NonNull;
 
-import com.hally.influencerai.model.SocialUser;
+import com.hally.influencerai.model.User;
 import com.twitter.sdk.android.core.TwitterException;
 
 /**
@@ -28,7 +28,7 @@ public interface TwitterResponse {
     /**
      * This method will execute when user profile is received.
      *
-     * @param user {@link SocialUser} profile.
+     * @param user {@link User} profile.
      */
-    void onTwitterProfileReceived(SocialUser user);
+    void onTwitterProfileReceived(User user);
 }

@@ -3,9 +3,13 @@ package com.hally.influencerai.managers.network;
 import android.content.Context;
 
 import com.hally.influencerai.Constants;
+import com.hally.influencerai.model.Login;
+import com.hally.influencerai.model.RegisterUserRes;
+import com.hally.influencerai.model.UpdateUserRes;
 import com.hally.influencerai.model.User;
 
-import retrofit2.Call;
+import java.util.List;
+
 import retrofit2.Callback;
 
 /**
@@ -14,17 +18,23 @@ import retrofit2.Callback;
  */
 public class ApiUtils {
 
-    public static final String BASE_URL_DEBUG = "http://35.236.66.95/";
-    public static final String BASE_URL = "http://35.236.66.95/";
+    private static final String BASE_URL_DEBUG = "http://35.236.66.95/";
+    private static final String BASE_URL = "http://35.236.66.95/";
 
-    public static APIService getAPIService(Context context) {
+    private static APIService getAPIService(Context context) {
         return RetrofitClient.getClient(Constants.DEBUG ? BASE_URL_DEBUG : BASE_URL, context)
                 .create(APIService.class);
     }
 
-    public static void registerUser(Context context, User user, Callback<User> callback) {
-        APIService service = getAPIService(context);
-        Call<User> userCall = service.registerUser(user);
-        userCall.enqueue(callback);
+    public static void registerUser(Context context, String jwt, Callback<Login> callback) {
+        getAPIService(context).login(jwt).enqueue(callback);
+    }
+
+    public static void registerUser(Context context, User user, Callback<List<RegisterUserRes>> callback) {
+        getAPIService(context).registerUser(user).enqueue(callback);
+    }
+
+    public static void updateUser(Context context, User user, Callback<UpdateUserRes> callback) {
+        getAPIService(context).updateUser(user).enqueue(callback);
     }
 }

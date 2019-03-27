@@ -1,6 +1,6 @@
 package com.hally.influencerai.helper.facebookSignIn;
 
-import com.hally.influencerai.model.SocialUser;
+import com.hally.influencerai.model.User;
 
 /**
  * Created by HallyTran on 3/22/2019.
@@ -11,7 +11,7 @@ public interface FacebookResponse {
 
     void onFacebookSignInSuccess();
 
-    void onFacebookProfileReceived(SocialUser socialUser);
+    void onFacebookProfileReceived(User user);
 
     void onFacebookSignOut();
 }

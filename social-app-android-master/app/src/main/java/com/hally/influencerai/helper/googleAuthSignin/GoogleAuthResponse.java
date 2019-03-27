@@ -1,6 +1,6 @@
 package com.hally.influencerai.helper.googleAuthSignin;
 
-import com.hally.influencerai.model.SocialUser;
+import com.hally.influencerai.model.User;
 
 /**
  * Created by HallyTran on 3/22/2019.
@@ -8,7 +8,7 @@ import com.hally.influencerai.model.SocialUser;
  */
 public interface GoogleAuthResponse {
 
-    void onGoogleAuthSignIn(SocialUser user);
+    void onGoogleAuthSignIn(User user);
 
     void onGoogleAuthSignInFailed();
 

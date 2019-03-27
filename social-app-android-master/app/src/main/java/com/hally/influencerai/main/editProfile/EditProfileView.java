@@ -17,7 +17,7 @@
 package com.hally.influencerai.main.editProfile;
 
 import com.hally.influencerai.main.pickImageBase.PickImageView;
-import com.hally.influencerai.model.SocialUser;
+import com.hally.influencerai.model.User;
 
 /**
  * Created by Alexey on 03.05.18.
@@ -34,5 +34,5 @@ public interface EditProfileView extends PickImageView {
 
     void createProfessionalList();
 
-    void buildProfile(SocialUser profile);
+    void buildProfile(User profile);
 }
