@@ -74,6 +74,9 @@ public class User {
     @SerializedName("link")
     @Expose
     private String link;
+    @SerializedName("social_type")
+    @Expose
+    private String socialType;
 
     public Integer getId() {
         return id;
@@ -249,5 +252,13 @@ public class User {
 
     public String getLink() {
         return link;
+    }
+
+    public void setSocialType(String socialType) {
+        this.socialType = socialType;
+    }
+
+    public String getSocialType() {
+        return socialType;
     }
 }

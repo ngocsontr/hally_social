@@ -156,13 +156,12 @@ class LoginPresenter extends BasePresenter<LoginView> {
                 public void run(@NonNull LoginView view) {
                     User user = new User();
                     user.setSocialId(socialUser.getId());
+                    user.setSocialType(String.valueOf(socialUser.getUserType().value));
                     user.setUsername(socialUser.getUsername());
-                    user.setEmail(socialUser.getEmail());
+//                    user.setEmail(socialUser.getEmail());
                     user.setAvatar(socialUser.getAvatar());
                     user.setDescription(socialUser.getDescription());
-                    user.setSnsAccessToken(socialUser.getAccessToken());
-                    user.setLink("null");
-                    user.setUserType(String.valueOf(socialUser.getUserType().value));
+//                    user.setSnsAccessToken(socialUser.getAccessToken());
 
                     ApiUtils.registerUser(context, user, new Callback<User>() {
                         @Override
