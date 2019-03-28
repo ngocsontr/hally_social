@@ -41,10 +41,8 @@ import com.hally.influencerai.model.Profile;
 import com.hally.influencerai.model.RegisterUserRes;
 import com.hally.influencerai.model.User;
 import com.hally.influencerai.utils.LogUtil;
-import com.hally.influencerai.utils.PreferencesUtil;
+import com.hally.influencerai.utils.SharePreUtil;
 import com.hally.influencerai.utils.Utils;
-
-import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -66,7 +64,7 @@ class LoginPresenter extends BasePresenter<LoginView> {
                         if (!exist) {
 //                            view.startCreateProfileActivity();
                         } else {
-                            PreferencesUtil.setProfileCreated(context, true);
+                            SharePreUtil.setProfileCreated(context, true);
                             ProfileInteractor.getInstance(context.getApplicationContext())
                                     .addRegistrationToken(FirebaseInstanceId.getInstance().getToken(), userId);
                             view.startMainActivity();
@@ -171,15 +169,18 @@ class LoginPresenter extends BasePresenter<LoginView> {
                     if (!TextUtils.isEmpty(socialUser.getSnsAccessToken()))
                         user.setSnsAccessToken(user.getSnsAccessToken());
 
-                    ApiUtils.registerUser(context, user, new Callback<List<RegisterUserRes>>() {
+                    ApiUtils.registerUser(context, user, new Callback<RegisterUserRes>() {
                         @Override
-                        public void onResponse(Call<List<RegisterUserRes>> call, Response<List<RegisterUserRes>> response) {
+                        public void onResponse(Call<RegisterUserRes> call, Response<RegisterUserRes> response) {
                             LogUtil.logDebug(TAG, "onResponse: Call: " + call);
-                            List<RegisterUserRes> users = response.body();
-                            String token = users.get(0).getToken();
-                            User resUser = users.get(1).getUser();
+                            RegisterUserRes user = response.body();
+                            String token = user.getToken();
+                            User resUser = user.getUser();
                             LogUtil.logDebug(TAG, "onResponse: token: " + token);
                             LogUtil.logDebug(TAG, "onResponse: User: " + resUser);
+
+                            if (!TextUtils.isEmpty(token))
+                                SharePreUtil.saveLoginToken(context, token);
                             if (resUser != null) {
                                 if (resUser.isRequireUpdateInfo()) {
                                     view.startCreateProfileActivity(resUser);
@@ -193,7 +194,7 @@ class LoginPresenter extends BasePresenter<LoginView> {
                         }
 
                         @Override
-                        public void onFailure(Call<List<RegisterUserRes>> call, Throwable t) {
+                        public void onFailure(Call<RegisterUserRes> call, Throwable t) {
                             LogUtil.logDebug(TAG, "onFailure: Message: " + t.getMessage());
                             view.showSnackBar(R.string.error_fail_create_profile);
 //                            view.startCreateProfileActivity(socialUser);

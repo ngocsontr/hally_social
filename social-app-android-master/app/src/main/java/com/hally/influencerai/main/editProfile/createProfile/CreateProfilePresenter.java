@@ -33,7 +33,7 @@ import android.util.Log;
 
 import com.hally.influencerai.main.editProfile.EditProfilePresenter;
 import com.hally.influencerai.model.User;
-import com.hally.influencerai.utils.PreferencesUtil;
+import com.hally.influencerai.utils.SharePreUtil;
 
 import java.io.IOException;
 import java.util.List;
@@ -70,7 +70,7 @@ class CreateProfilePresenter extends EditProfilePresenter<CreateProfileView> {
     @Override
     protected void onProfileUpdatedSuccessfully() {
         super.onProfileUpdatedSuccessfully();
-        PreferencesUtil.setProfileCreated(context, true);
+        SharePreUtil.setProfileCreated(context, true);
 //        profileManager.addRegistrationToken(FirebaseInstanceId.getInstance().getToken(), profile.getId());
     }
 

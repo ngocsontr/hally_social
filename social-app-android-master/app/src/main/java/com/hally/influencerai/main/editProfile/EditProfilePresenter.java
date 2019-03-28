@@ -121,6 +121,7 @@ public class EditProfilePresenter<V extends EditProfileView> extends PickImagePr
                         public void onResponse(Call<UpdateUserRes> call, Response<UpdateUserRes> response) {
                             if (response.errorBody() != null) {
                                 LogUtil.logDebug(TAG, "onResponse:error " + response.errorBody());
+                                view.showSnackBar(R.string.error_fail_update_profile);
                                 EditProfilePresenter.this.onProfileUpdatedSuccessfully();
                                 return;
                             }

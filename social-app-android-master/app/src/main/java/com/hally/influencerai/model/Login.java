@@ -8,16 +8,16 @@ public class Login {
 
     @SerializedName("allow_access")
     @Expose
-    private String allowAccess;
+    private boolean allowAccess;
     @SerializedName("user")
     @Expose
     private User user;
 
-    public String getAllowAccess() {
+    public boolean isAllowAccess() {
         return allowAccess;
     }
 
-    public void setAllowAccess(String allowAccess) {
+    public void setAllowAccess(boolean allowAccess) {
         this.allowAccess = allowAccess;
     }
 

@@ -76,7 +76,7 @@ public class LogoutHelper {
 
     private static void logoutFirebase(Context context) {
         FirebaseAuth.getInstance().signOut();
-        PreferencesUtil.setProfileCreated(context, false);
+        SharePreUtil.setProfileCreated(context, false);
     }
 
     private static void logoutFacebook(Context context) {

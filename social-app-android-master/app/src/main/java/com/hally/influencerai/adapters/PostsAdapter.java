@@ -33,7 +33,7 @@ import com.hally.influencerai.managers.PostManager;
 import com.hally.influencerai.managers.listeners.OnPostListChangedListener;
 import com.hally.influencerai.model.Post;
 import com.hally.influencerai.model.PostListResult;
-import com.hally.influencerai.utils.PreferencesUtil;
+import com.hally.influencerai.utils.SharePreUtil;
 
 import java.util.List;
 
@@ -159,7 +159,7 @@ public class PostsAdapter extends BasePostsAdapter {
 
     private void loadNext(final long nextItemCreatedDate) {
 
-        if (!PreferencesUtil.isPostWasLoadedAtLeastOnce(mainActivity) && !activity.hasInternetConnection()) {
+        if (!SharePreUtil.isPostWasLoadedAtLeastOnce(mainActivity) && !activity.hasInternetConnection()) {
             mainActivity.showFloatButtonRelatedSnackBar(R.string.internet_connection_failed);
             hideProgress();
             callback.onListLoadingFinished();
@@ -184,8 +184,8 @@ public class PostsAdapter extends BasePostsAdapter {
                 if (!list.isEmpty()) {
                     addList(list);
 
-                    if (!PreferencesUtil.isPostWasLoadedAtLeastOnce(mainActivity)) {
-                        PreferencesUtil.setPostWasLoadedAtLeastOnce(mainActivity, true);
+                    if (!SharePreUtil.isPostWasLoadedAtLeastOnce(mainActivity)) {
+                        SharePreUtil.setPostWasLoadedAtLeastOnce(mainActivity, true);
                     }
                 } else {
                     isLoading = false;

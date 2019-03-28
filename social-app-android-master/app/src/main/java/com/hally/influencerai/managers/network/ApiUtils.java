@@ -7,8 +7,7 @@ import com.hally.influencerai.model.Login;
 import com.hally.influencerai.model.RegisterUserRes;
 import com.hally.influencerai.model.UpdateUserRes;
 import com.hally.influencerai.model.User;
-
-import java.util.List;
+import com.hally.influencerai.utils.SharePreUtil;
 
 import retrofit2.Callback;
 
@@ -26,15 +25,16 @@ public class ApiUtils {
                 .create(APIService.class);
     }
 
-    public static void registerUser(Context context, String jwt, Callback<Login> callback) {
+    public static void login(Context context, String jwt, Callback<Login> callback) {
         getAPIService(context).login(jwt).enqueue(callback);
     }
 
-    public static void registerUser(Context context, User user, Callback<List<RegisterUserRes>> callback) {
+    public static void registerUser(Context context, User user, Callback<RegisterUserRes> callback) {
         getAPIService(context).registerUser(user).enqueue(callback);
     }
 
     public static void updateUser(Context context, User user, Callback<UpdateUserRes> callback) {
-        getAPIService(context).updateUser(user).enqueue(callback);
+        String token = SharePreUtil.getLoginToken(context);
+        getAPIService(context).updateUser(token, user).enqueue(callback);
     }
 }

@@ -29,7 +29,7 @@ import com.hally.influencerai.managers.listeners.OnObjectChangedListener;
 import com.hally.influencerai.managers.listeners.OnObjectExistListener;
 import com.hally.influencerai.managers.listeners.OnProfileCreatedListener;
 import com.hally.influencerai.model.Profile;
-import com.hally.influencerai.utils.PreferencesUtil;
+import com.hally.influencerai.utils.SharePreUtil;
 
 /**
  * Created by Kristina on 10/28/16.
@@ -95,7 +95,7 @@ public class ProfileManager extends FirebaseListenersManager {
 
         if (user == null) {
             return ProfileStatus.NOT_AUTHORIZED;
-        } else if (!PreferencesUtil.isProfileCreated(context)) {
+        } else if (!SharePreUtil.isProfileCreated(context)) {
             return ProfileStatus.NO_PROFILE;
         } else {
             return ProfileStatus.PROFILE_CREATED;
