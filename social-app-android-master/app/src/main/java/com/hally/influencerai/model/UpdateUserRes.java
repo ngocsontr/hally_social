@@ -6,6 +6,7 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 public class UpdateUserRes {
+    private static final String IS_SUCCESS = "Success";
 
     @SerializedName("update_user_info")
     @Expose
@@ -20,6 +21,6 @@ public class UpdateUserRes {
     }
 
     public boolean isSuccess() {
-        return TextUtils.equals(getUpdateUserInfo(), "success");
+        return TextUtils.equals(getUpdateUserInfo(), IS_SUCCESS);
     }
 }

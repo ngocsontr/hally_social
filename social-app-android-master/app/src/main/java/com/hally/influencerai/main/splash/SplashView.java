@@ -4,6 +4,7 @@ package com.hally.influencerai.main.splash;
 import android.view.View;
 
 import com.hally.influencerai.main.base.BaseView;
+import com.hally.influencerai.model.User;
 
 public interface SplashView extends BaseView {
 
@@ -12,4 +13,6 @@ public interface SplashView extends BaseView {
     View getLogoView();
 
     View getBackground();
+
+    void startCreateProfileActivity(User user);
 }

@@ -18,12 +18,13 @@ package com.hally.influencerai.utils;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.text.TextUtils;
 
 public class SharePreUtil {
 
     private static final String TAG = SharePreUtil.class.getSimpleName();
 
-    private static final String SHARED_PREFERENCES_NAME = "com.hally.socials";
+    private static final String SHARED_PREFERENCES_NAME = "local_share_preferences";
     private static final String PREF_PARAM_USER_LOGIN_TOKEN = "pref_param_user_login_token";
     private static final String PREF_PARAM_IS_PROFILE_CREATED = "isProfileCreated";
     private static final String PREF_PARAM_IS_POSTS_WAS_LOADED_AT_LEAST_ONCE = "isPostsWasLoadedAtLeastOnce";
@@ -33,8 +34,9 @@ public class SharePreUtil {
     }
 
     public static String getLoginToken(Context context) {
-        return CryptUtil.decrypt(getSharedPreferences(context).getString(
-                PREF_PARAM_USER_LOGIN_TOKEN, ""));
+        String token = getSharedPreferences(context).getString(
+                PREF_PARAM_USER_LOGIN_TOKEN, "");
+        return TextUtils.isEmpty(token) ? "" : CryptUtil.decrypt(token);
     }
 
     public static void saveLoginToken(Context context, String token) {

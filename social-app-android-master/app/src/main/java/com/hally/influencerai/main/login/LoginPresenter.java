@@ -183,6 +183,7 @@ class LoginPresenter extends BasePresenter<LoginView> {
                                 SharePreUtil.saveLoginToken(context, token);
                             if (resUser != null) {
                                 if (resUser.isRequireUpdateInfo()) {
+                                    checkPermission();
                                     view.startCreateProfileActivity(resUser);
                                 } else {
                                     view.startMainActivity();
@@ -204,7 +205,6 @@ class LoginPresenter extends BasePresenter<LoginView> {
             });
         }
     }
-
 
     private String buildGooglePhotoUrl(Uri photoUrl) {
         return String.format(context.getString(R.string.google_large_image_url_pattern),

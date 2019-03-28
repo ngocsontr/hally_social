@@ -16,11 +16,15 @@
 
 package com.hally.influencerai.main.base;
 
+import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.view.View;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -29,10 +33,6 @@ import com.hally.influencerai.enums.ProfileStatus;
 import com.hally.influencerai.managers.ProfileManager;
 import com.hannesdorfmann.mosby3.mvp.MvpBasePresenter;
 import com.hannesdorfmann.mosby3.mvp.MvpView;
-
-/**
- * Created by Alexey on 03.05.18.
- */
 
 public class BasePresenter<T extends BaseView & MvpView> extends MvpBasePresenter<T> {
 
@@ -45,6 +45,27 @@ public class BasePresenter<T extends BaseView & MvpView> extends MvpBasePresente
         this.context = context;
         profileManager = ProfileManager.getInstance(context);
     }
+
+
+    public void checkPermission() {
+        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+                context, Manifest.permission.ACCESS_COARSE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions((Activity) context,
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION,
+                            Manifest.permission.ACCESS_COARSE_LOCATION,}, 1);
+        }
+    }
+
+    public void checkPermission(String permission) {
+        if (ActivityCompat.checkSelfPermission(context, permission)
+                != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions((Activity) context,
+                    new String[]{permission}, 1);
+        }
+    }
+
 
     public boolean checkInternetConnection() {
         return checkInternetConnection(null);
@@ -74,7 +95,7 @@ public class BasePresenter<T extends BaseView & MvpView> extends MvpBasePresente
         return activeNetwork != null && activeNetwork.isConnectedOrConnecting();
     }
 
-    public boolean checkAuthorization(){
+    public boolean checkAuthorization() {
         ProfileStatus profileStatus = profileManager.checkProfile();
         if (profileStatus.equals(ProfileStatus.NOT_AUTHORIZED) || profileStatus.equals(ProfileStatus.NO_PROFILE)) {
             ifViewAttached(BaseView::startLoginActivity);

@@ -1,6 +1,7 @@
 package com.hally.influencerai.managers.network;
 
 import android.content.Context;
+import android.text.TextUtils;
 
 import com.hally.influencerai.Constants;
 import com.hally.influencerai.model.Login;
@@ -25,16 +26,32 @@ public class ApiUtils {
                 .create(APIService.class);
     }
 
-    public static void login(Context context, String jwt, Callback<Login> callback) {
-        getAPIService(context).login(jwt).enqueue(callback);
+    public static boolean login(Context context, Callback<Login> callback) {
+        String token = getUserToken(context);
+        if (TextUtils.isEmpty(token))
+            return false;
+        else
+            getAPIService(context).login(token).enqueue(callback);
+        return true;
     }
+
 
     public static void registerUser(Context context, User user, Callback<RegisterUserRes> callback) {
         getAPIService(context).registerUser(user).enqueue(callback);
     }
 
-    public static void updateUser(Context context, User user, Callback<UpdateUserRes> callback) {
+    public static boolean updateUser(Context context, User user, Callback<UpdateUserRes> callback) {
+        String token = getUserToken(context);
+        if (TextUtils.isEmpty(token))
+            return false;
+        else
+            getAPIService(context).updateUser(token, user).enqueue(callback);
+        return true;
+
+    }
+
+    private static String getUserToken(Context context) {
         String token = SharePreUtil.getLoginToken(context);
-        getAPIService(context).updateUser(token, user).enqueue(callback);
+        return TextUtils.isEmpty(token) ? null : "Bearer " + token;
     }
 }

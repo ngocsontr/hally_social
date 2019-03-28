@@ -17,7 +17,6 @@
 package com.hally.influencerai.main.editProfile.createProfile;
 
 import android.Manifest;
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -25,13 +24,13 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
-import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.util.Log;
 
 import com.hally.influencerai.main.editProfile.EditProfilePresenter;
+import com.hally.influencerai.main.editProfile.EditProfileView;
 import com.hally.influencerai.model.User;
 import com.hally.influencerai.utils.SharePreUtil;
 
@@ -49,21 +48,11 @@ class CreateProfilePresenter extends EditProfilePresenter<CreateProfileView> {
 
     public void buildProfile(User profile) {
 
-        ifViewAttached(new ViewAction<CreateProfileView>() {
-            @Override
-            public void run(@NonNull CreateProfileView view) {
-                view.buildProfile(profile);
-            }
-        });
+        ifViewAttached(view -> view.buildProfile(profile));
     }
 
     public void initProfessionalList() {
-        ifViewAttached(new ViewAction<CreateProfileView>() {
-            @Override
-            public void run(@NonNull CreateProfileView view) {
-                view.createProfessionalList();
-            }
-        });
+        ifViewAttached(EditProfileView::createProfessionalList);
     }
 
 
@@ -75,59 +64,54 @@ class CreateProfilePresenter extends EditProfilePresenter<CreateProfileView> {
     }
 
     public void initLocation() {
-        ifViewAttached(new ViewAction<CreateProfileView>() {
-            @Override
-            public void run(@NonNull CreateProfileView view) {
-                if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION)
-                        != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
-                        context, Manifest.permission.ACCESS_COARSE_LOCATION)
-                        != PackageManager.PERMISSION_GRANTED) {
-                    ActivityCompat.requestPermissions((Activity) context,
-                            new String[]{Manifest.permission.ACCESS_FINE_LOCATION,
-                                    Manifest.permission.ACCESS_COARSE_LOCATION,}, 1);
-                    return;
+        ifViewAttached(view -> {
+            if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION)
+                    != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+                    context, Manifest.permission.ACCESS_COARSE_LOCATION)
+                    != PackageManager.PERMISSION_GRANTED) {
+                return;
+            }
+
+            final LocationManager locationManager = (LocationManager) context.getSystemService(LOCATION_SERVICE);
+            if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+                // show dialog
+                buildAlertMessageNoGps();
+            }
+
+            List<String> providers = locationManager.getProviders(true);
+            Log.d(TAG, "getLastKnownLocation " + providers);
+            Location bestLocation = null;
+
+            for (String provider : providers) {
+                Location l = locationManager.getLastKnownLocation(provider);
+                if (l == null) {
+                    continue;
                 }
-
-                final LocationManager locationManager = (LocationManager) context.getSystemService(LOCATION_SERVICE);
-                if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-                    // show dialog
-                    buildAlertMessageNoGps();
+                if (bestLocation == null || l.getAccuracy() < bestLocation.getAccuracy()) {
+                    // Found best last known location: %s", l);
+                    bestLocation = l;
                 }
+            }
+            Log.d(TAG, "getLastKnownLocation " + bestLocation);
 
-                List<String> providers = locationManager.getProviders(true);
-                Log.d(TAG, "getLastKnownLocation " + providers);
-                Location bestLocation = null;
-
-                for (String provider : providers) {
-                    Location l = locationManager.getLastKnownLocation(provider);
-                    if (l == null) {
-                        continue;
-                    }
-                    if (bestLocation == null || l.getAccuracy() < bestLocation.getAccuracy()) {
-                        // Found best last known location: %s", l);
-                        bestLocation = l;
-                    }
+            if (bestLocation != null) {
+                try {
+                    Geocoder geocoder = new Geocoder(context, Locale.getDefault());
+                    final int MAX = 1;
+                    Address address = geocoder.getFromLocation(
+                            bestLocation.getLatitude(), bestLocation.getLongitude(), MAX)
+                            .get(MAX - 1);
+                    String cityName = address.getAddressLine(0);
+                    String stateName = address.getAddressLine(1);
+                    String countryName = address.getAddressLine(2);
+                    String builder = (TextUtils.isEmpty(countryName) ? "" : countryName) +
+                            (TextUtils.isEmpty(stateName) ? "" : stateName) +
+                            (TextUtils.isEmpty(cityName) ? "" : cityName);
+                    view.setLocation(builder);
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
-                Log.d(TAG, "getLastKnownLocation " + bestLocation);
-
-                if (bestLocation != null) {
-                    try {
-                        Geocoder geocoder = new Geocoder(context, Locale.getDefault());
-                        final int MAX = 1;
-                        Address address = geocoder.getFromLocation(
-                                bestLocation.getLatitude(), bestLocation.getLongitude(), MAX)
-                                .get(MAX - 1);
-                        String cityName = address.getAddressLine(0);
-                        String stateName = address.getAddressLine(1);
-                        String countryName = address.getAddressLine(2);
-                        String builder = (TextUtils.isEmpty(countryName) ? "" : countryName) +
-                                (TextUtils.isEmpty(stateName) ? "" : stateName) +
-                                (TextUtils.isEmpty(cityName) ? "" : cityName);
-                        view.setLocation(builder);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                } else {
+            } else {
 //                    Log.e(TAG, "getLastKnownLocation null ");
 //                    Criteria criteria = new Criteria();
 //                    criteria.setAccuracy(Criteria.ACCURACY_LOW);
@@ -155,7 +139,6 @@ class CreateProfilePresenter extends EditProfilePresenter<CreateProfileView> {
 //
 //                                }
 //                            }, null);
-                }
             }
         });
 

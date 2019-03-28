@@ -6,7 +6,7 @@ import com.google.gson.annotations.SerializedName;
 
 public class Login {
 
-    @SerializedName("allow_access")
+    @SerializedName("allow_access_user")
     @Expose
     private boolean allowAccess;
     @SerializedName("user")
