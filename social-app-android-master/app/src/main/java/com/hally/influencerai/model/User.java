@@ -82,10 +82,18 @@ public class User implements Parcelable {
     @SerializedName("user_socials")
     @Expose
     private List<UserSocial> userSocials = null;
-
+    @SerializedName("website")
+    @Expose
     private String website;
+    @SerializedName("about")
+    @Expose
     private String about;
+    @SerializedName("coverPicUrl")
+    @Expose
     private String coverPicUrl;
+    @SerializedName("professions")
+    @Expose
+    private List<String> professions;
 
     public User() {
     }
@@ -403,5 +411,13 @@ public class User implements Parcelable {
                 ", about='" + about + '\'' +
                 ", coverPicUrl='" + coverPicUrl + '\'' +
                 '}';
+    }
+
+    public void setProfessions(List<String> professions) {
+        this.professions = professions;
+    }
+
+    public List<String> getProfession() {
+        return professions;
     }
 }

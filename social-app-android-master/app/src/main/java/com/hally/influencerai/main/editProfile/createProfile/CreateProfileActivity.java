@@ -16,6 +16,7 @@
 
 package com.hally.influencerai.main.editProfile.createProfile;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
@@ -25,7 +26,12 @@ import android.view.MenuItem;
 
 import com.hally.influencerai.R;
 import com.hally.influencerai.main.editProfile.EditProfileActivity;
+import com.hally.influencerai.model.User;
 
+/**
+ * Created by HallyTran on 3/22/2019.
+ * transon97uet@gmail.com
+ */
 public class CreateProfileActivity extends EditProfileActivity<CreateProfileView, CreateProfilePresenter> implements CreateProfileView {
 
     @Override
@@ -66,11 +72,23 @@ public class CreateProfileActivity extends EditProfileActivity<CreateProfileView
         // Handle item selection
         switch (item.getItemId()) {
             case R.id.continueButton:
-                presenter.attemptCreateProfile(user);
+                presenter.attemptCreateProfile(getUser());
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    @SuppressLint("SetTextI18n")
+    @Override
+    public void buildProfile(User profile) {
+        setProfilePhoto(profile.getAvatar());
+        emailEditText.setText(profile.getEmail());
+        nameEditText.setText(profile.getUsername());
+        locationEditText.setText(profile.getLocation());
+        desEditText.setText(profile.getDescription()
+                + "\r\n" + profile.getAbout()
+                + "\r\n" + profile.getWebsite());
     }
 
     @Override

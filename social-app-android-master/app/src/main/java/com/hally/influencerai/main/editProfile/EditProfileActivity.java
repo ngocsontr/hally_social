@@ -44,21 +44,29 @@ import com.nex3z.togglebuttongroup.MultiSelectToggleGroup;
 import com.nex3z.togglebuttongroup.SingleSelectToggleGroup;
 import com.nex3z.togglebuttongroup.button.LabelToggle;
 
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * Created by HallyTran on 3/22/2019.
+ * transon97uet@gmail.com
+ */
 public class EditProfileActivity<V extends EditProfileView, P extends EditProfilePresenter<V>> extends PickImageActivity<V, P> implements EditProfileView {
     private static final String TAG = EditProfileActivity.class.getSimpleName();
 
     public static final String SOCIAL_USER_EXTRA_KEY = "SOCIAL_USER_EXTRA_KEY";
+    private String[] PROFESSIONS;
 
     protected User user;
     // UI references.
-    private EditText emailEditText;
-    private EditText nameEditText;
+    protected EditText emailEditText;
+    protected EditText nameEditText;
     protected EditText locationEditText;
-    private EditText desEditText;
+    protected EditText desEditText;
     protected ImageView avatarImageView;
-    private ProgressBar avatarProgressBar;
-    private SingleSelectToggleGroup userTypeChoices;
-    private MultiSelectToggleGroup groupProfessional;
+    protected ProgressBar avatarProgressBar;
+    protected SingleSelectToggleGroup userTypeChoices;
+    protected MultiSelectToggleGroup groupProfessional;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,6 +76,7 @@ public class EditProfileActivity<V extends EditProfileView, P extends EditProfil
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
         user = getIntent().getParcelableExtra(SOCIAL_USER_EXTRA_KEY);
+        PROFESSIONS = getResources().getStringArray(R.array.professional_array);
 
         avatarProgressBar = findViewById(R.id.avatarProgressBar);
         avatarImageView = findViewById(R.id.imageView);
@@ -79,18 +88,10 @@ public class EditProfileActivity<V extends EditProfileView, P extends EditProfil
         groupProfessional = findViewById(R.id.group_professional);
 
         avatarImageView.setOnClickListener(this::onSelectImageClick);
-        userTypeChoices.setOnCheckedChangeListener(new SingleSelectToggleGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(SingleSelectToggleGroup group, int checkedId) {
-                LogUtil.logInfo(TAG, "" + group + checkedId);
-            }
-        });
-        groupProfessional.setOnCheckedChangeListener(new MultiSelectToggleGroup.OnCheckedStateChangeListener() {
-            @Override
-            public void onCheckedStateChanged(MultiSelectToggleGroup group, int checkedId, boolean isChecked) {
-                LogUtil.logInfo(TAG, "" + group + group.getCheckedIds() + isChecked);
-            }
-        });
+        userTypeChoices.setOnCheckedChangeListener((group, checkedId)
+                -> LogUtil.logInfo(TAG, "" + group + checkedId));
+        groupProfessional.setOnCheckedChangeListener((group, checkedId, isChecked)
+                -> LogUtil.logInfo(TAG, "" + group + group.getCheckedIds() + isChecked));
 
         initContent();
     }
@@ -168,22 +169,11 @@ public class EditProfileActivity<V extends EditProfileView, P extends EditProfil
     @Override
     public void createProfessionalList() {
         groupProfessional.removeAllViews();
-        String[] proList = getResources().getStringArray(R.array.professional_array);
-        for (String category : proList) {
+        for (String category : PROFESSIONS) {
             LabelToggle toggle = new LabelToggle(this);
             toggle.setText(category);
             groupProfessional.addView(toggle);
         }
-    }
-
-    @SuppressLint("SetTextI18n")
-    @Override
-    public void buildProfile(User profile) {
-        setProfilePhoto(profile.getAvatar());
-        emailEditText.setText(profile.getEmail());
-        nameEditText.setText(profile.getUsername());
-        locationEditText.setText(profile.getLocation());
-        desEditText.setText(profile.getDescription() + "\r\n" + profile.getAbout() + "\r\n" + profile.getWebsite());
     }
 
     @Override
@@ -198,11 +188,38 @@ public class EditProfileActivity<V extends EditProfileView, P extends EditProfil
         // Handle item selection
         switch (item.getItemId()) {
             case R.id.save:
-                presenter.attemptCreateProfile(user);
+                presenter.attemptCreateProfile(getUser());
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    protected User getUser() {
+        user.setAvatar(user.getAvatar());
+        user.setEmail(emailEditText.getText().toString());
+        user.setUsername(nameEditText.getText().toString());
+        user.setLocation(locationEditText.getText().toString());
+        user.setDescription(desEditText.getText().toString());
+        user.setUserType(getUserType());
+        user.setProfessions(getProfessions());
+        return user;
+    }
+
+    protected List<String> getProfessions() {
+        List<String> results = new ArrayList<>();
+        for (int i = 0; i < groupProfessional.getChildCount(); i++) {
+            LabelToggle toggle = (LabelToggle) groupProfessional.getChildAt(i);
+            if (toggle.isChecked()) {
+                results.add(toggle.getText().toString());
+            }
+        }
+        return results;
+    }
+
+    private String getUserType() {
+        int checkId = userTypeChoices.getCheckedId();
+        return String.valueOf(checkId == R.id.marketer ? 1 : 2);
     }
 }
 

@@ -48,6 +48,10 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+/**
+ * Created by HallyTran on 3/22/2019.
+ * transon97uet@gmail.com
+ */
 class LoginPresenter extends BasePresenter<LoginView> {
 
     LoginPresenter(Context context) {

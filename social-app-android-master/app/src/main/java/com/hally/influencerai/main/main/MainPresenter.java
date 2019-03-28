@@ -22,14 +22,21 @@ import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.view.View;
 
-import com.google.firebase.auth.FirebaseAuth;
 import com.hally.influencerai.R;
 import com.hally.influencerai.enums.PostStatus;
 import com.hally.influencerai.main.base.BasePresenter;
+import com.hally.influencerai.main.editProfile.EditProfileActivity;
 import com.hally.influencerai.main.postDetails.PostDetailsActivity;
 import com.hally.influencerai.managers.PostManager;
 import com.hally.influencerai.managers.listeners.OnObjectExistListener;
+import com.hally.influencerai.managers.network.ApiUtils;
+import com.hally.influencerai.model.Login;
 import com.hally.influencerai.model.Post;
+import com.hally.influencerai.utils.LogUtil;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Created by Alexey on 03.05.18.
@@ -72,14 +79,55 @@ class MainPresenter extends BasePresenter<MainView> {
     }
 
     void onProfileMenuActionClicked() {
-        if (checkAuthorization()) {
-            String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-            ifViewAttached(new ViewAction<MainView>() {
-                @Override
-                public void run(@NonNull MainView view) {
-                    view.openProfileActivity(userId, null);
+//        if (checkAuthorization()) {
+//            String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+//            ifViewAttached(new ViewAction<MainView>() {
+//                @Override
+//                public void run(@NonNull MainView view) {
+//                    view.openProfileActivity(userId, null);
+//                }
+//            });
+//        }
+
+        ifViewAttached(new ViewAction<MainView>() {
+            @Override
+            public void run(@NonNull MainView view) {
+                if (checkInternetConnection()) {
+                    doAuthorization(view);
                 }
-            });
+            }
+        });
+    }
+
+    private void doAuthorization(MainView view) {
+        if (!ApiUtils.login(context, new Callback<Login>() {
+            @Override
+            public void onResponse(Call<Login> call, Response<Login> response) {
+                if (response.errorBody() != null) {
+                    LogUtil.logDebug(TAG, "onResponse:error " + response.message());
+                    view.showSnackBar(R.string.error_authentication);
+//                    routeToLogin(view);
+                    return;
+                }
+                Login login = response.body();
+                LogUtil.logDebug(TAG, "onResponse:body() " + response.body());
+                if (login != null && login.isAllowAccess()) {
+//                    view.showSnackBar(R.string.login_success);
+//                    view.startCreateProfileActivity(login.getUser());
+                    Intent intent = new Intent(context, EditProfileActivity.class);
+                    intent.putExtra(EditProfileActivity.SOCIAL_USER_EXTRA_KEY, login.getUser());
+                    context.startActivity(intent);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Login> call, Throwable t) {
+                LogUtil.logDebug(TAG, "onFailure:error " + t.getMessage());
+                view.showSnackBar(R.string.error_authentication);
+//                routeToLogin(view);
+            }
+        })) {
+//            routeToLogin(view);
         }
     }
 

@@ -17,8 +17,11 @@
 package com.hally.influencerai.main.editProfile.createProfile;
 
 import com.hally.influencerai.main.editProfile.EditProfileView;
+import com.hally.influencerai.model.User;
 
 public interface CreateProfileView extends EditProfileView {
+
+    void buildProfile(User profile);
 
     void setLocation(String location);
 }

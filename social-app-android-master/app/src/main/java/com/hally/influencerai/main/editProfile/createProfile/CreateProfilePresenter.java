@@ -40,6 +40,10 @@ import java.util.Locale;
 
 import static android.content.Context.LOCATION_SERVICE;
 
+/**
+ * Created by HallyTran on 3/22/2019.
+ * transon97uet@gmail.com
+ */
 class CreateProfilePresenter extends EditProfilePresenter<CreateProfileView> {
 
     CreateProfilePresenter(Context context) {
@@ -101,11 +105,11 @@ class CreateProfilePresenter extends EditProfilePresenter<CreateProfileView> {
                     Address address = geocoder.getFromLocation(
                             bestLocation.getLatitude(), bestLocation.getLongitude(), MAX)
                             .get(MAX - 1);
-                    String cityName = address.getAddressLine(0);
-                    String stateName = address.getAddressLine(1);
-                    String countryName = address.getAddressLine(2);
-                    String builder = (TextUtils.isEmpty(countryName) ? "" : countryName) +
-                            (TextUtils.isEmpty(stateName) ? "" : stateName) +
+                    String cityName = address.getSubLocality();
+                    String stateName = address.getLocality();
+                    String countryName = address.getCountryName();
+                    String builder = (TextUtils.isEmpty(countryName) ? "" : countryName + ", ") +
+                            (TextUtils.isEmpty(stateName) ? "" : stateName + ", ") +
                             (TextUtils.isEmpty(cityName) ? "" : cityName);
                     view.setLocation(builder);
                 } catch (IOException e) {

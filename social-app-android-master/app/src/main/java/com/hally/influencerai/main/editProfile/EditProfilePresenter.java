@@ -34,9 +34,9 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 /**
- * Created by Alexey on 03.05.18.
+ * Created by HallyTran on 3/22/2019.
+ * transon97uet@gmail.com
  */
-
 public class EditProfilePresenter<V extends EditProfileView> extends PickImagePresenter<V> {
 
     protected Profile profile;
@@ -108,13 +108,13 @@ public class EditProfilePresenter<V extends EditProfileView> extends PickImagePr
                 @Override
                 public void run(@NonNull V view) {
                     User user = new User();
-                    user.setSocialId(socialUser.getSocialId());
                     user.setUsername(socialUser.getUsername());
                     user.setEmail(socialUser.getEmail());
                     user.setAvatar(socialUser.getAvatar());
                     user.setDescription(socialUser.getDescription());
-                    user.setSnsAccessToken(socialUser.getSnsAccessToken());
-                    user.setSocialType(socialUser.getSocialType());
+                    user.setLocation(socialUser.getLocation());
+                    user.setUserType(socialUser.getUserType());
+                    user.setProfessions(socialUser.getProfession());
 
                     ApiUtils.updateUser(context, user, new Callback<UpdateUserRes>() {
                         @Override
