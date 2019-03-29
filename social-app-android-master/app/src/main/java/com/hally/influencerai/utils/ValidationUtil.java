@@ -23,7 +23,7 @@ import android.net.Uri;
 import com.hally.influencerai.Constants;
 
 /**
- * Created by Kristina on 8/8/15.
+ * Created by HallyTran on 8/8/15.
  */
 public class ValidationUtil {
     private static final String [] IMAGE_TYPE = new String[]{"jpg", "png", "jpeg", "bmp", "jp2", "psd", "tif", "gif"};

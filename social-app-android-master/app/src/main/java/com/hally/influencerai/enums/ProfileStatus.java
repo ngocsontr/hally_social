@@ -17,7 +17,7 @@
 package com.hally.influencerai.enums;
 
 /**
- * Created by alexey on 05.12.16.
+ * Created by HallyTran on 05.12.16.
  */
 
 public enum ProfileStatus {

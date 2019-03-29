@@ -52,7 +52,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by Alexey on 05.06.18.
+ * Created by HallyTran on 05.06.18.
  */
 
 public class ProfileInteractor {

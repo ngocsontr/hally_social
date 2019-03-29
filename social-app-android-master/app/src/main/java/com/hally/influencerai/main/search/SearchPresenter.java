@@ -21,7 +21,7 @@ import android.app.Activity;
 import com.hally.influencerai.main.base.BasePresenter;
 
 /**
- * Created by Alexey on 08.05.18.
+ * Created by HallyTran on 08.05.18.
  */
 
 class SearchPresenter extends BasePresenter<SearchView> {

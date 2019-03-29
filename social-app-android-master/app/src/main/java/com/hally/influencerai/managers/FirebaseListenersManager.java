@@ -27,7 +27,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Created by alexey on 19.12.16.
+ * Created by HallyTran on 19.12.16.
  */
 
 public class FirebaseListenersManager {

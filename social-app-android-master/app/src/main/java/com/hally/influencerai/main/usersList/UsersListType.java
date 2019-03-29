@@ -1,7 +1,7 @@
 package com.hally.influencerai.main.usersList;
 
 /**
- * Created by Alexey on 16.05.18.
+ * Created by HallyTran on 16.05.18.
  */
 public interface UsersListType {
     int FOLLOWINGS = 115;

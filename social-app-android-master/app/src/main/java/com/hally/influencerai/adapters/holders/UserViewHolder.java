@@ -37,7 +37,7 @@ import com.hally.influencerai.utils.ImageUtil;
 import com.hally.influencerai.views.FollowButton;
 
 /**
- * Created by Alexey on 03.05.18.
+ * Created by HallyTran on 03.05.18.
  */
 
 public class UserViewHolder extends RecyclerView.ViewHolder {

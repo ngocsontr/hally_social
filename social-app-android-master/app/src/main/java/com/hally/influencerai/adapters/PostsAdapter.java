@@ -38,7 +38,7 @@ import com.hally.influencerai.utils.SharePreUtil;
 import java.util.List;
 
 /**
- * Created by Kristina on 10/31/16.
+ * Created by HallyTran on 10/31/16.
  */
 
 public class PostsAdapter extends BasePostsAdapter {

@@ -6,7 +6,7 @@ import com.hally.influencerai.model.Profile;
 import java.util.List;
 
 /**
- * Created by Alexey on 08.06.18.
+ * Created by HallyTran on 08.06.18.
  */
 public interface SearchUsersView extends BaseFragmentView {
     void onSearchResultsReady(List<Profile> profiles);

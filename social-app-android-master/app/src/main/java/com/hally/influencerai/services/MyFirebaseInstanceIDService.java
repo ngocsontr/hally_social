@@ -25,7 +25,7 @@ import com.hally.influencerai.utils.LogUtil;
 
 
 /**
- * Created by alexey on 14.04.17.
+ * Created by HallyTran on 14.04.17.
  */
 
 public class MyFirebaseInstanceIDService extends FirebaseInstanceIdService {

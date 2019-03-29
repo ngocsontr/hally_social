@@ -42,7 +42,7 @@ import com.hally.influencerai.views.FollowButton;
 import java.util.List;
 
 /**
- * Created by Alexey on 03.05.18.
+ * Created by HallyTran on 03.05.18.
  */
 
 public class UsersListActivity extends BaseActivity<UsersListView, UsersListPresenter> implements UsersListView {

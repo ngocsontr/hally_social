@@ -29,7 +29,7 @@ import com.hally.influencerai.R;
 import com.hally.influencerai.main.pickImageBase.PickImageActivity;
 
 /**
- * Created by Alexey on 03.05.18.
+ * Created by HallyTran on 03.05.18.
  */
 public abstract class BaseCreatePostActivity<V extends BaseCreatePostView, P extends BaseCreatePostPresenter<V>>
         extends PickImageActivity<V, P> implements BaseCreatePostView {

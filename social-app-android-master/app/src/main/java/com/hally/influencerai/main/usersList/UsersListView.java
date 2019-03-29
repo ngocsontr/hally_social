@@ -23,7 +23,7 @@ import com.hally.influencerai.main.base.BaseView;
 import java.util.List;
 
 /**
- * Created by Alexey on 03.05.18.
+ * Created by HallyTran on 03.05.18.
  */
 
 public interface UsersListView extends BaseView {

@@ -25,7 +25,7 @@ import com.hally.influencerai.model.Post;
 import com.hally.influencerai.model.Profile;
 
 /**
- * Created by Alexey on 03.05.18.
+ * Created by HallyTran on 03.05.18.
  */
 
 public interface ProfileView extends BaseView {

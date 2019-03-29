@@ -48,6 +48,7 @@ import com.hally.influencerai.main.profile.ProfileActivity;
 import com.hally.influencerai.main.search.SearchActivity;
 import com.hally.influencerai.model.Post;
 import com.hally.influencerai.utils.AnimationUtils;
+import com.hally.influencerai.utils.SharePreUtil;
 
 public class MainActivity extends BaseActivity<MainView, MainPresenter> implements MainView {
 
@@ -315,7 +316,8 @@ public class MainActivity extends BaseActivity<MainView, MainPresenter> implemen
                 return true;
 
             case R.id.chat:
-                startActivity(new Intent(this, ChatMainActivity.class));
+                SharePreUtil.clearLoginToken(this);
+//                startActivity(new Intent(this, ChatMainActivity.class));
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

@@ -32,7 +32,7 @@ import com.hally.influencerai.model.Profile;
 import com.hally.influencerai.utils.SharePreUtil;
 
 /**
- * Created by Kristina on 10/28/16.
+ * Created by HallyTran on 10/28/16.
  */
 
 public class ProfileManager extends FirebaseListenersManager {

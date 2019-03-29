@@ -19,7 +19,7 @@ package com.hally.influencerai.managers.listeners;
 import java.util.List;
 
 /**
- * Created by Kristina on 10/28/16.
+ * Created by HallyTran on 10/28/16.
  */
 
 public interface OnDataChangedListener<T> {

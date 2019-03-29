@@ -34,7 +34,7 @@ import android.widget.EditText;
 import com.hally.influencerai.R;
 
 /**
- * Created by alexey on 12.05.17.
+ * Created by HallyTran on 12.05.17.
  */
 
 public class EditCommentDialog extends DialogFragment {

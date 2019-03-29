@@ -39,7 +39,7 @@ import com.hally.influencerai.managers.listeners.OnPostChangedListener;
 import com.hally.influencerai.model.Post;
 
 /**
- * Created by Kristina on 12/30/16.
+ * Created by HallyTran on 12/30/16.
  */
 
 public class LikeController {

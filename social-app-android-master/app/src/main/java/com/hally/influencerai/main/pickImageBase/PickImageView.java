@@ -21,7 +21,7 @@ import android.net.Uri;
 import com.hally.influencerai.main.base.BaseView;
 
 /**
- * Created by Alexey on 03.05.18.
+ * Created by HallyTran on 03.05.18.
  */
 
 public interface PickImageView extends BaseView {

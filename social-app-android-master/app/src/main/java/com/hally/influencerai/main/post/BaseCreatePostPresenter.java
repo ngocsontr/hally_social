@@ -30,7 +30,7 @@ import com.hally.influencerai.utils.LogUtil;
 import com.hally.influencerai.utils.ValidationUtil;
 
 /**
- * Created by Alexey on 03.05.18.
+ * Created by HallyTran on 03.05.18.
  */
 
 public abstract class BaseCreatePostPresenter<V extends BaseCreatePostView> extends PickImagePresenter<V> implements OnPostCreatedListener {

@@ -17,7 +17,7 @@
 package com.hally.influencerai.enums;
 
 /**
- * Created by Alex on 21.07.16.
+ * Created by HallyTran on 21.07.16.
  */
 
 public enum ItemType {LOAD(10), ITEM(11);

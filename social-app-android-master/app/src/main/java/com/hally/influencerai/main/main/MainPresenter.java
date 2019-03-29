@@ -39,7 +39,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 /**
- * Created by Alexey on 03.05.18.
+ * Created by HallyTran on 03.05.18.
  */
 
 class MainPresenter extends BasePresenter<MainView> {
@@ -106,14 +106,12 @@ class MainPresenter extends BasePresenter<MainView> {
                 if (response.errorBody() != null) {
                     LogUtil.logDebug(TAG, "onResponse:error " + response.message());
                     view.showSnackBar(R.string.error_authentication);
-//                    routeToLogin(view);
+                    view.startLoginActivity();
                     return;
                 }
                 Login login = response.body();
                 LogUtil.logDebug(TAG, "onResponse:body() " + response.body());
                 if (login != null && login.isAllowAccess()) {
-//                    view.showSnackBar(R.string.login_success);
-//                    view.startCreateProfileActivity(login.getUser());
                     Intent intent = new Intent(context, EditProfileActivity.class);
                     intent.putExtra(EditProfileActivity.SOCIAL_USER_EXTRA_KEY, login.getUser());
                     context.startActivity(intent);
@@ -124,10 +122,10 @@ class MainPresenter extends BasePresenter<MainView> {
             public void onFailure(Call<Login> call, Throwable t) {
                 LogUtil.logDebug(TAG, "onFailure:error " + t.getMessage());
                 view.showSnackBar(R.string.error_authentication);
-//                routeToLogin(view);
+                view.startLoginActivity();
             }
         })) {
-//            routeToLogin(view);
+            view.startLoginActivity();
         }
     }
 

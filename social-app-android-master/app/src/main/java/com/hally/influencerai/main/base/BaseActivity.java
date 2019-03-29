@@ -38,7 +38,7 @@ import com.hally.influencerai.main.main.MainActivity;
 import com.hannesdorfmann.mosby3.mvp.MvpActivity;
 
 /**
- * Created by alexey on 05.12.16.
+ * Created by HallyTran on 05.12.16.
  */
 
 public abstract class BaseActivity<V extends BaseView, P extends BasePresenter<V>> extends MvpActivity<V, P> implements BaseView {

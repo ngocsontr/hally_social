@@ -29,7 +29,7 @@ import java.util.Locale;
 import java.util.TimeZone;
 
 /**
- * Created by Kristina on 10/17/16.
+ * Created by HallyTran on 10/17/16.
  */
 
 public class FormatterUtil {

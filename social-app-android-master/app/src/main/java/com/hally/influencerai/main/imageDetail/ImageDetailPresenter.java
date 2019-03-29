@@ -23,7 +23,7 @@ import android.view.WindowManager;
 import com.hally.influencerai.main.base.BasePresenter;
 
 /**
- * Created by Alexey on 03.05.18.
+ * Created by HallyTran on 03.05.18.
  */
 
 class ImageDetailPresenter extends BasePresenter<ImageDetailView> {

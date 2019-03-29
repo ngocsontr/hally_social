@@ -9,7 +9,7 @@ import com.hally.influencerai.model.Post;
 import com.hally.influencerai.utils.LogUtil;
 
 /**
- * Created by Alexey on 22.05.18.
+ * Created by HallyTran on 22.05.18.
  */
 public class FollowPostViewHolder extends PostViewHolder {
 

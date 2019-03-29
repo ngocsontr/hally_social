@@ -17,7 +17,7 @@
 package com.hally.influencerai.managers.listeners;
 
 /**
- * Created by Alexey on 10.05.18.
+ * Created by HallyTran on 10.05.18.
  */
 
 public interface OnRequestComplete {

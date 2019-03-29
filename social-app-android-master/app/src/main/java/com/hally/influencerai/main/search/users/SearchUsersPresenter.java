@@ -34,7 +34,7 @@ import com.hally.influencerai.views.FollowButton;
 import java.util.List;
 
 /**
- * Created by Alexey on 08.06.18.
+ * Created by HallyTran on 08.06.18.
  */
 public class SearchUsersPresenter extends BasePresenter<SearchUsersView> {
     private final FollowManager followManager;

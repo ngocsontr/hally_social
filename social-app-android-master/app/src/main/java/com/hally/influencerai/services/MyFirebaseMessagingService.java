@@ -44,7 +44,7 @@ import com.hally.influencerai.utils.ImageUtil;
 import com.hally.influencerai.utils.LogUtil;
 
 /**
- * Created by alexey on 13.04.17.
+ * Created by HallyTran on 13.04.17.
  */
 
 

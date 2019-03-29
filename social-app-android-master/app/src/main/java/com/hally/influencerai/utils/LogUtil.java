@@ -23,7 +23,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Created by Kristina on 6/7/16.
+ * Created by HallyTran on 6/7/16.
  */
 public class LogUtil {
     private static final boolean TIMING_ENABLED = true;

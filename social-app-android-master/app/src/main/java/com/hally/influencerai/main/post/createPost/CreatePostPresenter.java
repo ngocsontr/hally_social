@@ -25,7 +25,7 @@ import com.hally.influencerai.main.post.BaseCreatePostPresenter;
 import com.hally.influencerai.model.Post;
 
 /**
- * Created by Alexey on 03.05.18.
+ * Created by HallyTran on 03.05.18.
  */
 
 public class CreatePostPresenter extends BaseCreatePostPresenter<CreatePostView> {

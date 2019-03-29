@@ -35,7 +35,7 @@ import com.hally.influencerai.utils.GlideApp;
 import com.hally.influencerai.utils.ImageUtil;
 
 /**
- * Created by Alexey on 11.05.18.
+ * Created by HallyTran on 11.05.18.
  */
 
 public class UnfollowConfirmationDialog extends DialogFragment {

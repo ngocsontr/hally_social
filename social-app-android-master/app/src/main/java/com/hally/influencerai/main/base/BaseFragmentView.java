@@ -20,7 +20,7 @@ import android.support.annotation.StringRes;
 import android.view.View;
 
 /**
- * Created by Alexey on 08.05.18.
+ * Created by HallyTran on 08.05.18.
  */
 public interface BaseFragmentView extends BaseView {
 

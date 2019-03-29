@@ -19,7 +19,7 @@ package com.hally.influencerai.main.post.createPost;
 import com.hally.influencerai.main.post.BaseCreatePostView;
 
 /**
- * Created by Alexey on 03.05.18.
+ * Created by HallyTran on 03.05.18.
  */
 
 public interface CreatePostView extends BaseCreatePostView {

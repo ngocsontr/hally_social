@@ -31,7 +31,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by alexey on 10.05.17.
+ * Created by HallyTran on 10.05.17.
  */
 
 public class CommentsAdapter extends RecyclerView.Adapter<CommentViewHolder> {

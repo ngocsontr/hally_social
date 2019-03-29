@@ -1,7 +1,7 @@
 package com.hally.influencerai.model;
 
 /**
- * Created by Alexey on 22.05.18.
+ * Created by HallyTran on 22.05.18.
  */
 public class FollowingPost {
 

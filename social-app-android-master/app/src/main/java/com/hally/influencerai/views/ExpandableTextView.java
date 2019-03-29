@@ -17,7 +17,7 @@
 package com.hally.influencerai.views;
 
 /**
- * Created by alexey on 21.12.16.
+ * Created by HallyTran on 21.12.16.
  */
 
 import android.annotation.TargetApi;

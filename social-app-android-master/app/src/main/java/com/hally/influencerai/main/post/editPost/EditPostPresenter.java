@@ -28,7 +28,7 @@ import com.hally.influencerai.managers.listeners.OnPostChangedListener;
 import com.hally.influencerai.model.Post;
 
 /**
- * Created by Alexey on 03.05.18.
+ * Created by HallyTran on 03.05.18.
  */
 
 class EditPostPresenter extends BaseCreatePostPresenter<EditPostView> {

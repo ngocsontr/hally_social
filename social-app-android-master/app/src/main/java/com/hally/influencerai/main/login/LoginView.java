@@ -20,7 +20,7 @@ import com.hally.influencerai.main.base.BaseView;
 import com.hally.influencerai.model.User;
 
 /**
- * Created by Alexey on 03.05.18.
+ * Created by HallyTran on 03.05.18.
  */
 
 public interface LoginView extends BaseView {

@@ -17,7 +17,7 @@
 package com.hally.influencerai.main.search;
 
 /**
- * Created by Alexey on 11.06.18.
+ * Created by HallyTran on 11.06.18.
  */
 public interface Searchable {
     void search(String searchText);

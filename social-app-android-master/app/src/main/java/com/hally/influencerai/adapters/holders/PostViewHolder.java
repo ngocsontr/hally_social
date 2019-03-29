@@ -43,7 +43,7 @@ import com.hally.influencerai.utils.GlideApp;
 import com.hally.influencerai.utils.ImageUtil;
 
 /**
- * Created by alexey on 27.12.16.
+ * Created by HallyTran on 27.12.16.
  */
 
 public class PostViewHolder extends RecyclerView.ViewHolder {

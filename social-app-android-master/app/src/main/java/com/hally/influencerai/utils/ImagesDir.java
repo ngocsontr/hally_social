@@ -23,7 +23,7 @@ import java.io.File;
 import java.io.IOException;
 
 /**
- * Created by Kristina on 7/23/14.
+ * Created by HallyTran on 7/23/14.
  */
 public class ImagesDir {
 

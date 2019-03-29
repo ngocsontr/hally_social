@@ -28,7 +28,7 @@ import com.hally.influencerai.utils.LogUtil;
 import java.util.List;
 
 /**
- * Created by Alexey on 08.06.18.
+ * Created by HallyTran on 08.06.18.
  */
 public class SearchPostsPresenter extends BasePresenter<SearchPostsView> {
     public static final int LIMIT_POSTS_FILTERED_BY_LIKES = 10;

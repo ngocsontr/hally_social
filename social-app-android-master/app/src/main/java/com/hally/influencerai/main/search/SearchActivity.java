@@ -36,7 +36,7 @@ import com.hally.influencerai.main.search.users.SearchUsersFragment;
 import com.hally.influencerai.utils.LogUtil;
 
 /**
- * Created by Alexey on 08.05.18.
+ * Created by HallyTran on 08.05.18.
  */
 
 public class SearchActivity extends BaseActivity<SearchView, SearchPresenter> implements SearchView {

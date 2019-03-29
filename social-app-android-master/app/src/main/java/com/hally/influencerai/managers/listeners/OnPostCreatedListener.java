@@ -17,7 +17,7 @@
 package com.hally.influencerai.managers.listeners;
 
 /**
- * Created by Kristina on 10/28/16.
+ * Created by HallyTran on 10/28/16.
  */
 
 public interface OnPostCreatedListener {
