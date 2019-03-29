@@ -13,13 +13,17 @@ import com.hally.influencerai.main.base.BasePresenter;
 import com.hally.influencerai.main.base.BaseView;
 import com.hally.influencerai.main.login.LoginActivity;
 import com.hally.influencerai.managers.network.ApiUtils;
-import com.hally.influencerai.model.Login;
+import com.hally.influencerai.model.LoginRes;
 import com.hally.influencerai.utils.LogUtil;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+/**
+ * Created by HallyTran on 3/22/2019.
+ * transon97uet@gmail.com
+ */
 class SplashPresenter extends BasePresenter<SplashView> {
 
     SplashPresenter(Context context) {
@@ -39,21 +43,21 @@ class SplashPresenter extends BasePresenter<SplashView> {
     }
 
     private void doAuthorization(SplashView view) {
-        if (!ApiUtils.login(context, new Callback<Login>() {
+        if (!ApiUtils.login(context, new Callback<LoginRes>() {
             @Override
-            public void onResponse(Call<Login> call, Response<Login> response) {
+            public void onResponse(Call<LoginRes> call, Response<LoginRes> response) {
                 if (response.errorBody() != null) {
                     LogUtil.logDebug(TAG, "onResponse:error " + response.message());
                     view.showSnackBar(R.string.error_authentication);
                     routeToLogin(view);
                     return;
                 }
-                Login login = response.body();
+                LoginRes loginRes = response.body();
                 LogUtil.logDebug(TAG, "onResponse:body() " + response.body());
-                if (login != null && login.isAllowAccess()) {
+                if (loginRes != null && loginRes.isAllowAccess()) {
                     view.showSnackBar(R.string.login_success);
-                    if (login.getUser().isRequireUpdateInfo()) {
-                        view.startCreateProfileActivity(login.getUser());
+                    if (loginRes.getUser().isRequireUpdateInfo()) {
+                        view.startCreateProfileActivity(loginRes.getUser());
                     } else {
                         view.startMainActivity();
                     }
@@ -62,7 +66,7 @@ class SplashPresenter extends BasePresenter<SplashView> {
             }
 
             @Override
-            public void onFailure(Call<Login> call, Throwable t) {
+            public void onFailure(Call<LoginRes> call, Throwable t) {
                 LogUtil.logDebug(TAG, "onFailure:error " + t.getMessage());
                 view.showSnackBar(R.string.error_authentication);
                 routeToLogin(view);

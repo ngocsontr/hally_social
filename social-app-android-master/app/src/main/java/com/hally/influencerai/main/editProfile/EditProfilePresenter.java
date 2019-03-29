@@ -73,35 +73,6 @@ public class EditProfilePresenter<V extends EditProfileView> extends PickImagePr
 //        });
     }
 
-//    public void attemptCreateProfileemptCreateProfile(Uri imageUri) {
-//        if (checkInternetConnection()) {
-//            ifViewAttached(new ViewAction<V>() {
-//                @Override
-//                public void run(@NonNull V view) {
-//                    view.setNameError(null);
-//
-//                    String name = view.getNameText().trim();
-//                    boolean cancel = false;
-//
-//                    if (TextUtils.isEmpty(name)) {
-//                        view.setNameError(context.getString(R.string.error_field_required));
-//                        cancel = true;
-//                    } else if (!ValidationUtil.isNameValid(name)) {
-//                        view.setNameError(context.getString(R.string.error_profile_name_length));
-//                        cancel = true;
-//                    }
-//
-//                    if (!cancel) {
-//                        view.showProgress();
-//                        profile.setUsername(name);
-//                        EditProfilePresenter.this.createOrUpdateProfile(imageUri);
-//                    }
-//                }
-//            });
-//        }
-//    }
-
-
     public void attemptCreateProfile(User socialUser) {
         if (checkInternetConnection()) {
             ifViewAttached(new ViewAction<V>() {
@@ -139,24 +110,6 @@ public class EditProfilePresenter<V extends EditProfileView> extends PickImagePr
         }
     }
 
-//    private void createOrUpdateProfile(Uri imageUri) {
-//        profileManager.createOrUpdateProfile(profile, imageUri, new OnProfileCreatedListener() {
-//            @Override
-//            public void onProfileCreated(boolean success) {
-//                EditProfilePresenter.this.ifViewAttached(new ViewAction<V>() {
-//                    @Override
-//                    public void run(@NonNull V view) {
-//                        view.hideProgress();
-//                        if (success) {
-//                            EditProfilePresenter.this.onProfileUpdatedSuccessfully();
-//                        } else {
-//                            view.showSnackBar(R.string.error_fail_create_profile);
-//                        }
-//                    }
-//                });
-//            }
-//        });
-//    }
 
     protected void onProfileUpdatedSuccessfully() {
         ifViewAttached(BaseView::startMainActivity);
@@ -164,12 +117,7 @@ public class EditProfilePresenter<V extends EditProfileView> extends PickImagePr
     }
 
     public void initProfessionalList() {
-        ifViewAttached(new ViewAction<V>() {
-            @Override
-            public void run(@NonNull V view) {
-                view.createProfessionalList();
-            }
-        });
+        ifViewAttached(EditProfileView::createProfessionalList);
     }
 
 }

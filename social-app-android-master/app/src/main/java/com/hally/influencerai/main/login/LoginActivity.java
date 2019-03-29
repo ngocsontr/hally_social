@@ -37,6 +37,10 @@ import com.hally.influencerai.model.User;
 import com.hally.influencerai.utils.LogUtil;
 import com.twitter.sdk.android.core.TwitterException;
 
+/**
+ * Created by HallyTran on 3/22/2019.
+ * transon97uet@gmail.com
+ */
 public class LoginActivity extends BaseActivity<LoginView, LoginPresenter> implements LoginView {
     private static final String TAG = LoginActivity.class.getSimpleName();
 
@@ -60,6 +64,7 @@ public class LoginActivity extends BaseActivity<LoginView, LoginPresenter> imple
         initInstagramSignIn();
         initTwitterSignIn();
         initClickView();
+        presenter.checkPermission();
     }
 
     private void initGoogleSignIn() {

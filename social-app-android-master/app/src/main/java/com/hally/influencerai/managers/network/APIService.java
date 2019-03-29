@@ -1,6 +1,6 @@
 package com.hally.influencerai.managers.network;
 
-import com.hally.influencerai.model.Login;
+import com.hally.influencerai.model.LoginRes;
 import com.hally.influencerai.model.RegisterUserRes;
 import com.hally.influencerai.model.UpdateUserRes;
 import com.hally.influencerai.model.User;
@@ -17,7 +17,7 @@ import retrofit2.http.POST;
 interface APIService {
 
     @POST("/api/v1/user_login_api")
-    Call<Login> login(@Header("Authorization") String jwt);
+    Call<LoginRes> login(@Header("Authorization") String jwt);
 
     @POST("/api/v1/user_register_api")
     Call<RegisterUserRes> registerUser(@Body User user);

@@ -19,6 +19,10 @@ package com.hally.influencerai.main.editProfile.createProfile;
 import com.hally.influencerai.main.editProfile.EditProfileView;
 import com.hally.influencerai.model.User;
 
+/**
+ * Created by HallyTran on 3/22/2019.
+ * transon97uet@gmail.com
+ */
 public interface CreateProfileView extends EditProfileView {
 
     void buildProfile(User profile);

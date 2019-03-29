@@ -44,15 +44,4 @@
         <attr name="roundedCornerRadius" format="dimension" />
         <attr name="android:textColor" tools:ignore="ResourceName" />
     </declare-styleable>
-
-    <!--<declare-styleable name="SocialButton">-->
-    <!--<attr name="iconSize" format="dimension" />-->
-    <!--<attr name="iconPadding" format="dimension" />-->
-    <!--<attr name="iconCenterAligned" format="boolean"/>-->
-    <!--<attr name="roundedCorner" format="boolean"/>-->
-    <!--<attr name="transparentBackground" format="boolean"/>-->
-    <!--<attr name="roundedCornerRadius" format="dimension"/>-->
-
-    <!--<attr name="android:textColor" tools:ignore="ResourceName" />-->
-    <!--</declare-styleable>-->
 </resources>

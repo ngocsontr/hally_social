@@ -45,8 +45,7 @@ public class SharePreUtil {
     }
 
     public static void clearLoginToken(Context context) {
-        getSharedPreferences(context).edit().putString(PREF_PARAM_USER_LOGIN_TOKEN,
-                "").apply();
+        getSharedPreferences(context).edit().putString(PREF_PARAM_USER_LOGIN_TOKEN, "").apply();
     }
 
     public static Boolean isProfileCreated(Context context) {

@@ -4,7 +4,7 @@ package com.hally.influencerai.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Login {
+public class LoginRes {
 
     @SerializedName("allow_access_user")
     @Expose

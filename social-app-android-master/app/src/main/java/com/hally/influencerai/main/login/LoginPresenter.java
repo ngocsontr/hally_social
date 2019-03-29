@@ -17,27 +17,14 @@
 package com.hally.influencerai.main.login;
 
 import android.content.Context;
-import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
-import com.facebook.login.LoginResult;
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.FacebookAuthProvider;
-import com.google.firebase.auth.GoogleAuthProvider;
-import com.google.firebase.iid.FirebaseInstanceId;
-import com.hally.influencerai.Constants;
 import com.hally.influencerai.R;
 import com.hally.influencerai.main.base.BasePresenter;
-import com.hally.influencerai.main.interactors.ProfileInteractor;
-import com.hally.influencerai.managers.ProfileManager;
-import com.hally.influencerai.managers.listeners.OnObjectExistListener;
 import com.hally.influencerai.managers.network.ApiUtils;
-import com.hally.influencerai.model.Profile;
 import com.hally.influencerai.model.RegisterUserRes;
 import com.hally.influencerai.model.User;
 import com.hally.influencerai.utils.LogUtil;
@@ -56,30 +43,6 @@ class LoginPresenter extends BasePresenter<LoginView> {
 
     LoginPresenter(Context context) {
         super(context);
-    }
-
-    public void checkIsProfileExist(final String userId) {
-        ProfileManager.getInstance(context).isProfileExist(userId, new OnObjectExistListener<Profile>() {
-            @Override
-            public void onDataChanged(boolean exist) {
-                LoginPresenter.this.ifViewAttached(new ViewAction<LoginView>() {
-                    @Override
-                    public void run(@NonNull LoginView view) {
-                        if (!exist) {
-//                            view.startCreateProfileActivity();
-                        } else {
-                            SharePreUtil.setProfileCreated(context, true);
-                            ProfileInteractor.getInstance(context.getApplicationContext())
-                                    .addRegistrationToken(FirebaseInstanceId.getInstance().getToken(), userId);
-                            view.startMainActivity();
-                        }
-
-                        view.hideProgress();
-                        view.finish();
-                    }
-                });
-            }
-        });
     }
 
     public void onGoogleSignInClick() {
@@ -106,118 +69,63 @@ class LoginPresenter extends BasePresenter<LoginView> {
         }
     }
 
-    public void handleGoogleSignInResult(GoogleSignInResult result) {
-        ifViewAttached(new ViewAction<LoginView>() {
-            @Override
-            public void run(@NonNull LoginView view) {
-                if (result.isSuccess()) {
-                    view.showProgress();
+    public void handleSocialSignInResult(User user) {
+        ifViewAttached(view -> attemptCreateProfile(view, user));
+    }
 
-                    GoogleSignInAccount account = result.getSignInAccount();
+    public void attemptCreateProfile(LoginView view, User socialUser) {
+        if (checkInternetConnection()) {
+            User user = new User();
+            user.setSocialId(socialUser.getSocialId());
+            user.setSocialType(socialUser.getSocialType());
+            if (!TextUtils.isEmpty(socialUser.getUsername()))
+                user.setUsername(socialUser.getUsername());
+            if (!TextUtils.isEmpty(socialUser.getEmail()))
+                user.setEmail(user.getEmail());
+            if (!TextUtils.isEmpty(socialUser.getAvatar()))
+                user.setAvatar(socialUser.getAvatar());
+            if (!TextUtils.isEmpty(socialUser.getDescription()))
+                user.setDescription(socialUser.getDescription());
+            if (!TextUtils.isEmpty(socialUser.getSnsAccessToken()))
+                user.setSnsAccessToken(user.getSnsAccessToken());
 
-//                    view.setProfilePhotoUrl(LoginPresenter.this.buildGooglePhotoUrl(account.getPhotoUrl()));
+            ApiUtils.registerUser(context, user, new Callback<RegisterUserRes>() {
+                @Override
+                public void onResponse(Call<RegisterUserRes> call, Response<RegisterUserRes> response) {
+                    LogUtil.logDebug(TAG, "onResponse: Call: " + call);
+                    RegisterUserRes user = response.body();
+                    if (user == null) {
+                        view.showSnackBar(R.string.error_fail_create_profile);
+                        return;
+                    }
+                    String token = user.getToken();
+                    User resUser = user.getUser();
+                    LogUtil.logDebug(TAG, "onResponse: token: " + token);
+                    LogUtil.logDebug(TAG, "onResponse: User: " + resUser);
 
-                    AuthCredential credential = GoogleAuthProvider.getCredential(account.getIdToken(), null);
-//                    view.firebaseAuthWithCredentials(credential);
-
-                    LogUtil.logDebug(TAG, "firebaseAuthWithGoogle:" + account.getId());
-
-                } else {
-                    LogUtil.logDebug(TAG, "SIGN_IN_GOOGLE failed :" + result);
+                    if (!TextUtils.isEmpty(token))
+                        SharePreUtil.saveLoginToken(context, token);
+                    if (resUser != null) {
+                        // TODO: 3/29/2019 for test edit screen
+                        if (true/*resUser.isRequireUpdateInfo()*/) {
+                            view.startCreateProfileActivity(resUser);
+                        } else {
+                            view.startMainActivity();
+                        }
+                    } else {
+                        view.showSnackBar(R.string.error_fail_create_profile);
+                    }
                     view.hideProgress();
                 }
-            }
-        });
-    }
 
-    public void handleFacebookSignInResult(LoginResult loginResult) {
-        ifViewAttached(new ViewAction<LoginView>() {
-            @Override
-            public void run(@NonNull LoginView view) {
-                LogUtil.logDebug(TAG, "handleFacebookSignInResult: " + loginResult);
-//                view.setProfilePhotoUrl(LoginPresenter.this.buildFacebookPhotoUrl(loginResult.getSnsAccessToken().getUserId()));
-                view.showProgress();
-                AuthCredential credential = FacebookAuthProvider.getCredential(loginResult.getAccessToken().getToken());
-//                view.firebaseAuthWithCredentials(credential);
-            }
-        });
-    }
-
-    public void handleSocialSignInResult(User user) {
-        ifViewAttached(new ViewAction<LoginView>() {
-            @Override
-            public void run(@NonNull LoginView view) {
-//                view.startCreateProfileActivity(user);
-                attemptCreateProfile(user);
-                view.hideProgress();
-            }
-        });
-    }
-
-    public void attemptCreateProfile(User socialUser) {
-        if (checkInternetConnection()) {
-            ifViewAttached(new ViewAction<LoginView>() {
                 @Override
-                public void run(@NonNull LoginView view) {
-                    User user = new User();
-                    user.setSocialId(socialUser.getSocialId());
-                    user.setSocialType(socialUser.getSocialType());
-                    if (!TextUtils.isEmpty(socialUser.getUsername()))
-                        user.setUsername(socialUser.getUsername());
-                    if (!TextUtils.isEmpty(socialUser.getEmail()))
-                        user.setEmail(user.getEmail());
-                    if (!TextUtils.isEmpty(socialUser.getAvatar()))
-                        user.setAvatar(socialUser.getAvatar());
-                    if (!TextUtils.isEmpty(socialUser.getDescription()))
-                        user.setDescription(socialUser.getDescription());
-                    if (!TextUtils.isEmpty(socialUser.getSnsAccessToken()))
-                        user.setSnsAccessToken(user.getSnsAccessToken());
-
-                    ApiUtils.registerUser(context, user, new Callback<RegisterUserRes>() {
-                        @Override
-                        public void onResponse(Call<RegisterUserRes> call, Response<RegisterUserRes> response) {
-                            LogUtil.logDebug(TAG, "onResponse: Call: " + call);
-                            RegisterUserRes user = response.body();
-                            String token = user.getToken();
-                            User resUser = user.getUser();
-                            LogUtil.logDebug(TAG, "onResponse: token: " + token);
-                            LogUtil.logDebug(TAG, "onResponse: User: " + resUser);
-
-                            if (!TextUtils.isEmpty(token))
-                                SharePreUtil.saveLoginToken(context, token);
-                            if (resUser != null) {
-                                if (resUser.isRequireUpdateInfo()) {
-                                    checkPermission();
-                                    view.startCreateProfileActivity(resUser);
-                                } else {
-                                    view.startMainActivity();
-                                }
-                            } else {
-                                view.showSnackBar(R.string.error_fail_create_profile);
-//                                view.startCreateProfileActivity(socialUser);
-                            }
-                        }
-
-                        @Override
-                        public void onFailure(Call<RegisterUserRes> call, Throwable t) {
-                            LogUtil.logDebug(TAG, "onFailure: Message: " + t.getMessage());
-                            view.showSnackBar(R.string.error_fail_create_profile);
-//                            view.startCreateProfileActivity(socialUser);
-                        }
-                    });
+                public void onFailure(Call<RegisterUserRes> call, Throwable t) {
+                    LogUtil.logDebug(TAG, "onFailure: Message: " + t.getMessage());
+                    view.showSnackBar(R.string.error_fail_create_profile);
+                    view.hideProgress();
                 }
             });
         }
-    }
-
-    private String buildGooglePhotoUrl(Uri photoUrl) {
-        return String.format(context.getString(R.string.google_large_image_url_pattern),
-                photoUrl, Constants.Profile.MAX_AVATAR_SIZE);
-    }
-
-    private String buildFacebookPhotoUrl(String userId) {
-        return String.format(context.getString(R.string.facebook_large_image_url_pattern),
-                userId);
     }
 
     public void handleAuthError(Task<AuthResult> task) {

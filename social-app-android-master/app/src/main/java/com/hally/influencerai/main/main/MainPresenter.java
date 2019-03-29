@@ -30,7 +30,7 @@ import com.hally.influencerai.main.postDetails.PostDetailsActivity;
 import com.hally.influencerai.managers.PostManager;
 import com.hally.influencerai.managers.listeners.OnObjectExistListener;
 import com.hally.influencerai.managers.network.ApiUtils;
-import com.hally.influencerai.model.Login;
+import com.hally.influencerai.model.LoginRes;
 import com.hally.influencerai.model.Post;
 import com.hally.influencerai.utils.LogUtil;
 
@@ -100,26 +100,26 @@ class MainPresenter extends BasePresenter<MainView> {
     }
 
     private void doAuthorization(MainView view) {
-        if (!ApiUtils.login(context, new Callback<Login>() {
+        if (!ApiUtils.login(context, new Callback<LoginRes>() {
             @Override
-            public void onResponse(Call<Login> call, Response<Login> response) {
+            public void onResponse(Call<LoginRes> call, Response<LoginRes> response) {
                 if (response.errorBody() != null) {
                     LogUtil.logDebug(TAG, "onResponse:error " + response.message());
                     view.showSnackBar(R.string.error_authentication);
                     view.startLoginActivity();
                     return;
                 }
-                Login login = response.body();
+                LoginRes loginRes = response.body();
                 LogUtil.logDebug(TAG, "onResponse:body() " + response.body());
-                if (login != null && login.isAllowAccess()) {
+                if (loginRes != null && loginRes.isAllowAccess()) {
                     Intent intent = new Intent(context, EditProfileActivity.class);
-                    intent.putExtra(EditProfileActivity.SOCIAL_USER_EXTRA_KEY, login.getUser());
+                    intent.putExtra(EditProfileActivity.SOCIAL_USER_EXTRA_KEY, loginRes.getUser());
                     context.startActivity(intent);
                 }
             }
 
             @Override
-            public void onFailure(Call<Login> call, Throwable t) {
+            public void onFailure(Call<LoginRes> call, Throwable t) {
                 LogUtil.logDebug(TAG, "onFailure:error " + t.getMessage());
                 view.showSnackBar(R.string.error_authentication);
                 view.startLoginActivity();

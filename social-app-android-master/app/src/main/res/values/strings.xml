@@ -100,6 +100,10 @@
     <string name="login_term_n_condition"><u>Term and Conditions</u></string>
     <string name="login_contact_us"><u>Contact us</u></string>
 
+    <string name="hint_username">Enter a new username</string>
+    <string name="hint_email_reset">Enter your email</string>
+    <string name="enter_group_name">Enter group name</string>
+    <string name="facebook_request_field">id,name,email,gender,birthday,picture,cover</string>
 
     <string name="loading">Loading …</string>
     <string name="removing">Removing …</string>
@@ -109,12 +113,9 @@
     <string name="press_once_again_to_exit">Press once again to exit</string>
 
     <!-- Strings related to login -->
-
     <string name="error_invalid_password">This password is too short</string>
     <string name="error_incorrect_password">This password is incorrect</string>
-    <string name="permission_rationale">"Contacts permissions are needed for providing email
-        completions."
-    </string>
+    <string name="permission_rationale">"Contacts permissions are needed for providing email completions." </string>
 
     <string name="profile_menu_item">Profile</string>
     <string name="collapse_text_label">show less</string>
@@ -216,9 +217,4 @@
     <string name="repeat_password">Repeat Password</string>
     <string name="next">NEXT</string>
     <string name="register">REGISTER</string>
-
-    <string name="hint_username">Enter a new username</string>
-    <string name="hint_email_reset">Enter your email</string>
-    <string name="enter_group_name">Enter group name</string>
-    <string name="facebook_request_field">id,name,email,gender,birthday,picture,cover</string>
 </resources>

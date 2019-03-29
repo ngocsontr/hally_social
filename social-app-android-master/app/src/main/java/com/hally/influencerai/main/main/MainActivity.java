@@ -39,13 +39,10 @@ import android.widget.TextView;
 
 import com.hally.influencerai.R;
 import com.hally.influencerai.adapters.PostsAdapter;
-import com.hally.influencerai.chat.ChatMainActivity;
 import com.hally.influencerai.main.base.BaseActivity;
-import com.hally.influencerai.main.followPosts.FollowingPostsActivity;
 import com.hally.influencerai.main.post.createPost.CreatePostActivity;
 import com.hally.influencerai.main.postDetails.PostDetailsActivity;
 import com.hally.influencerai.main.profile.ProfileActivity;
-import com.hally.influencerai.main.search.SearchActivity;
 import com.hally.influencerai.model.Post;
 import com.hally.influencerai.utils.AnimationUtils;
 import com.hally.influencerai.utils.SharePreUtil;
@@ -305,18 +302,20 @@ public class MainActivity extends BaseActivity<MainView, MainPresenter> implemen
                 presenter.onProfileMenuActionClicked();
                 return true;
 
-            case R.id.followingPosts:
-                Intent followingPosts = new Intent(this, FollowingPostsActivity.class);
-                startActivity(followingPosts);
-                return true;
-
-            case R.id.search:
-                Intent searchIntent = new Intent(this, SearchActivity.class);
-                startActivity(searchIntent);
-                return true;
+//            case R.id.followingPosts:
+//                Intent followingPosts = new Intent(this, FollowingPostsActivity.class);
+//                startActivity(followingPosts);
+//                return true;
+//
+//            case R.id.search:
+//                Intent searchIntent = new Intent(this, SearchActivity.class);
+//                startActivity(searchIntent);
+//                return true;
 
             case R.id.chat:
+                // TODO: 3/29/2019 for logout test
                 SharePreUtil.clearLoginToken(this);
+                startLoginActivity();
 //                startActivity(new Intent(this, ChatMainActivity.class));
                 return true;
             default:

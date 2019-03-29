@@ -34,7 +34,6 @@ import static android.app.Activity.RESULT_OK;
 /**
  * Created by HallyTran on 03.05.18.
  */
-
 public class PickImagePresenter<V extends PickImageView> extends BasePresenter<V> {
     protected static final int MAX_FILE_SIZE_IN_BYTES = 10485760;   //10 Mb
 

@@ -4,7 +4,7 @@ import android.content.Context;
 import android.text.TextUtils;
 
 import com.hally.influencerai.Constants;
-import com.hally.influencerai.model.Login;
+import com.hally.influencerai.model.LoginRes;
 import com.hally.influencerai.model.RegisterUserRes;
 import com.hally.influencerai.model.UpdateUserRes;
 import com.hally.influencerai.model.User;
@@ -26,7 +26,7 @@ public class ApiUtils {
                 .create(APIService.class);
     }
 
-    public static boolean login(Context context, Callback<Login> callback) {
+    public static boolean login(Context context, Callback<LoginRes> callback) {
         String token = getUserToken(context);
         if (TextUtils.isEmpty(token))
             return false;
