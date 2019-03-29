@@ -19,6 +19,7 @@ package com.hally.influencerai;
 public class Constants {
 
     public static final boolean DEBUG = true;
+    public static final String EMAIL_PATTERN = "^[_A-Za-z0-9-]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
 
     public static class UserType {
         public static final int FACEBOOK = 1;

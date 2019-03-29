@@ -51,7 +51,6 @@ class CreateProfilePresenter extends EditProfilePresenter<CreateProfileView> {
     }
 
     public void buildProfile(User profile) {
-
         ifViewAttached(view -> view.buildProfile(profile));
     }
 
@@ -78,7 +77,6 @@ class CreateProfilePresenter extends EditProfilePresenter<CreateProfileView> {
 
             final LocationManager locationManager = (LocationManager) context.getSystemService(LOCATION_SERVICE);
             if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-                // show dialog
                 buildAlertMessageNoGps();
             }
 
@@ -145,7 +143,6 @@ class CreateProfilePresenter extends EditProfilePresenter<CreateProfileView> {
 //                            }, null);
             }
         });
-
     }
 
     private void buildAlertMessageNoGps() {

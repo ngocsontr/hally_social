@@ -2,6 +2,7 @@ package com.hally.influencerai.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.text.TextUtils;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -13,6 +14,8 @@ import java.util.List;
  * transon97uet@gmail.com
  */
 public class User implements Parcelable {
+    private static final String INFLUENCER = "2";
+
     @SerializedName("id")
     @Expose
     private int id;
@@ -346,6 +349,18 @@ public class User implements Parcelable {
         this.coverPicUrl = coverPicUrl;
     }
 
+    public void setProfessions(List<String> professions) {
+        this.professions = professions;
+    }
+
+    public List<String> getProfession() {
+        return professions;
+    }
+
+    public boolean isInfluencer() {
+        return TextUtils.equals(getUserType(), INFLUENCER);
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -401,7 +416,7 @@ public class User implements Parcelable {
                 ", ip='" + ip + '\'' +
                 ", isActive='" + isActive + '\'' +
                 ", userType='" + userType + '\'' +
-                ", requireUpdateInfo='" + requireUpdateInfo + '\'' +
+                ", requireUpdateInfo=" + requireUpdateInfo +
                 ", socialId='" + socialId + '\'' +
                 ", snsAccessToken='" + snsAccessToken + '\'' +
                 ", link='" + link + '\'' +
@@ -410,14 +425,7 @@ public class User implements Parcelable {
                 ", website='" + website + '\'' +
                 ", about='" + about + '\'' +
                 ", coverPicUrl='" + coverPicUrl + '\'' +
+                ", professions=" + professions +
                 '}';
-    }
-
-    public void setProfessions(List<String> professions) {
-        this.professions = professions;
-    }
-
-    public List<String> getProfession() {
-        return professions;
     }
 }

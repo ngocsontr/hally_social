@@ -32,7 +32,9 @@ import com.hally.influencerai.model.User;
  * Created by HallyTran on 3/22/2019.
  * transon97uet@gmail.com
  */
-public class CreateProfileActivity extends EditProfileActivity<CreateProfileView, CreateProfilePresenter> implements CreateProfileView {
+public class CreateProfileActivity extends
+        EditProfileActivity<CreateProfileView, CreateProfilePresenter> implements
+        CreateProfileView {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,7 +74,7 @@ public class CreateProfileActivity extends EditProfileActivity<CreateProfileView
         // Handle item selection
         switch (item.getItemId()) {
             case R.id.continueButton:
-                presenter.attemptCreateProfile(getUser());
+                presenter.attemptCreateOrUpdateProfile(getUser());
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -82,13 +84,14 @@ public class CreateProfileActivity extends EditProfileActivity<CreateProfileView
     @SuppressLint("SetTextI18n")
     @Override
     public void buildProfile(User profile) {
+        loadSocialItem();
         setProfilePhoto(profile.getAvatar());
         emailEditText.setText(profile.getEmail());
         nameEditText.setText(profile.getUsername());
         locationEditText.setText(profile.getLocation());
-        desEditText.setText(profile.getDescription()
-                + "\r\n" + profile.getAbout()
-                + "\r\n" + profile.getWebsite());
+        desEditText.setText(TextUtils.isEmpty(profile.getDescription()) ? "" : profile.getDescription()
+                + (TextUtils.isEmpty(profile.getAbout()) ? "" : "\n" + profile.getAbout())
+                + (TextUtils.isEmpty(profile.getWebsite()) ? "" : "\n" + profile.getWebsite()));
     }
 
     @Override

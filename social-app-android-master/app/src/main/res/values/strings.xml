@@ -72,6 +72,9 @@
     <string name="prompt_marketer">Marketer</string>
     <string name="prompt_email">Email address</string>
     <string name="prompt_name">User name</string>
+    <string name="prompt_male">Male</string>
+    <string name="prompt_female">Female</string>
+    <string name="prompt_gender">Gender</string>
     <string name="prompt_location">Location</string>
     <string name="prompt_description">Description</string>
     <string name="prompt_professional">Professions</string>
@@ -100,6 +103,8 @@
     <string name="login_term_n_condition"><u>Term and Conditions</u></string>
     <string name="login_contact_us"><u>Contact us</u></string>
 
+    <string name="location_helper">Country, city</string>
+    <string name="description_helper">Biology, website, personal</string>
     <string name="hint_username">Enter a new username</string>
     <string name="hint_email_reset">Enter your email</string>
     <string name="enter_group_name">Enter group name</string>

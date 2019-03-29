@@ -22,7 +22,6 @@
             android:layout_centerInParent="true"
             android:visibility="visible" />
 
-
         <com.hally.influencerai.views.CircularImageView
             android:id="@+id/imageView"
             android:layout_width="match_parent"
@@ -44,7 +43,6 @@
         android:layout_toEndOf="@id/imageContainer"
         android:gravity="center_horizontal"
         android:orientation="horizontal"
-        app:tbgCheckedButton="@+id/marketer"
         app:tbgChildSpacing="auto"
         app:tbgChildSpacingForLastRow="align"
         app:tbgFlow="true">
@@ -75,64 +73,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <android.support.v7.widget.CardView
-                android:id="@+id/social_card_view"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                card_view:cardBackgroundColor="@android:color/white"
-                card_view:cardCornerRadius="5dp"
-                card_view:cardElevation="@dimen/post_card_elevation"
-                card_view:cardUseCompatPadding="true">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:padding="@dimen/intrinsic_padding"
-                    android:text="@string/prompt_socical_infor" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/huge_intrinsic_padding"
-                    android:focusableInTouchMode="true"
-                    android:gravity="center"
-                    android:orientation="horizontal"
-                    android:padding="@dimen/intrinsic_padding">
-
-                    <com.hally.influencerai.views.ButtonSocial
-                        android:id="@+id/facebookSignInButton"
-                        android:layout_width="60dp"
-                        android:layout_height="60dp"
-                        app:iconCenterAligned="true"
-                        app:social="facebook" />
-
-                    <com.hally.influencerai.views.ButtonSocial
-                        android:id="@+id/youtubeSignInButton"
-                        android:layout_width="60dp"
-                        android:layout_height="60dp"
-                        android:layout_marginStart="@dimen/intrinsic_padding"
-                        app:iconCenterAligned="true"
-                        app:social="youtube" />
-
-                    <com.hally.influencerai.views.ButtonSocial
-                        android:id="@+id/twitterSignInButton"
-                        android:layout_width="60dp"
-                        android:layout_height="60dp"
-                        android:layout_marginStart="@dimen/intrinsic_padding"
-                        app:iconCenterAligned="true"
-                        app:social="twitter" />
-
-                    <com.hally.influencerai.views.ButtonSocial
-                        android:id="@+id/instagramSignInButton"
-                        android:layout_width="60dp"
-                        android:layout_height="60dp"
-                        android:layout_marginStart="@dimen/intrinsic_padding"
-                        app:iconCenterAligned="true"
-                        app:social="instagram" />
-
-                </LinearLayout>
-
-            </android.support.v7.widget.CardView>
+            <include layout="@layout/view_social_button" />
 
             <android.support.v7.widget.CardView
                 android:id="@+id/biology_card_view"
@@ -164,9 +105,10 @@
                         android:hint="@string/prompt_email"
                         android:imeOptions="actionNext"
                         android:inputType="textEmailAddress"
-                        android:maxLines="1"
                         app:met_accentTypeface="font/roboto_light_italic.ttf"
-                        app:met_floatingLabel="highlight" />
+                        app:met_autoValidate="true"
+                        app:met_floatingLabel="highlight"
+                        app:met_validateOnFocusLost="true" />
 
                     <com.rengwuxian.materialedittext.MaterialEditText
                         android:id="@+id/nameEditText"
@@ -175,23 +117,52 @@
                         android:hint="@string/prompt_name"
                         android:imeOptions="actionNext"
                         android:inputType="text"
-                        android:maxLines="1"
                         app:met_accentTypeface="font/roboto_light_italic.ttf"
-                        app:met_autoValidate="true"
-                        app:met_checkCharactersCountAtBeginning="true"
                         app:met_floatingLabel="highlight"
                         app:met_minCharacters="8" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/prompt_gender"
+                        android:fontFamily="@font/roboto_light_italic"
+                        android:textStyle="italic" />
+
+                    <com.nex3z.togglebuttongroup.SingleSelectToggleGroup
+                        android:id="@+id/gender_choices"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/intrinsic_padding"
+                        android:orientation="horizontal"
+                        app:tbgCheckedButton="@+id/male"
+                        app:tbgFlow="true">
+
+                        <com.nex3z.togglebuttongroup.button.LabelToggle
+                            android:id="@+id/male"
+                            android:layout_width="80dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="@dimen/intrinsic_padding"
+                            android:text="@string/prompt_male" />
+
+                        <com.nex3z.togglebuttongroup.button.LabelToggle
+                            android:id="@+id/female"
+                            android:layout_width="80dp"
+                            android:layout_height="wrap_content"
+                            android:text="@string/prompt_female" />
+                    </com.nex3z.togglebuttongroup.SingleSelectToggleGroup>
 
                     <com.rengwuxian.materialedittext.MaterialEditText
                         android:id="@+id/locationEditText"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/intrinsic_padding"
                         android:hint="@string/prompt_location"
                         android:imeOptions="actionNext"
                         android:inputType="text"
                         android:maxLines="1"
                         app:met_accentTypeface="font/roboto_light_italic.ttf"
-                        app:met_floatingLabel="highlight" />
+                        app:met_floatingLabel="highlight"
+                        app:met_helperText="@string/location_helper" />
 
                     <com.rengwuxian.materialedittext.MaterialEditText
                         android:id="@+id/descriptionEditText"
@@ -201,7 +172,9 @@
                         android:imeOptions="actionNext"
                         android:inputType="text"
                         app:met_accentTypeface="font/roboto_light_italic.ttf"
-                        app:met_floatingLabel="highlight" />
+                        app:met_floatingLabel="highlight"
+                        app:met_helperText="@string/description_helper"
+                        app:met_minCharacters="100" />
                 </LinearLayout>
 
             </android.support.v7.widget.CardView>

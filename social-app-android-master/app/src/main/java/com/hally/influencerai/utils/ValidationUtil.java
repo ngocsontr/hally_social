@@ -27,10 +27,10 @@ import com.hally.influencerai.Constants;
  */
 public class ValidationUtil {
     private static final String [] IMAGE_TYPE = new String[]{"jpg", "png", "jpeg", "bmp", "jp2", "psd", "tif", "gif"};
+    public static final String STRICTER_FILTER_STRING = "[A-Z0-9a-z\\._%+-]+@([A-Za-z0-9-]+\\.)+[A-Za-z]{2,4}";
 
     public static boolean isEmailValid(String email) {
-        String stricterFilterString = "[A-Z0-9a-z\\._%+-]+@([A-Za-z0-9-]+\\.)+[A-Za-z]{2,4}";
-        return email.matches(stricterFilterString);
+        return email.matches(STRICTER_FILTER_STRING);
     }
 
     public static boolean isOnlyLatinLetters(String text) {

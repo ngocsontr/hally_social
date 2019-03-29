@@ -1,0 +1,119 @@
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/social_card_view"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    card_view:cardBackgroundColor="@android:color/white"
+    card_view:cardCornerRadius="5dp"
+    card_view:cardElevation="@dimen/post_card_elevation"
+    card_view:cardUseCompatPadding="true">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/intrinsic_padding"
+        android:text="@string/prompt_socical_infor" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/huge_intrinsic_padding"
+        android:focusableInTouchMode="true"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:padding="@dimen/intrinsic_padding">
+
+        <com.hally.influencerai.views.ButtonSocial
+            android:id="@+id/facebookSignInButton"
+            android:layout_width="@dimen/social_button_size"
+            android:layout_height="@dimen/social_button_size"
+            app:iconCenterAligned="true"
+            app:social="facebook" />
+
+        <com.hally.influencerai.views.ButtonSocial
+            android:id="@+id/youtubeSignInButton"
+            android:layout_width="@dimen/social_button_size"
+            android:layout_height="@dimen/social_button_size"
+            android:layout_marginStart="@dimen/large_intrinsic_padding"
+            android:layout_toEndOf="@id/facebookSignInButton"
+            app:iconCenterAligned="true"
+            app:social="youtube" />
+
+        <com.hally.influencerai.views.ButtonSocial
+            android:id="@+id/twitterSignInButton"
+            android:layout_width="@dimen/social_button_size"
+            android:layout_height="@dimen/social_button_size"
+            android:layout_marginStart="@dimen/large_intrinsic_padding"
+            android:layout_toEndOf="@id/youtubeSignInButton"
+            app:iconCenterAligned="true"
+            app:social="twitter" />
+
+        <com.hally.influencerai.views.ButtonSocial
+            android:id="@+id/instagramSignInButton"
+            android:layout_width="@dimen/social_button_size"
+            android:layout_height="@dimen/social_button_size"
+            android:layout_marginStart="@dimen/large_intrinsic_padding"
+            android:layout_toEndOf="@id/twitterSignInButton"
+            app:iconCenterAligned="true"
+            app:social="instagram" />
+
+        <com.hally.influencerai.views.CircularImageView
+            android:id="@+id/facebookImage"
+            android:layout_width="@dimen/social_button_image_size"
+            android:layout_height="@dimen/social_button_image_size"
+            android:layout_alignEnd="@id/facebookSignInButton"
+            android:layout_alignBottom="@id/facebookSignInButton"
+            android:translationZ="10dp"
+            android:visibility="visible"
+            app:border="false"
+            app:shadow="false"
+            app:shadow_color="@color/circle_image_shadow"
+            app:shadow_radius="@dimen/circle_image_shadow_radius"
+            tools:src="@drawable/ic_stub" />
+
+        <com.hally.influencerai.views.CircularImageView
+            android:id="@+id/youtubeImage"
+            android:layout_width="@dimen/social_button_image_size"
+            android:layout_height="@dimen/social_button_image_size"
+            android:layout_alignEnd="@id/youtubeSignInButton"
+            android:layout_alignBottom="@id/youtubeSignInButton"
+            android:translationZ="10dp"
+            android:visibility="invisible"
+            app:border="false"
+            app:shadow="false"
+            app:shadow_color="@color/circle_image_shadow"
+            app:shadow_radius="@dimen/circle_image_shadow_radius"
+            tools:src="@drawable/ic_stub" />
+
+        <com.hally.influencerai.views.CircularImageView
+            android:id="@+id/twitterImage"
+            android:layout_width="@dimen/social_button_image_size"
+            android:layout_height="@dimen/social_button_image_size"
+            android:layout_alignEnd="@id/twitterSignInButton"
+            android:layout_alignBottom="@id/twitterSignInButton"
+            android:translationZ="10dp"
+            android:visibility="invisible"
+            app:border="false"
+            app:shadow="false"
+            app:shadow_color="@color/circle_image_shadow"
+            app:shadow_radius="@dimen/circle_image_shadow_radius"
+            tools:src="@drawable/ic_stub" />
+
+        <com.hally.influencerai.views.CircularImageView
+            android:id="@+id/instagramImage"
+            android:layout_width="@dimen/social_button_image_size"
+            android:layout_height="@dimen/social_button_image_size"
+            android:layout_alignEnd="@id/instagramSignInButton"
+            android:layout_alignBottom="@id/instagramSignInButton"
+            android:translationZ="10dp"
+            android:visibility="invisible"
+            app:border="false"
+            app:shadow="false"
+            app:shadow_color="@color/circle_image_shadow"
+            app:shadow_radius="@dimen/circle_image_shadow_radius"
+            tools:src="@drawable/ic_stub" />
+    </RelativeLayout>
+
+</android.support.v7.widget.CardView>

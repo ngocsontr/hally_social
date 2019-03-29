@@ -22,11 +22,13 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.text.Editable;
+import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 
@@ -34,6 +36,7 @@ import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
+import com.hally.influencerai.Constants;
 import com.hally.influencerai.R;
 import com.hally.influencerai.main.pickImageBase.PickImageActivity;
 import com.hally.influencerai.model.User;
@@ -43,6 +46,8 @@ import com.hally.influencerai.utils.LogUtil;
 import com.nex3z.togglebuttongroup.MultiSelectToggleGroup;
 import com.nex3z.togglebuttongroup.SingleSelectToggleGroup;
 import com.nex3z.togglebuttongroup.button.LabelToggle;
+import com.rengwuxian.materialedittext.MaterialEditText;
+import com.rengwuxian.materialedittext.validation.RegexpValidator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,7 +56,8 @@ import java.util.List;
  * Created by HallyTran on 3/22/2019.
  * transon97uet@gmail.com
  */
-public class EditProfileActivity<V extends EditProfileView, P extends EditProfilePresenter<V>> extends PickImageActivity<V, P> implements EditProfileView {
+public class EditProfileActivity<V extends EditProfileView, P extends EditProfilePresenter<V>> extends
+        PickImageActivity<V, P> implements EditProfileView {
     private static final String TAG = EditProfileActivity.class.getSimpleName();
 
     public static final String SOCIAL_USER_EXTRA_KEY = "SOCIAL_USER_EXTRA_KEY";
@@ -59,13 +65,17 @@ public class EditProfileActivity<V extends EditProfileView, P extends EditProfil
 
     protected User user;
     // UI references.
-    protected EditText emailEditText;
-    protected EditText nameEditText;
-    protected EditText locationEditText;
-    protected EditText desEditText;
+    protected MaterialEditText emailEditText;
+    protected MaterialEditText nameEditText;
+    protected LabelToggle male;
+    protected LabelToggle female;
+    protected MaterialEditText locationEditText;
+    protected MaterialEditText desEditText;
     protected ImageView avatarImageView;
     protected ProgressBar avatarProgressBar;
     protected SingleSelectToggleGroup userTypeChoices;
+    protected LabelToggle influencer;
+    protected LabelToggle marketer;
     protected MultiSelectToggleGroup groupProfessional;
 
     @Override
@@ -81,10 +91,16 @@ public class EditProfileActivity<V extends EditProfileView, P extends EditProfil
         avatarProgressBar = findViewById(R.id.avatarProgressBar);
         avatarImageView = findViewById(R.id.imageView);
         emailEditText = findViewById(R.id.emailEditText);
+        emailEditText.addValidator(new RegexpValidator(getString(R.string.error_invalid_email),
+                Constants.EMAIL_PATTERN));
         nameEditText = findViewById(R.id.nameEditText);
+        male = findViewById(R.id.male);
+        female = findViewById(R.id.female);
         locationEditText = findViewById(R.id.locationEditText);
         desEditText = findViewById(R.id.descriptionEditText);
         userTypeChoices = findViewById(R.id.user_type_choices);
+        influencer = findViewById(R.id.influencer);
+        marketer = findViewById(R.id.marketer);
         groupProfessional = findViewById(R.id.group_professional);
 
         avatarImageView.setOnClickListener(this::onSelectImageClick);
@@ -106,7 +122,7 @@ public class EditProfileActivity<V extends EditProfileView, P extends EditProfil
     }
 
     protected void initContent() {
-        presenter.loadProfile();
+        presenter.loadProfile(user);
         presenter.initProfessionalList();
     }
 
@@ -188,17 +204,68 @@ public class EditProfileActivity<V extends EditProfileView, P extends EditProfil
         // Handle item selection
         switch (item.getItemId()) {
             case R.id.save:
-                presenter.attemptCreateProfile(getUser());
+                presenter.setIsUpdate(true);
+                presenter.attemptCreateOrUpdateProfile(getUser());
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
 
+    @Override
+    public void loadProfile(User user) {
+        loadSocialItem();
+        if (user.isInfluencer()) {
+            influencer.setChecked(true);
+            marketer.setVisibility(View.GONE);
+        } else {
+            marketer.setChecked(true);
+            influencer.setVisibility(View.GONE);
+        }
+        setProfilePhoto(user.getAvatar());
+        emailEditText.setText(user.getEmail());
+        if (TextUtils.equals(getString(R.string.prompt_male), user.getGender())) {
+            male.setChecked(true);
+        } else {
+            female.setChecked(true);
+        }
+        nameEditText.setText(user.getUsername());
+        locationEditText.setText(user.getLocation());
+        desEditText.setText(user.getDescription());
+    }
+
+    protected void loadSocialItem() {
+//        if (user.getUserSocials() == null) return;
+//        for (UserSocial userSocial : user.getUserSocials()) {
+            ImageView socialImageView = null;
+            switch (/*userSocial.getSocialType()*/1) {
+                case Constants.UserType.FACEBOOK:
+                    socialImageView = findViewById(R.id.facebookImage);
+                    break;
+                case Constants.UserType.TWITTER:
+                    socialImageView = findViewById(R.id.twitterImage);
+                    break;
+                case Constants.UserType.INSTAGRAM:
+                    socialImageView = findViewById(R.id.instagramImage);
+                    break;
+                case Constants.UserType.YOUTUBE:
+                    socialImageView = findViewById(R.id.youtubeImage);
+                    break;
+                default:
+            }
+            if (socialImageView != null) {
+                socialImageView.setVisibility(View.VISIBLE);
+                ImageUtil.loadImage(GlideApp.with(this),
+                        user.getAvatar()/*userSocial.getSocialAvatar()*/, socialImageView);
+            }
+//        }
+    }
+
     protected User getUser() {
         user.setAvatar(user.getAvatar());
         user.setEmail(emailEditText.getText().toString());
         user.setUsername(nameEditText.getText().toString());
+        user.setGender(getString(male.isChecked() ? R.string.prompt_male : R.string.prompt_female));
         user.setLocation(locationEditText.getText().toString());
         user.setDescription(desEditText.getText().toString());
         user.setUserType(getUserType());

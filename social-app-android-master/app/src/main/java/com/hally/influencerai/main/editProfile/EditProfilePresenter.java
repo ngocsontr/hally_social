@@ -22,9 +22,7 @@ import android.support.annotation.NonNull;
 import com.hally.influencerai.R;
 import com.hally.influencerai.main.base.BaseView;
 import com.hally.influencerai.main.pickImageBase.PickImagePresenter;
-import com.hally.influencerai.managers.ProfileManager;
 import com.hally.influencerai.managers.network.ApiUtils;
-import com.hally.influencerai.model.Profile;
 import com.hally.influencerai.model.UpdateUserRes;
 import com.hally.influencerai.model.User;
 import com.hally.influencerai.utils.LogUtil;
@@ -39,52 +37,29 @@ import retrofit2.Response;
  */
 public class EditProfilePresenter<V extends EditProfileView> extends PickImagePresenter<V> {
 
-    protected Profile profile;
-    protected ProfileManager profileManager;
+    private boolean isUpdate;
 
     protected EditProfilePresenter(Context context) {
         super(context);
-        profileManager = ProfileManager.getInstance(context.getApplicationContext());
-
     }
 
-    public void loadProfile() {
-//        ifViewAttached(BaseView::showProgress);
-//        profileManager.getProfileSingleValue(getCurrentUserId(), new OnObjectChangedListenerSimple<Profile>() {
-//            @Override
-//            public void onObjectChanged(Profile obj) {
-//                profile = obj;
-//                ifViewAttached(new ViewAction<V>() {
-//                    @Override
-//                    public void run(@NonNull V view) {
-//                        if (profile != null) {
-//                            view.setName(profile.getUsername());
-//
-//                            if (profile.getPhotoUrl() != null) {
-//                                view.setProfilePhoto(profile.getPhotoUrl());
-//                            }
-//                        }
-//
-//                        view.hideProgress();
-//                        view.setNameError(null);
-//                    }
-//                });
-//            }
-//        });
+    public void loadProfile(User user) {
+        ifViewAttached(view -> view.loadProfile(user));
     }
 
-    public void attemptCreateProfile(User socialUser) {
+    public void attemptCreateOrUpdateProfile(User socialUser) {
         if (checkInternetConnection()) {
             ifViewAttached(new ViewAction<V>() {
                 @Override
                 public void run(@NonNull V view) {
                     User user = new User();
-                    user.setUsername(socialUser.getUsername());
                     user.setEmail(socialUser.getEmail());
+                    user.setUsername(socialUser.getUsername());
+                    user.setGender(socialUser.getGender());
                     user.setAvatar(socialUser.getAvatar());
                     user.setDescription(socialUser.getDescription());
                     user.setLocation(socialUser.getLocation());
-                    user.setUserType(socialUser.getUserType());
+                    if (!isUpdate) user.setUserType(socialUser.getUserType());
                     user.setProfessions(socialUser.getProfession());
 
                     ApiUtils.updateUser(context, user, new Callback<UpdateUserRes>() {
@@ -120,4 +95,7 @@ public class EditProfilePresenter<V extends EditProfileView> extends PickImagePr
         ifViewAttached(EditProfileView::createProfessionalList);
     }
 
+    public void setIsUpdate(boolean isUpdate) {
+        this.isUpdate = isUpdate;
+    }
 }
