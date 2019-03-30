@@ -23,13 +23,13 @@
     <string name="facebook_app_id">1818488218257595</string>
     <string name="fb_login_protocol_scheme">fb1818488218257595</string>
 
-    <string name="twitter_api_key">ZLiRTn1UbKjImUeWL2KVVynZi</string>
-    <string name="twitter_secret_key">NpzummsFJChUmQ6wQz4Bc9jHWceyhduONMfhwcSyPXwUN7gIr1</string>
+    <string name="twitter_api_key">RB3uxe6jLlFuX9FJzsodFkGi5</string>
+    <string name="twitter_secret_key">k1F22bIEimQss8afLWfRvzFD2w5t2i5uJWG3ZQtg0MuIhN7kpo</string>
 
-    <string name="instagram_client_id">61998f63d5fa49eb81ce700d52b27ff8</string>
+    <string name="instagram_client_id">a6c693d6ee434986a44513e58382be61</string>
+    <string name="instagram_client_secret">e1d5f92b1cb74cadb6724be0ff906db3</string>
     <string name="instagram_callback_url">https://instagram.com/</string>
     <string name="instagram_base_url">https://api.instagram.com/</string>
-    <string name="instagram_client_secret">7df5834abce54baca64f3b87809e48c5</string>
 
     <!--avatar url pattern-->
     <string name="facebook_large_image_url_pattern">https://graph.facebook.com/%1$s/picture?type=large</string>
