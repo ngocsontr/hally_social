@@ -83,15 +83,16 @@ public class CreateProfileActivity extends
 
     @SuppressLint("SetTextI18n")
     @Override
-    public void buildProfile(User profile) {
+    public void buildProfile(User user) {
         loadSocialItem();
-        setProfilePhoto(profile.getAvatar());
-        emailEditText.setText(profile.getEmail());
-        nameEditText.setText(profile.getUsername());
-        locationEditText.setText(profile.getLocation());
-        desEditText.setText(TextUtils.isEmpty(profile.getDescription()) ? "" : profile.getDescription()
-                + (TextUtils.isEmpty(profile.getAbout()) ? "" : "\n" + profile.getAbout())
-                + (TextUtils.isEmpty(profile.getWebsite()) ? "" : "\n" + profile.getWebsite()));
+        setProfilePhoto(user.getAvatar());
+        emailEditText.setText(user.getEmail());
+        nameEditText.setText(user.getUsername());
+        dobEditText.setText(user.getDateOfBirth());
+        locationEditText.setText(user.getLocation());
+        desEditText.setText(TextUtils.isEmpty(user.getDescription()) ? "" : user.getDescription()
+                + (TextUtils.isEmpty(user.getAbout()) ? "" : "\n" + user.getAbout())
+                + (TextUtils.isEmpty(user.getWebsite()) ? "" : "\n" + user.getWebsite()));
     }
 
     @Override

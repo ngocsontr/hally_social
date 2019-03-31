@@ -28,7 +28,7 @@
 
     <string name="instagram_client_id">a6c693d6ee434986a44513e58382be61</string>
     <string name="instagram_client_secret">e1d5f92b1cb74cadb6724be0ff906db3</string>
-    <string name="instagram_callback_url">https://instagram.com/</string>
+    <string name="instagram_callback_url">http://www.deepsocial.ai</string>
     <string name="instagram_base_url">https://api.instagram.com/</string>
 
     <!--avatar url pattern-->

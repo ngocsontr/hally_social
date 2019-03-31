@@ -56,6 +56,7 @@ public class EditProfilePresenter<V extends EditProfileView> extends PickImagePr
                     user.setEmail(socialUser.getEmail());
                     user.setUsername(socialUser.getUsername());
                     user.setGender(socialUser.getGender());
+                    user.setDateOfBirth(socialUser.getDateOfBirth());
                     user.setAvatar(socialUser.getAvatar());
                     user.setDescription(socialUser.getDescription());
                     user.setLocation(socialUser.getLocation());

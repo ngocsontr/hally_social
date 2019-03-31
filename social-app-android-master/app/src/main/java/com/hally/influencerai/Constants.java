@@ -20,6 +20,7 @@ public class Constants {
 
     public static final boolean DEBUG = true;
     public static final String EMAIL_PATTERN = "^[_A-Za-z0-9-]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
+    public static final String DOB_PATTERN = "^((19|20)\\\\d\\\\d)-(0?[1-9]|1[012])-(0?[1-9]|[12][0-9]|3[01])$";
 
     public static class UserType {
         public static final int FACEBOOK = 1;

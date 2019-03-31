@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
@@ -21,6 +20,7 @@ import com.facebook.login.LoginResult;
 import com.hally.influencerai.Constants;
 import com.hally.influencerai.R;
 import com.hally.influencerai.model.User;
+import com.hally.influencerai.utils.LogUtil;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -87,7 +87,7 @@ public class FacebookHelper {
      * @param loginResult login result with user credentials.
      */
     private void getUserProfile(LoginResult loginResult) {
-        Log.i("AccessToken: ", loginResult.getAccessToken() + "");
+        LogUtil.logInfo("FacebookHelper", "AccessToken: " + loginResult.getAccessToken());
         // App code
         GraphRequest request = GraphRequest.newMeRequest(
                 loginResult.getAccessToken(),
@@ -95,7 +95,7 @@ public class FacebookHelper {
                     @Override
                     public void onCompleted(JSONObject object, GraphResponse response) {
 
-                        Log.i("response: ", response + "");
+                        LogUtil.logInfo("FacebookHelper", "GraphResponse: " + response + "\nJSONObject: " + object);
                         try {
                             mListener.onFacebookProfileReceived(parseResponse(loginResult.getAccessToken(), object));
                         } catch (Exception e) {
@@ -133,12 +133,12 @@ public class FacebookHelper {
      */
     private User parseResponse(AccessToken accessToken, JSONObject object) throws JSONException {
         User user = new User();
-
         user.setSocialType(Constants.UserType.FACEBOOK);
         user.setSnsAccessToken(accessToken.getToken());
         if (object.has("id")) user.setSocialId(object.getString("id"));
         if (object.has("email")) user.setEmail(object.getString("email"));
         if (object.has("name")) user.setUsername(object.getString("name"));
+        if (object.has("birthday")) user.setDateOfBirth(object.getString("birthday"));
         if (object.has("gender"))
             user.setGender(object.getString("gender"));
         if (object.has("about")) user.setAbout(object.getString("about"));

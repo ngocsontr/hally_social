@@ -15,6 +15,7 @@ import com.hally.influencerai.main.login.LoginActivity;
 import com.hally.influencerai.managers.network.ApiUtils;
 import com.hally.influencerai.model.LoginRes;
 import com.hally.influencerai.utils.LogUtil;
+import com.hally.influencerai.utils.SharePreUtil;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -77,6 +78,7 @@ class SplashPresenter extends BasePresenter<SplashView> {
     }
 
     private void routeToLogin(SplashView view) {
+        SharePreUtil.clearLoginToken(context);
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {

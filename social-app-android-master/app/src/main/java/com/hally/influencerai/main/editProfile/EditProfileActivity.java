@@ -50,6 +50,7 @@ import com.rengwuxian.materialedittext.MaterialEditText;
 import com.rengwuxian.materialedittext.validation.RegexpValidator;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -70,6 +71,7 @@ public class EditProfileActivity<V extends EditProfileView, P extends EditProfil
     protected LabelToggle male;
     protected LabelToggle female;
     protected MaterialEditText locationEditText;
+    protected MaterialEditText dobEditText;
     protected MaterialEditText desEditText;
     protected ImageView avatarImageView;
     protected ProgressBar avatarProgressBar;
@@ -77,6 +79,70 @@ public class EditProfileActivity<V extends EditProfileView, P extends EditProfil
     protected LabelToggle influencer;
     protected LabelToggle marketer;
     protected MultiSelectToggleGroup groupProfessional;
+    TextWatcher dob_tw = new TextWatcher() {
+        private String current = "";
+        private String dateFormat = "YYYYMMDD";
+        private Calendar cal = Calendar.getInstance();
+
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            if (!s.toString().equals(current)) {
+                String clean = s.toString().replaceAll("[^\\d.]|\\.", "");
+                String cleanC = current.replaceAll("[^\\d.]|\\.", "");
+
+                int cl = clean.length();
+                int sel = cl;
+                for (int i = 2; i <= cl && i < 6; i += 2) {
+                    sel++;
+                }
+                //Fix for pressing delete next to a forward slash
+                if (clean.equals(cleanC)) sel--;
+
+                if (clean.length() < 8) {
+                    clean = clean + dateFormat.substring(clean.length());
+                } else {
+                    //This part makes sure that when we finish entering numbers
+                    //the date is correct, fixing it otherwise
+                    int year = Integer.parseInt(clean.substring(0, 4));
+                    int mon = Integer.parseInt(clean.substring(4, 6));
+                    int day = Integer.parseInt(clean.substring(6, 8));
+
+                    mon = mon < 1 ? 1 : mon > 12 ? 12 : mon;
+                    cal.set(Calendar.MONTH, mon - 1);
+                    year = (year < 1900) ? 1900 : (year > 2100) ? 2100 : year;
+                    cal.set(Calendar.YEAR, year);
+                    // ^ first set year for the line below to work correctly
+                    //with leap years - otherwise, date e.g. 29/02/2012
+                    //would be automatically corrected to 28/02/2012
+
+                    day = (day > cal.getActualMaximum(Calendar.DATE))
+                            ? cal.getActualMaximum(Calendar.DATE) : day;
+                    clean = String.format("%02d%02d%02d", year, mon, day);
+                }
+
+                clean = String.format("%s-%s-%s",
+                        clean.substring(0, 4),
+                        clean.substring(4, 6),
+                        clean.substring(6, 8));
+
+                sel = sel < 0 ? 0 : sel;
+                current = clean;
+                dobEditText.setText(current);
+                dobEditText.setSelection(sel < current.length() ? sel : current.length());
+            }
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+
+        }
+    };
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,6 +162,10 @@ public class EditProfileActivity<V extends EditProfileView, P extends EditProfil
         nameEditText = findViewById(R.id.nameEditText);
         male = findViewById(R.id.male);
         female = findViewById(R.id.female);
+        dobEditText = findViewById(R.id.dobEditText);
+        dobEditText.addValidator(new RegexpValidator(getString(R.string.dob_helper),
+                Constants.DOB_PATTERN));
+        dobEditText.addTextChangedListener(dob_tw);
         locationEditText = findViewById(R.id.locationEditText);
         desEditText = findViewById(R.id.descriptionEditText);
         userTypeChoices = findViewById(R.id.user_type_choices);
@@ -230,6 +300,7 @@ public class EditProfileActivity<V extends EditProfileView, P extends EditProfil
             female.setChecked(true);
         }
         nameEditText.setText(user.getUsername());
+        dobEditText.setText(user.getDateOfBirth());
         locationEditText.setText(user.getLocation());
         desEditText.setText(user.getDescription());
     }
@@ -237,27 +308,27 @@ public class EditProfileActivity<V extends EditProfileView, P extends EditProfil
     protected void loadSocialItem() {
 //        if (user.getUserSocials() == null) return;
 //        for (UserSocial userSocial : user.getUserSocials()) {
-            ImageView socialImageView = null;
-            switch (/*userSocial.getSocialType()*/1) {
-                case Constants.UserType.FACEBOOK:
-                    socialImageView = findViewById(R.id.facebookImage);
-                    break;
-                case Constants.UserType.TWITTER:
-                    socialImageView = findViewById(R.id.twitterImage);
-                    break;
-                case Constants.UserType.INSTAGRAM:
-                    socialImageView = findViewById(R.id.instagramImage);
-                    break;
-                case Constants.UserType.YOUTUBE:
-                    socialImageView = findViewById(R.id.youtubeImage);
-                    break;
-                default:
-            }
-            if (socialImageView != null) {
-                socialImageView.setVisibility(View.VISIBLE);
-                ImageUtil.loadImage(GlideApp.with(this),
-                        user.getAvatar()/*userSocial.getSocialAvatar()*/, socialImageView);
-            }
+        ImageView socialImageView = null;
+        switch (/*userSocial.getSocialType()*/1) {
+            case Constants.UserType.FACEBOOK:
+                socialImageView = findViewById(R.id.facebookImage);
+                break;
+            case Constants.UserType.TWITTER:
+                socialImageView = findViewById(R.id.twitterImage);
+                break;
+            case Constants.UserType.INSTAGRAM:
+                socialImageView = findViewById(R.id.instagramImage);
+                break;
+            case Constants.UserType.YOUTUBE:
+                socialImageView = findViewById(R.id.youtubeImage);
+                break;
+            default:
+        }
+        if (socialImageView != null) {
+            socialImageView.setVisibility(View.VISIBLE);
+            ImageUtil.loadImage(GlideApp.with(this),
+                    user.getAvatar()/*userSocial.getSocialAvatar()*/, socialImageView);
+        }
 //        }
     }
 
@@ -266,6 +337,7 @@ public class EditProfileActivity<V extends EditProfileView, P extends EditProfil
         user.setEmail(emailEditText.getText().toString());
         user.setUsername(nameEditText.getText().toString());
         user.setGender(getString(male.isChecked() ? R.string.prompt_male : R.string.prompt_female));
+        user.setDateOfBirth(dobEditText.getText().toString());
         user.setLocation(locationEditText.getText().toString());
         user.setDescription(desEditText.getText().toString());
         user.setUserType(getUserType());

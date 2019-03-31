@@ -124,8 +124,8 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@string/prompt_gender"
                         android:fontFamily="@font/roboto_light_italic"
+                        android:text="@string/prompt_gender"
                         android:textStyle="italic" />
 
                     <com.nex3z.togglebuttongroup.SingleSelectToggleGroup
@@ -152,10 +152,23 @@
                     </com.nex3z.togglebuttongroup.SingleSelectToggleGroup>
 
                     <com.rengwuxian.materialedittext.MaterialEditText
-                        android:id="@+id/locationEditText"
+                        android:id="@+id/dobEditText"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/intrinsic_padding"
+                        android:hint="@string/prompt_dob"
+                        android:imeOptions="actionNext"
+                        android:inputType="date"
+                        android:maxLines="1"
+                        app:met_accentTypeface="font/roboto_light_italic.ttf"
+                        app:met_floatingLabel="highlight"
+                        app:met_autoValidate="true"
+                        app:met_helperText="@string/dob_helper" />
+
+                    <com.rengwuxian.materialedittext.MaterialEditText
+                        android:id="@+id/locationEditText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
                         android:hint="@string/prompt_location"
                         android:imeOptions="actionNext"
                         android:inputType="text"
