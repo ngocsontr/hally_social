@@ -68,7 +68,7 @@ public class LoginActivity extends BaseActivity<LoginView, LoginPresenter> imple
     }
 
     private void initGoogleSignIn() {
-        mGoogleAuthHelper = new GoogleSignInHelper(this, null, new GoogleAuthResponse() {
+        mGoogleAuthHelper = new GoogleSignInHelper(this, getString(R.string.google_web_client_id), new GoogleAuthResponse() {
             @Override
             public void onGoogleAuthSignIn(User googleUser) {
                 LogUtil.logDebug(TAG, "Google:onSuccess: " + googleUser);

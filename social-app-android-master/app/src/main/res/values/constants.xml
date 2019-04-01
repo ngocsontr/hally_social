@@ -18,7 +18,7 @@
 <resources>
     <string name="storage_link">gs://steady-petal-227908.appspot.com</string>
 
-    <string name="google_web_client_id">116240781299-721t0e57c0g4i0jjrnkumj0nnkt0kun4.apps.googleusercontent.com</string>
+    <string name="google_web_client_id">989104393644-2uvtdn0f41e8vffvpve0d4vldutfqmo1.apps.googleusercontent.com</string>
 
     <string name="facebook_app_id">1818488218257595</string>
     <string name="fb_login_protocol_scheme">fb1818488218257595</string>
