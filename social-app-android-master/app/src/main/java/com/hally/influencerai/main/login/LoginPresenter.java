@@ -106,8 +106,7 @@ class LoginPresenter extends BasePresenter<LoginView> {
                     if (!TextUtils.isEmpty(token))
                         SharePreUtil.saveLoginToken(context, token);
                     if (resUser != null) {
-                        // TODO: 3/29/2019 for test edit screen
-                        if (true/*resUser.isRequireUpdateInfo()*/) {
+                        if (resUser.isRequireUpdateInfo()) {
                             view.startCreateProfileActivity(resUser);
                         } else {
                             view.startMainActivity();

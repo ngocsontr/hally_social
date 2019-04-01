@@ -3,6 +3,8 @@ package com.hally.influencerai.managers.network;
 import android.content.Context;
 import android.provider.Settings;
 
+import com.hally.influencerai.Constants;
+
 import java.io.IOException;
 
 import okhttp3.Interceptor;
@@ -28,13 +30,15 @@ class RetrofitClient {
                     @Override
                     public Response intercept(Chain chain) throws IOException {
                         Request request = chain.request().newBuilder()
-                                .addHeader("UUID", Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID))
+                                .addHeader("UUID", Settings.Secure.getString(
+                                        context.getContentResolver(), Settings.Secure.ANDROID_ID))
                                 .addHeader("X-Requested-With", "XMLHttpRequest")
                                 .build();
                         return chain.proceed(request);
                     }
                 })
-                .addInterceptor(new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY)).build();
+                .addInterceptor(new HttpLoggingInterceptor().setLevel(Constants.DEBUG
+                        ? HttpLoggingInterceptor.Level.BODY : HttpLoggingInterceptor.Level.NONE)).build();
 
         if (retrofit == null) {
             retrofit = new Retrofit.Builder()

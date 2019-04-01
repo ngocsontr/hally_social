@@ -124,9 +124,11 @@ public class User implements Parcelable {
         snsAccessToken = in.readString();
         link = in.readString();
         socialType = in.readInt();
+        userSocials = in.createTypedArrayList(UserSocial.CREATOR);
         website = in.readString();
         about = in.readString();
         coverPicUrl = in.readString();
+        professions = in.createStringArrayList();
     }
 
     public static final Creator<User> CREATOR = new Creator<User>() {
@@ -368,7 +370,6 @@ public class User implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-
         dest.writeInt(id);
         dest.writeString(username);
         dest.writeString(fullName);
@@ -391,9 +392,11 @@ public class User implements Parcelable {
         dest.writeString(snsAccessToken);
         dest.writeString(link);
         dest.writeInt(socialType);
+        dest.writeTypedList(userSocials);
         dest.writeString(website);
         dest.writeString(about);
         dest.writeString(coverPicUrl);
+        dest.writeStringList(professions);
     }
 
     @Override
@@ -428,4 +431,5 @@ public class User implements Parcelable {
                 ", professions=" + professions +
                 '}';
     }
+
 }

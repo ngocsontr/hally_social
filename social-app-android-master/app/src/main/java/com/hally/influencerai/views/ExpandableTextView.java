@@ -16,14 +16,8 @@
 
 package com.hally.influencerai.views;
 
-/**
- * Created by HallyTran on 21.12.16.
- */
-
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
@@ -102,7 +96,6 @@ public class ExpandableTextView extends LinearLayout implements View.OnClickList
         init(attrs);
     }
 
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public ExpandableTextView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         init(attrs);
@@ -182,6 +175,7 @@ public class ExpandableTextView extends LinearLayout implements View.OnClickList
 
     @Override
     protected void onFinishInflate() {
+        super.onFinishInflate();
         findViews();
     }
 
@@ -296,21 +290,12 @@ public class ExpandableTextView extends LinearLayout implements View.OnClickList
         mButton.setOnClickListener(this);
     }
 
-    private static boolean isPostHoneycomb() {
-        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB;
-    }
-
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     private static void applyAlphaAnimation(View view, float alpha) {
-        if (isPostHoneycomb()) {
-            view.setAlpha(alpha);
-        } else {
-            AlphaAnimation alphaAnimation = new AlphaAnimation(alpha, alpha);
-            // make it instant
-            alphaAnimation.setDuration(0);
-            alphaAnimation.setFillAfter(true);
-            view.startAnimation(alphaAnimation);
-        }
+        AlphaAnimation alphaAnimation = new AlphaAnimation(alpha, alpha);
+        // make it instant
+        alphaAnimation.setDuration(0);
+        alphaAnimation.setFillAfter(true);
+        view.startAnimation(alphaAnimation);
     }
 
     private static int getRealTextViewHeight(@NonNull TextView textView) {

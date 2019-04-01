@@ -1,10 +1,13 @@
 
 package com.hally.influencerai.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class UserSocial {
+public class UserSocial implements Parcelable {
 
     @SerializedName("id")
     @Expose
@@ -39,6 +42,38 @@ public class UserSocial {
     @SerializedName("flatform_id")
     @Expose
     private String flatformId;
+    private String socialAvatar;
+
+    protected UserSocial(Parcel in) {
+        if (in.readByte() == 0) {
+            id = null;
+        } else {
+            id = in.readInt();
+        }
+        link = in.readString();
+        email = in.readString();
+        createdAt = in.readString();
+        updatedAt = in.readString();
+        deletedAt = in.readString();
+        socialType = in.readString();
+        accessToken = in.readString();
+        userId = in.readString();
+        extraData = in.readString();
+        flatformId = in.readString();
+        socialAvatar = in.readString();
+    }
+
+    public static final Creator<UserSocial> CREATOR = new Creator<UserSocial>() {
+        @Override
+        public UserSocial createFromParcel(Parcel in) {
+            return new UserSocial(in);
+        }
+
+        @Override
+        public UserSocial[] newArray(int size) {
+            return new UserSocial[size];
+        }
+    };
 
     public Integer getId() {
         return id;
@@ -128,6 +163,14 @@ public class UserSocial {
         this.flatformId = flatformId;
     }
 
+    public String getSocialAvatar() {
+        return socialAvatar;
+    }
+
+    public void setSocialAvatar(String socialAvatar) {
+        this.socialAvatar = socialAvatar;
+    }
+
     @Override
     public String toString() {
         return "UserSocial{" +
@@ -143,5 +186,31 @@ public class UserSocial {
                 ", extraData='" + extraData + '\'' +
                 ", flatformId='" + flatformId + '\'' +
                 '}';
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        if (id == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeInt(id);
+        }
+        dest.writeString(link);
+        dest.writeString(email);
+        dest.writeString(createdAt);
+        dest.writeString(updatedAt);
+        dest.writeString(deletedAt);
+        dest.writeString(socialType);
+        dest.writeString(accessToken);
+        dest.writeString(userId);
+        dest.writeString(extraData);
+        dest.writeString(flatformId);
+        dest.writeString(socialAvatar);
     }
 }
