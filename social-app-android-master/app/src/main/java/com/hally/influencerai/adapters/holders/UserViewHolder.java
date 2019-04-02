@@ -24,10 +24,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.google.firebase.auth.FirebaseAuth;
 import com.hally.influencerai.R;
-import com.hally.influencerai.enums.FollowState;
-import com.hally.influencerai.managers.FollowManager;
 import com.hally.influencerai.managers.ProfileManager;
 import com.hally.influencerai.managers.listeners.OnObjectChangedListener;
 import com.hally.influencerai.managers.listeners.OnObjectChangedListenerSimple;
@@ -101,23 +98,6 @@ public class UserViewHolder extends RecyclerView.ViewHolder {
 
     protected void fillInProfileFields(Profile profile) {
         nameTextView.setText(profile.getUsername());
-
-        String currentUserId = FirebaseAuth.getInstance().getUid();
-        if (currentUserId != null) {
-            if (!currentUserId.equals(profile.getId())) {
-                FollowManager.getInstance(context).checkFollowState(currentUserId, profile.getId(), new FollowManager.CheckStateListener() {
-                    @Override
-                    public void onStateReady(FollowState followState) {
-                        followButton.setVisibility(View.VISIBLE);
-                        followButton.setState(followState);
-                    }
-                });
-            } else {
-                followButton.setState(FollowState.MY_PROFILE);
-            }
-        } else {
-            followButton.setState(FollowState.NO_ONE_FOLLOW);
-        }
 
         if (profile.getPhotoUrl() != null) {
             ImageUtil.loadImage(GlideApp.with(activity), profile.getPhotoUrl(), photoImageView);

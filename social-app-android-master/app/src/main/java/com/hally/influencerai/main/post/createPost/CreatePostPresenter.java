@@ -19,7 +19,6 @@ package com.hally.influencerai.main.post.createPost;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
-import com.google.firebase.auth.FirebaseAuth;
 import com.hally.influencerai.R;
 import com.hally.influencerai.main.post.BaseCreatePostPresenter;
 import com.hally.influencerai.model.Post;
@@ -48,7 +47,7 @@ public class CreatePostPresenter extends BaseCreatePostPresenter<CreatePostView>
                 Post post = new Post();
                 post.setTitle(title);
                 post.setDescription(description);
-                post.setAuthorId(FirebaseAuth.getInstance().getCurrentUser().getUid());
+//                post.setAuthorId(FirebaseAuth.getInstance().getCurrentUser().getUid());
                 postManager.createOrUpdatePostWithImage(view.getImageUri(), CreatePostPresenter.this, post);
             }
         });

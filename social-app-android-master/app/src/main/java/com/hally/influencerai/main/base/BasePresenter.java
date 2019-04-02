@@ -27,7 +27,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.view.View;
 
-import com.google.firebase.auth.FirebaseAuth;
 import com.hally.influencerai.R;
 import com.hally.influencerai.enums.ProfileStatus;
 import com.hally.influencerai.managers.ProfileManager;
@@ -121,7 +120,7 @@ public class BasePresenter<T extends BaseView & MvpView> extends MvpBasePresente
     }
 
     protected String getCurrentUserId() {
-        return FirebaseAuth.getInstance().getUid();
+        return "";
     }
 
 }

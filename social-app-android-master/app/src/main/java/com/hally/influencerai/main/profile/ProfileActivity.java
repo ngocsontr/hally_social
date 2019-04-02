@@ -45,11 +45,8 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.hally.influencerai.R;
 import com.hally.influencerai.adapters.PostsByUserAdapter;
-import com.hally.influencerai.chat.ChatMainActivity;
 import com.hally.influencerai.dialogs.UnfollowConfirmationDialog;
 import com.hally.influencerai.enums.FollowState;
 import com.hally.influencerai.main.base.BaseActivity;
@@ -58,14 +55,12 @@ import com.hally.influencerai.main.post.createPost.CreatePostActivity;
 import com.hally.influencerai.main.postDetails.PostDetailsActivity;
 import com.hally.influencerai.main.usersList.UsersListActivity;
 import com.hally.influencerai.main.usersList.UsersListType;
-import com.hally.influencerai.managers.FollowManager;
 import com.hally.influencerai.managers.ProfileManager;
 import com.hally.influencerai.model.Post;
 import com.hally.influencerai.model.Profile;
 import com.hally.influencerai.utils.GlideApp;
 import com.hally.influencerai.utils.ImageUtil;
 import com.hally.influencerai.utils.LogUtil;
-import com.hally.influencerai.utils.LogoutHelper;
 import com.hally.influencerai.views.FollowButton;
 
 public class ProfileActivity extends BaseActivity<ProfileView, ProfilePresenter> implements ProfileView, GoogleApiClient.OnConnectionFailedListener, UnfollowConfirmationDialog.Callback {
@@ -81,7 +76,7 @@ public class ProfileActivity extends BaseActivity<ProfileView, ProfilePresenter>
     private TextView postsCounterTextView;
     private ProgressBar postsProgressBar;
 
-    private FirebaseAuth mAuth;
+    //    private FirebaseAuth mAuth;
     private GoogleApiClient mGoogleApiClient;
     private String currentUserId;
     private String userID;
@@ -107,11 +102,11 @@ public class ProfileActivity extends BaseActivity<ProfileView, ProfilePresenter>
 
         userID = getIntent().getStringExtra(USER_ID_EXTRA_KEY);
 
-        mAuth = FirebaseAuth.getInstance();
-        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-        if (firebaseUser != null) {
-            currentUserId = firebaseUser.getUid();
-        }
+//        mAuth = FirebaseAuth.getInstance();
+//        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+//        if (firebaseUser != null) {
+//            currentUserId = firebaseUser.getUid();
+//        }
 
         // Set up the login form.
         progressBar = findViewById(R.id.progressBar);
@@ -147,7 +142,6 @@ public class ProfileActivity extends BaseActivity<ProfileView, ProfilePresenter>
     @Override
     public void onStop() {
         super.onStop();
-        FollowManager.getInstance(this).closeListeners(this);
         ProfileManager.getInstance(this).closeListeners(this);
 
         if (mGoogleApiClient != null && mGoogleApiClient.isConnected()) {
@@ -430,7 +424,7 @@ public class ProfileActivity extends BaseActivity<ProfileView, ProfilePresenter>
                 return true;
 
             case R.id.signOut:
-                LogoutHelper.signOut(mGoogleApiClient, this);
+//                LogoutHelper.signOut(mGoogleApiClient, this);
                 startLoginActivity();
                 return true;
 
@@ -438,7 +432,7 @@ public class ProfileActivity extends BaseActivity<ProfileView, ProfilePresenter>
                 presenter.onCreatePostClick();
 
             case R.id.chat:
-                startActivity(new Intent(this, ChatMainActivity.class));
+//                startActivity(new Intent(this, ChatMainActivity.class));
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

@@ -20,13 +20,10 @@ package com.hally.influencerai.main.search.users;
 import android.app.Activity;
 import android.support.annotation.NonNull;
 
-import com.google.firebase.auth.FirebaseAuth;
 import com.hally.influencerai.main.base.BasePresenter;
 import com.hally.influencerai.main.base.BaseView;
-import com.hally.influencerai.managers.FollowManager;
 import com.hally.influencerai.managers.ProfileManager;
 import com.hally.influencerai.managers.listeners.OnDataChangedListener;
-import com.hally.influencerai.managers.listeners.OnRequestComplete;
 import com.hally.influencerai.model.Profile;
 import com.hally.influencerai.utils.LogUtil;
 import com.hally.influencerai.views.FollowButton;
@@ -37,7 +34,7 @@ import java.util.List;
  * Created by HallyTran on 08.06.18.
  */
 public class SearchUsersPresenter extends BasePresenter<SearchUsersView> {
-    private final FollowManager followManager;
+    //    private final FollowManager followManager;
     private String currentUserId;
     private Activity activity;
     private ProfileManager profileManager;
@@ -46,8 +43,8 @@ public class SearchUsersPresenter extends BasePresenter<SearchUsersView> {
         super(activity);
         this.activity = activity;
 
-        followManager = FollowManager.getInstance(context);
-        currentUserId = FirebaseAuth.getInstance().getUid();
+//        followManager = FollowManager.getInstance(context);
+//        currentUserId = FirebaseAuth.getInstance().getUid();
         profileManager = ProfileManager.getInstance(context.getApplicationContext());
     }
 
@@ -63,42 +60,42 @@ public class SearchUsersPresenter extends BasePresenter<SearchUsersView> {
 
     private void followUser(String targetUserId) {
         ifViewAttached(BaseView::showProgress);
-        followManager.followUser(activity, currentUserId, targetUserId, new OnRequestComplete() {
-            @Override
-            public void onComplete(boolean success) {
-                SearchUsersPresenter.this.ifViewAttached(new ViewAction<SearchUsersView>() {
-                    @Override
-                    public void run(@NonNull SearchUsersView view) {
-                        view.hideProgress();
-                        if (success) {
-                            view.updateSelectedItem();
-                        } else {
-                            LogUtil.logDebug(TAG, "followUser, success: " + false);
-                        }
-                    }
-                });
-            }
-        });
+//        followManager.followUser(activity, currentUserId, targetUserId, new OnRequestComplete() {
+//            @Override
+//            public void onComplete(boolean success) {
+//                SearchUsersPresenter.this.ifViewAttached(new ViewAction<SearchUsersView>() {
+//                    @Override
+//                    public void run(@NonNull SearchUsersView view) {
+//                        view.hideProgress();
+//                        if (success) {
+//                            view.updateSelectedItem();
+//                        } else {
+//                            LogUtil.logDebug(TAG, "followUser, success: " + false);
+//                        }
+//                    }
+//                });
+//            }
+//        });
     }
 
     public void unfollowUser(String targetUserId) {
         ifViewAttached(BaseView::showProgress);
-        followManager.unfollowUser(activity, currentUserId, targetUserId, new OnRequestComplete() {
-            @Override
-            public void onComplete(boolean success) {
-                SearchUsersPresenter.this.ifViewAttached(new ViewAction<SearchUsersView>() {
-                    @Override
-                    public void run(@NonNull SearchUsersView view) {
-                        view.hideProgress();
-                        if (success) {
-                            view.updateSelectedItem();
-                        } else {
-                            LogUtil.logDebug(TAG, "unfollowUser, success: " + false);
-                        }
-                    }
-                });
-            }
-        });
+//        followManager.unfollowUser(activity, currentUserId, targetUserId, new OnRequestComplete() {
+//            @Override
+//            public void onComplete(boolean success) {
+//                SearchUsersPresenter.this.ifViewAttached(new ViewAction<SearchUsersView>() {
+//                    @Override
+//                    public void run(@NonNull SearchUsersView view) {
+//                        view.hideProgress();
+//                        if (success) {
+//                            view.updateSelectedItem();
+//                        } else {
+//                            LogUtil.logDebug(TAG, "unfollowUser, success: " + false);
+//                        }
+//                    }
+//                });
+//            }
+//        });
     }
 
     public void loadUsersWithEmptySearch() {

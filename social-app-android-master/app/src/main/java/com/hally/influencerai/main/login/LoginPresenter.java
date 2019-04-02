@@ -17,11 +17,8 @@
 package com.hally.influencerai.main.login;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
 import com.hally.influencerai.R;
 import com.hally.influencerai.main.base.BasePresenter;
 import com.hally.influencerai.managers.network.ApiUtils;
@@ -125,24 +122,6 @@ class LoginPresenter extends BasePresenter<LoginView> {
                 }
             });
         }
-    }
-
-    public void handleAuthError(Task<AuthResult> task) {
-        Exception exception = task.getException();
-        LogUtil.logError(TAG, "signInWithCredential", exception);
-
-        ifViewAttached(new ViewAction<LoginView>() {
-            @Override
-            public void run(@NonNull LoginView view) {
-                if (exception != null) {
-                    view.showWarningDialog(exception.getMessage());
-                } else {
-                    view.showSnackBar(R.string.error_authentication);
-                }
-
-                view.hideProgress();
-            }
-        });
     }
 
     public void onViewBottomClick(int id) {

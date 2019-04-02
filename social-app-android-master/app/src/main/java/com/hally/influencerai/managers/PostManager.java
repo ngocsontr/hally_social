@@ -17,20 +17,12 @@
 package com.hally.influencerai.managers;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.widget.ImageView;
 
-import com.bumptech.glide.load.DataSource;
-import com.bumptech.glide.load.engine.GlideException;
-import com.bumptech.glide.request.RequestListener;
-import com.bumptech.glide.request.target.Target;
-import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.storage.StorageReference;
 import com.hally.influencerai.R;
-import com.hally.influencerai.main.interactors.FollowInteractor;
 import com.hally.influencerai.main.interactors.PostInteractor;
 import com.hally.influencerai.managers.listeners.OnDataChangedListener;
 import com.hally.influencerai.managers.listeners.OnObjectExistListener;
@@ -42,7 +34,6 @@ import com.hally.influencerai.model.FollowingPost;
 import com.hally.influencerai.model.Like;
 import com.hally.influencerai.model.Post;
 import com.hally.influencerai.utils.GlideRequests;
-import com.hally.influencerai.utils.ImageUtil;
 import com.hally.influencerai.utils.Utils;
 
 /**
@@ -81,49 +72,49 @@ public class PostManager extends FirebaseListenersManager {
     }
 
     public void getPostsList(OnPostListChangedListener<Post> onDataChangedListener, long date) {
-        postInteractor.getPostList(onDataChangedListener, date);
+//        postInteractor.getPostList(onDataChangedListener, date);
     }
 
     public void getPostsListByUser(OnDataChangedListener<Post> onDataChangedListener, String userId) {
-        postInteractor.getPostListByUser(onDataChangedListener, userId);
+//        postInteractor.getPostListByUser(onDataChangedListener, userId);
     }
 
     public void getPost(Context context, String postId, OnPostChangedListener onPostChangedListener) {
-        ValueEventListener valueEventListener = postInteractor.getPost(postId, onPostChangedListener);
-        addListenerToMap(context, valueEventListener);
+//        ValueEventListener valueEventListener = postInteractor.getPost(postId, onPostChangedListener);
+//        addListenerToMap(context, valueEventListener);
     }
 
     public void getSinglePostValue(String postId, OnPostChangedListener onPostChangedListener) {
-        postInteractor.getSinglePost(postId, onPostChangedListener);
+//        postInteractor.getSinglePost(postId, onPostChangedListener);
     }
 
     public void createOrUpdatePostWithImage(Uri imageUri, final OnPostCreatedListener onPostCreatedListener, final Post post) {
-        postInteractor.createOrUpdatePostWithImage(imageUri, onPostCreatedListener, post);
+//        postInteractor.createOrUpdatePostWithImage(imageUri, onPostCreatedListener, post);
     }
 
     public void removePost(final Post post, final OnTaskCompleteListener onTaskCompleteListener) {
-        postInteractor.removePost(post, onTaskCompleteListener);
+//        postInteractor.removePost(post, onTaskCompleteListener);
     }
 
-    public void addComplain(Post post) {
-        postInteractor.addComplainToPost(post);
-    }
+//    public void addComplain(Post post) {
+//        postInteractor.addComplainToPost(post);
+//    }
 
     public void hasCurrentUserLike(Context activityContext, String postId, String userId, final OnObjectExistListener<Like> onObjectExistListener) {
-        ValueEventListener valueEventListener = postInteractor.hasCurrentUserLike(postId, userId, onObjectExistListener);
-        addListenerToMap(activityContext, valueEventListener);
+//        ValueEventListener valueEventListener = postInteractor.hasCurrentUserLike(postId, userId, onObjectExistListener);
+//        addListenerToMap(activityContext, valueEventListener);
     }
 
     public void hasCurrentUserLikeSingleValue(String postId, String userId, final OnObjectExistListener<Like> onObjectExistListener) {
-        postInteractor.hasCurrentUserLikeSingleValue(postId, userId, onObjectExistListener);
+//        postInteractor.hasCurrentUserLikeSingleValue(postId, userId, onObjectExistListener);
     }
 
     public void isPostExistSingleValue(String postId, final OnObjectExistListener<Post> onObjectExistListener) {
-        postInteractor.isPostExistSingleValue(postId, onObjectExistListener);
+//        postInteractor.isPostExistSingleValue(postId, onObjectExistListener);
     }
 
     public void incrementWatchersCount(String postId) {
-        postInteractor.incrementWatchersCount(postId);
+//        postInteractor.incrementWatchersCount(postId);
     }
 
     public void incrementNewPostsCounter() {
@@ -151,45 +142,45 @@ public class PostManager extends FirebaseListenersManager {
     }
 
     public void getFollowingPosts(String userId, OnDataChangedListener<FollowingPost> listener) {
-        FollowInteractor.getInstance(context).getFollowingPosts(userId, listener);
+//        FollowInteractor.getInstance(context).getFollowingPosts(userId, listener);
     }
 
     public void searchByTitle(String searchText, OnDataChangedListener<Post> onDataChangedListener) {
         closeListeners(context);
-        ValueEventListener valueEventListener = postInteractor.searchPostsByTitle(searchText, onDataChangedListener);
-        addListenerToMap(context, valueEventListener);
+//        ValueEventListener valueEventListener = postInteractor.searchPostsByTitle(searchText, onDataChangedListener);
+//        addListenerToMap(context, valueEventListener);
     }
 
     public void filterByLikes(int limit, OnDataChangedListener<Post> onDataChangedListener) {
         closeListeners(context);
-        ValueEventListener valueEventListener = postInteractor.filterPostsByLikes(limit, onDataChangedListener);
-        addListenerToMap(context, valueEventListener);
+//        ValueEventListener valueEventListener = postInteractor.filterPostsByLikes(limit, onDataChangedListener);
+//        addListenerToMap(context, valueEventListener);
     }
 
     public void loadImageMediumSize(GlideRequests request, String imageTitle, ImageView imageView, @Nullable OnImageRequestListener onImageRequestListener) {
         int width = Utils.getDisplayWidth(context);
         int height = (int) context.getResources().getDimension(R.dimen.post_detail_image_height);
 
-        StorageReference mediumStorageRef = getMediumImageStorageRef(imageTitle);
-        StorageReference originalStorageRef = getOriginImageStorageRef(imageTitle);
-
-        ImageUtil.loadMediumImageCenterCrop(request, mediumStorageRef, originalStorageRef, imageView, width, height, new RequestListener<Drawable>() {
-            @Override
-            public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-                if (onImageRequestListener != null) {
-                    onImageRequestListener.onImageRequestFinished();
-                }
-                return false;
-            }
-
-            @Override
-            public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-                if (onImageRequestListener != null) {
-                    onImageRequestListener.onImageRequestFinished();
-                }
-                return false;
-            }
-        });
+//        StorageReference mediumStorageRef = getMediumImageStorageRef(imageTitle);
+//        StorageReference originalStorageRef = getOriginImageStorageRef(imageTitle);
+//
+//        ImageUtil.loadMediumImageCenterCrop(request, mediumStorageRef, originalStorageRef, imageView, width, height, new RequestListener<Drawable>() {
+//            @Override
+//            public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+//                if (onImageRequestListener != null) {
+//                    onImageRequestListener.onImageRequestFinished();
+//                }
+//                return false;
+//            }
+//
+//            @Override
+//            public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+//                if (onImageRequestListener != null) {
+//                    onImageRequestListener.onImageRequestFinished();
+//                }
+//                return false;
+//            }
+//        });
 
     }
 
@@ -197,17 +188,17 @@ public class PostManager extends FirebaseListenersManager {
         loadImageMediumSize(request, imageTitle, imageView, null);
     }
 
-    private StorageReference getMediumImageStorageRef(String imageTitle) {
-        return postInteractor.getMediumImageStorageRef(imageTitle);
-    }
-
-    public StorageReference getSmallImageStorageRef(String imageTitle) {
-        return postInteractor.getSmallImageStorageRef(imageTitle);
-    }
-
-    public StorageReference getOriginImageStorageRef(String imageTitle) {
-        return postInteractor.getOriginImageStorageRef(imageTitle);
-    }
+//    private StorageReference getMediumImageStorageRef(String imageTitle) {
+//        return postInteractor.getMediumImageStorageRef(imageTitle);
+//    }
+//
+//    public StorageReference getSmallImageStorageRef(String imageTitle) {
+//        return postInteractor.getSmallImageStorageRef(imageTitle);
+//    }
+//
+//    public StorageReference getOriginImageStorageRef(String imageTitle) {
+//        return postInteractor.getOriginImageStorageRef(imageTitle);
+//    }
 
     public interface PostCounterWatcher {
         void onPostCounterChanged(int newValue);

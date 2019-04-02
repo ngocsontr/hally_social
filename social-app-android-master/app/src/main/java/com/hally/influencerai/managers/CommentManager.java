@@ -20,8 +20,6 @@ package com.hally.influencerai.managers;
 
 import android.content.Context;
 
-import com.google.firebase.database.ValueEventListener;
-import com.hally.influencerai.main.interactors.CommentInteractor;
 import com.hally.influencerai.managers.listeners.OnDataChangedListener;
 import com.hally.influencerai.managers.listeners.OnTaskCompleteListener;
 import com.hally.influencerai.model.Comment;
@@ -32,7 +30,6 @@ public class CommentManager extends FirebaseListenersManager {
     private static CommentManager instance;
 
     private Context context;
-    CommentInteractor commentInteractor;
 
     public static CommentManager getInstance(Context context) {
         if (instance == null) {
@@ -44,27 +41,26 @@ public class CommentManager extends FirebaseListenersManager {
 
     private CommentManager(Context context) {
         this.context = context;
-        commentInteractor = CommentInteractor.getInstance(context);
     }
 
     public void createOrUpdateComment(String commentText, String postId, OnTaskCompleteListener onTaskCompleteListener) {
-        commentInteractor.createComment(commentText, postId, onTaskCompleteListener);
+//        commentInteractor.createComment(commentText, postId, onTaskCompleteListener);
     }
 
     public void decrementCommentsCount(String postId, OnTaskCompleteListener onTaskCompleteListener) {
-        commentInteractor.decrementCommentsCount(postId, onTaskCompleteListener);
+//        commentInteractor.decrementCommentsCount(postId, onTaskCompleteListener);
     }
 
     public void getCommentsList(Context activityContext, String postId, OnDataChangedListener<Comment> onDataChangedListener) {
-        ValueEventListener valueEventListener = commentInteractor.getCommentsList(postId, onDataChangedListener);
-        addListenerToMap(activityContext, valueEventListener);
+//        ValueEventListener valueEventListener = commentInteractor.getCommentsList(postId, onDataChangedListener);
+//        addListenerToMap(activityContext, valueEventListener);
     }
 
     public void removeComment(String commentId, final String postId, final OnTaskCompleteListener onTaskCompleteListener) {
-        commentInteractor.removeComment(commentId, postId, onTaskCompleteListener);
+//        commentInteractor.removeComment(commentId, postId, onTaskCompleteListener);
     }
 
     public void updateComment(String commentId, String commentText, String postId, OnTaskCompleteListener onTaskCompleteListener) {
-        commentInteractor.updateComment(commentId, commentText, postId, onTaskCompleteListener);
+//        commentInteractor.updateComment(commentId, commentText, postId, onTaskCompleteListener);
     }
 }

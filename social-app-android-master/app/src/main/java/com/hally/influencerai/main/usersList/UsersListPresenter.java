@@ -19,17 +19,9 @@ package com.hally.influencerai.main.usersList;
 import android.app.Activity;
 import android.support.annotation.NonNull;
 
-import com.google.firebase.auth.FirebaseAuth;
 import com.hally.influencerai.R;
 import com.hally.influencerai.main.base.BasePresenter;
-import com.hally.influencerai.main.base.BaseView;
-import com.hally.influencerai.managers.FollowManager;
-import com.hally.influencerai.managers.listeners.OnDataChangedListener;
-import com.hally.influencerai.managers.listeners.OnRequestComplete;
-import com.hally.influencerai.utils.LogUtil;
 import com.hally.influencerai.views.FollowButton;
-
-import java.util.List;
 
 /**
  * Created by HallyTran on 03.05.18.
@@ -37,7 +29,6 @@ import java.util.List;
 
 class UsersListPresenter extends BasePresenter<UsersListView> {
 
-    private final FollowManager followManager;
     private String currentUserId;
     private Activity activity;
 
@@ -45,8 +36,6 @@ class UsersListPresenter extends BasePresenter<UsersListView> {
         super(activity);
         this.activity = activity;
 
-        followManager = FollowManager.getInstance(context);
-        currentUserId = FirebaseAuth.getInstance().getUid();
     }
 
     public void loadFollowings(String userID, boolean isRefreshing) {
@@ -55,24 +44,6 @@ class UsersListPresenter extends BasePresenter<UsersListView> {
                 ifViewAttached(UsersListView::showLocalProgress);
             }
 
-            FollowManager.getInstance(context).getFollowingsIdsList(userID, new OnDataChangedListener<String>() {
-                @Override
-                public void onListChanged(List<String> list) {
-                    UsersListPresenter.this.ifViewAttached(new ViewAction<UsersListView>() {
-                        @Override
-                        public void run(@NonNull UsersListView view) {
-                            view.hideLocalProgress();
-                            view.onProfilesIdsListLoaded(list);
-                            if (list.size() > 0) {
-                                view.hideEmptyListMessage();
-                            } else {
-                                String message = context.getString(R.string.message_empty_list, context.getString(R.string.title_followings));
-                                view.showEmptyListMessage(message);
-                            }
-                        }
-                    });
-                }
-            });
         }
     }
 
@@ -82,26 +53,6 @@ class UsersListPresenter extends BasePresenter<UsersListView> {
                 ifViewAttached(UsersListView::showLocalProgress);
             }
 
-            FollowManager.getInstance(context).getFollowersIdsList(userID, new OnDataChangedListener<String>() {
-                @Override
-                public void onListChanged(List<String> list) {
-                    UsersListPresenter.this.ifViewAttached(new ViewAction<UsersListView>() {
-                        @Override
-                        public void run(@NonNull UsersListView view) {
-                            view.hideLocalProgress();
-                            view.onProfilesIdsListLoaded(list);
-
-                            if (list.size() > 0) {
-                                view.hideEmptyListMessage();
-                            } else {
-                                String message = context.getString(R.string.message_empty_list, context.getString(R.string.title_followers));
-                                view.showEmptyListMessage(message);
-                            }
-
-                        }
-                    });
-                }
-            });
         }
     }
 
@@ -132,43 +83,9 @@ class UsersListPresenter extends BasePresenter<UsersListView> {
     }
 
     private void followUser(String targetUserId) {
-        ifViewAttached(BaseView::showProgress);
-        followManager.followUser(activity, currentUserId, targetUserId, new OnRequestComplete() {
-            @Override
-            public void onComplete(boolean success) {
-                UsersListPresenter.this.ifViewAttached(new ViewAction<UsersListView>() {
-                    @Override
-                    public void run(@NonNull UsersListView view) {
-                        view.hideProgress();
-                        if (success) {
-                            view.updateSelectedItem();
-                        } else {
-                            LogUtil.logDebug(TAG, "followUser, success: " + false);
-                        }
-                    }
-                });
-            }
-        });
     }
 
     public void unfollowUser(String targetUserId) {
-        ifViewAttached(BaseView::showProgress);
-        followManager.unfollowUser(activity, currentUserId, targetUserId, new OnRequestComplete() {
-            @Override
-            public void onComplete(boolean success) {
-                UsersListPresenter.this.ifViewAttached(new ViewAction<UsersListView>() {
-                    @Override
-                    public void run(@NonNull UsersListView view) {
-                        view.hideProgress();
-                        if (success) {
-                            view.updateSelectedItem();
-                        } else {
-                            LogUtil.logDebug(TAG, "unfollowUser, success: " + false);
-                        }
-                    }
-                });
-            }
-        });
     }
 
     public void onFollowButtonClick(int state, String targetUserId) {

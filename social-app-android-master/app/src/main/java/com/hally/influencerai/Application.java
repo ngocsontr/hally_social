@@ -17,8 +17,6 @@
 
 package com.hally.influencerai;
 
-import com.hally.influencerai.main.interactors.PostInteractor;
-
 public class Application extends android.app.Application {
 
     public static final String TAG = Application.class.getSimpleName();
@@ -28,6 +26,5 @@ public class Application extends android.app.Application {
         super.onCreate();
 
         ApplicationHelper.initDatabaseHelper(this);
-        PostInteractor.getInstance(this).subscribeToNewPosts();
     }
 }

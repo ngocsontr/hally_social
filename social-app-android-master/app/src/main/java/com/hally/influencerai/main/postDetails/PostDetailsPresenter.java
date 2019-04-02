@@ -24,8 +24,6 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
 
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.hally.influencerai.R;
 import com.hally.influencerai.main.base.BasePresenter;
 import com.hally.influencerai.main.base.BaseView;
@@ -34,11 +32,9 @@ import com.hally.influencerai.managers.PostManager;
 import com.hally.influencerai.managers.ProfileManager;
 import com.hally.influencerai.managers.listeners.OnDataChangedListener;
 import com.hally.influencerai.managers.listeners.OnObjectChangedListenerSimple;
-import com.hally.influencerai.managers.listeners.OnObjectExistListener;
 import com.hally.influencerai.managers.listeners.OnPostChangedListener;
 import com.hally.influencerai.managers.listeners.OnTaskCompleteListener;
 import com.hally.influencerai.model.Comment;
-import com.hally.influencerai.model.Like;
 import com.hally.influencerai.model.Post;
 import com.hally.influencerai.model.Profile;
 
@@ -105,20 +101,20 @@ class PostDetailsPresenter extends BasePresenter<PostDetailsView> {
     }
 
     private void initLikeButtonState() {
-        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-        if (firebaseUser != null && post != null) {
-            postManager.hasCurrentUserLike(context, post.getId(), firebaseUser.getUid(), new OnObjectExistListener<Like>() {
-                @Override
-                public void onDataChanged(boolean exist) {
-                    PostDetailsPresenter.this.ifViewAttached(new ViewAction<PostDetailsView>() {
-                        @Override
-                        public void run(@NonNull PostDetailsView view) {
-                            view.initLikeButtonState(exist);
-                        }
-                    });
-                }
-            });
-        }
+//        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+//        if (firebaseUser != null && post != null) {
+//            postManager.hasCurrentUserLike(context, post.getId(), firebaseUser.getUid(), new OnObjectExistListener<Like>() {
+//                @Override
+//                public void onDataChanged(boolean exist) {
+//                    PostDetailsPresenter.this.ifViewAttached(new ViewAction<PostDetailsView>() {
+//                        @Override
+//                        public void run(@NonNull PostDetailsView view) {
+//                            view.initLikeButtonState(exist);
+//                        }
+//                    });
+//                }
+//            });
+//        }
     }
 
     private void fillInUI(@NonNull Post post) {
@@ -173,13 +169,15 @@ class PostDetailsPresenter extends BasePresenter<PostDetailsView> {
     }
 
     public boolean hasAccessToModifyPost() {
-        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-        return currentUser != null && post != null && post.getAuthorId().equals(currentUser.getUid());
+//        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+//        return currentUser != null && post != null && post.getAuthorId().equals(currentUser.getUid());
+        return false;
     }
 
     public boolean hasAccessToEditComment(String commentAuthorId) {
-        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-        return currentUser != null && commentAuthorId.equals(currentUser.getUid());
+//        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+//        return currentUser != null && commentAuthorId.equals(currentUser.getUid());
+        return false;
     }
 
     public void updateComment(String newText, String commentId) {
@@ -216,7 +214,7 @@ class PostDetailsPresenter extends BasePresenter<PostDetailsView> {
     }
 
     private void addComplain() {
-        postManager.addComplain(post);
+//        postManager.addComplain(post);
         ifViewAttached(new ViewAction<PostDetailsView>() {
             @Override
             public void run(@NonNull PostDetailsView view) {

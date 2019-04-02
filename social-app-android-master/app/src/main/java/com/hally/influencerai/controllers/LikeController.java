@@ -31,7 +31,6 @@ import android.widget.TextView;
 
 import com.hally.influencerai.R;
 import com.hally.influencerai.main.base.BaseActivity;
-import com.hally.influencerai.main.interactors.PostInteractor;
 import com.hally.influencerai.main.main.MainActivity;
 import com.hally.influencerai.managers.PostManager;
 import com.hally.influencerai.managers.listeners.OnObjectExistListener;
@@ -96,14 +95,12 @@ public class LikeController {
         updatingLikeCounter = true;
         isLiked = true;
         likeCounterTextView.setText(String.valueOf(prevValue + 1));
-        PostInteractor.getInstance(context).createOrUpdateLike(postId, postAuthorId);
     }
 
     private void removeLike(long prevValue) {
         updatingLikeCounter = true;
         isLiked = false;
         likeCounterTextView.setText(String.valueOf(prevValue - 1));
-        PostInteractor.getInstance(context).removeLike(postId, postAuthorId);
     }
 
     private void startAnimateLikeButton(AnimationType animationType) {

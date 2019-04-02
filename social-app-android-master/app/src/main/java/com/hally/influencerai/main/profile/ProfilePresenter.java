@@ -30,18 +30,13 @@ import com.hally.influencerai.R;
 import com.hally.influencerai.enums.FollowState;
 import com.hally.influencerai.enums.PostStatus;
 import com.hally.influencerai.main.base.BasePresenter;
-import com.hally.influencerai.main.base.BaseView;
 import com.hally.influencerai.main.postDetails.PostDetailsActivity;
-import com.hally.influencerai.managers.FollowManager;
 import com.hally.influencerai.managers.PostManager;
 import com.hally.influencerai.managers.ProfileManager;
-import com.hally.influencerai.managers.listeners.OnCountChangedListener;
 import com.hally.influencerai.managers.listeners.OnObjectChangedListenerSimple;
 import com.hally.influencerai.managers.listeners.OnObjectExistListener;
-import com.hally.influencerai.managers.listeners.OnRequestComplete;
 import com.hally.influencerai.model.Post;
 import com.hally.influencerai.model.Profile;
-import com.hally.influencerai.utils.LogUtil;
 import com.hally.influencerai.views.FollowButton;
 
 /**
@@ -50,7 +45,6 @@ import com.hally.influencerai.views.FollowButton;
 
 class ProfilePresenter extends BasePresenter<ProfileView> {
 
-    private final FollowManager followManager;
     private Activity activity;
     private ProfileManager profileManager;
 
@@ -60,47 +54,12 @@ class ProfilePresenter extends BasePresenter<ProfileView> {
         super(activity);
         this.activity = activity;
         profileManager = ProfileManager.getInstance(context);
-        followManager = FollowManager.getInstance(context);
     }
 
     private void followUser(String targetUserId) {
-        ifViewAttached(BaseView::showProgress);
-        followManager.followUser(activity, getCurrentUserId(), targetUserId, new OnRequestComplete() {
-            @Override
-            public void onComplete(boolean success) {
-                ProfilePresenter.this.ifViewAttached(new ViewAction<ProfileView>() {
-                    @Override
-                    public void run(@NonNull ProfileView view) {
-                        if (success) {
-                            view.setFollowStateChangeResultOk();
-                            ProfilePresenter.this.checkFollowState(targetUserId);
-                        } else {
-                            LogUtil.logDebug(TAG, "followUser, success: " + false);
-                        }
-                    }
-                });
-            }
-        });
     }
 
     public void unfollowUser(String targetUserId) {
-        ifViewAttached(BaseView::showProgress);
-        followManager.unfollowUser(activity, getCurrentUserId(), targetUserId, new OnRequestComplete() {
-            @Override
-            public void onComplete(boolean success) {
-                ProfilePresenter.this.ifViewAttached(new ViewAction<ProfileView>() {
-                    @Override
-                    public void run(@NonNull ProfileView view) {
-                        if (success) {
-                            view.setFollowStateChangeResultOk();
-                            ProfilePresenter.this.checkFollowState(targetUserId);
-                        } else {
-                            LogUtil.logDebug(TAG, "unfollowUser, success: " + false);
-                        }
-                    }
-                });
-            }
-        });
     }
 
     public void onFollowButtonClick(int state, String targetUserId) {
@@ -123,18 +82,6 @@ class ProfilePresenter extends BasePresenter<ProfileView> {
 
         if (currentUserId != null) {
             if (!targetUserId.equals(currentUserId)) {
-                followManager.checkFollowState(currentUserId, targetUserId, new FollowManager.CheckStateListener() {
-                    @Override
-                    public void onStateReady(FollowState followState) {
-                        ProfilePresenter.this.ifViewAttached(new ViewAction<ProfileView>() {
-                            @Override
-                            public void run(@NonNull ProfileView view) {
-                                view.hideProgress();
-                                view.updateFollowButtonState(followState);
-                            }
-                        });
-                    }
-                });
             } else {
                 ifViewAttached(new ViewAction<ProfileView>() {
                     @Override
@@ -154,31 +101,9 @@ class ProfilePresenter extends BasePresenter<ProfileView> {
     }
 
     public void getFollowersCount(String targetUserId) {
-        followManager.getFollowersCount(context, targetUserId, new OnCountChangedListener() {
-            @Override
-            public void onCountChanged(long count) {
-                ProfilePresenter.this.ifViewAttached(new ViewAction<ProfileView>() {
-                    @Override
-                    public void run(@NonNull ProfileView view) {
-                        view.updateFollowersCount((int) count);
-                    }
-                });
-            }
-        });
     }
 
     public void getFollowingsCount(String targetUserId) {
-        followManager.getFollowingsCount(context, targetUserId, new OnCountChangedListener() {
-            @Override
-            public void onCountChanged(long count) {
-                ProfilePresenter.this.ifViewAttached(new ViewAction<ProfileView>() {
-                    @Override
-                    public void run(@NonNull ProfileView view) {
-                        view.updateFollowingsCount((int) count);
-                    }
-                });
-            }
-        });
     }
 
     void onPostClick(Post post, View postItemView) {

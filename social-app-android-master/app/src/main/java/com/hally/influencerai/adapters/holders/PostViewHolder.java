@@ -24,8 +24,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.hally.influencerai.Constants;
 import com.hally.influencerai.R;
 import com.hally.influencerai.controllers.LikeController;
@@ -144,10 +142,10 @@ public class PostViewHolder extends RecyclerView.ViewHolder {
             profileManager.getProfileSingleValue(post.getAuthorId(), createProfileChangeListener(authorImageView));
         }
 
-        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-        if (firebaseUser != null) {
-            postManager.hasCurrentUserLikeSingleValue(post.getId(), firebaseUser.getUid(), createOnLikeObjectExistListener());
-        }
+//        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+//        if (firebaseUser != null) {
+//            postManager.hasCurrentUserLikeSingleValue(post.getId(), firebaseUser.getUid(), createOnLikeObjectExistListener());
+//        }
     }
 
     private String removeNewLinesDividers(String text) {

@@ -25,7 +25,6 @@ import android.widget.ImageView;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.SimpleTarget;
-import com.google.firebase.storage.StorageReference;
 import com.hally.influencerai.R;
 import com.hally.influencerai.enums.UploadImagePrefix;
 
@@ -78,45 +77,6 @@ public class ImageUtil {
                 .into(imageView);
     }
 
-    public static void loadImageCenterCrop(GlideRequests glideRequests, StorageReference imageStorageRef, ImageView imageView,
-                                           int width, int height) {
-        glideRequests.load(imageStorageRef)
-                .centerCrop()
-                .override(width, height)
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .error(R.drawable.ic_stub)
-                .into(imageView);
-    }
-
-    public static void loadImageCenterCrop(GlideRequests glideRequests, StorageReference imageStorageRef, ImageView imageView,
-                                           int width, int height, RequestListener<Drawable> listener) {
-        glideRequests.load(imageStorageRef)
-                .centerCrop()
-                .override(width, height)
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .error(R.drawable.ic_stub)
-                .listener(listener)
-                .into(imageView);
-    }
-
-    public static void loadMediumImageCenterCrop(GlideRequests glideRequests,
-                                                 StorageReference imageStorageRefMedium,
-                                                 StorageReference imageStorageRefOriginal,
-                                                 ImageView imageView,
-                                                 int width,
-                                                 int height,
-                                                 RequestListener<Drawable> listener) {
-
-        glideRequests.load(imageStorageRefMedium)
-                .centerCrop()
-                .override(width, height)
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .error(R.drawable.ic_stub)
-                .listener(listener)
-                .error(glideRequests.load(imageStorageRefOriginal))
-                .into(imageView);
-    }
-
     public static void loadImageCenterCrop(GlideRequests glideRequests, String url, ImageView imageView,
                                            int width, int height, RequestListener<Drawable> listener) {
         glideRequests.load(url)
@@ -128,15 +88,6 @@ public class ImageUtil {
                 .into(imageView);
     }
 
-    public static void loadImageCenterCrop(GlideRequests glideRequests, StorageReference imageStorageRef, ImageView imageView,
-                                           RequestListener<Drawable> listener) {
-        glideRequests.load(imageStorageRef)
-                .centerCrop()
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .error(R.drawable.ic_stub)
-                .listener(listener)
-                .into(imageView);
-    }
 
     public static void loadImageCenterCrop(GlideRequests glideRequests, String url, ImageView imageView,
                                            RequestListener<Drawable> listener) {
@@ -167,14 +118,6 @@ public class ImageUtil {
     public static void loadImageWithSimpleTarget(GlideRequests glideRequests, String url, SimpleTarget<Bitmap> simpleTarget) {
         glideRequests.asBitmap()
                 .load(url)
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .fitCenter()
-                .into(simpleTarget);
-    }
-
-    public static void loadImageWithSimpleTarget(GlideRequests glideRequests, StorageReference imageStorageRef, SimpleTarget<Bitmap> simpleTarget) {
-        glideRequests.asBitmap()
-                .load(imageStorageRef)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .fitCenter()
                 .into(simpleTarget);

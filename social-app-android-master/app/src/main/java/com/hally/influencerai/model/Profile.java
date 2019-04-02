@@ -16,12 +16,10 @@
 
 package com.hally.influencerai.model;
 
-import com.google.firebase.database.IgnoreExtraProperties;
 import com.hally.influencerai.enums.ItemType;
 
 import java.io.Serializable;
 
-@IgnoreExtraProperties
 public class Profile implements Serializable, LazyLoading {
 
     private String id;

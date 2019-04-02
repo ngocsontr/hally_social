@@ -19,9 +19,6 @@ package com.hally.influencerai.managers;
 import android.content.Context;
 import android.net.Uri;
 
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.ValueEventListener;
 import com.hally.influencerai.enums.ProfileStatus;
 import com.hally.influencerai.main.interactors.ProfileInteractor;
 import com.hally.influencerai.managers.listeners.OnDataChangedListener;
@@ -56,14 +53,14 @@ public class ProfileManager extends FirebaseListenersManager {
         this.context = context;
         profileInteractor = ProfileInteractor.getInstance(context);
     }
-
-    public Profile buildProfile(FirebaseUser firebaseUser, String largeAvatarURL) {
-        Profile profile = new Profile(firebaseUser.getUid());
-        profile.setEmail(firebaseUser.getEmail());
-        profile.setUsername(firebaseUser.getDisplayName());
-        profile.setPhotoUrl(largeAvatarURL != null ? largeAvatarURL : firebaseUser.getPhotoUrl().toString());
-        return profile;
-    }
+//
+//    public Profile buildProfile(FirebaseUser firebaseUser, String largeAvatarURL) {
+//        Profile profile = new Profile(firebaseUser.getUid());
+//        profile.setEmail(firebaseUser.getEmail());
+//        profile.setUsername(firebaseUser.getDisplayName());
+//        profile.setPhotoUrl(largeAvatarURL != null ? largeAvatarURL : firebaseUser.getPhotoUrl().toString());
+//        return profile;
+//    }
 
     public void isProfileExist(String id, final OnObjectExistListener<Profile> onObjectExistListener) {
         profileInteractor.isProfileExist(id, onObjectExistListener);
@@ -82,8 +79,8 @@ public class ProfileManager extends FirebaseListenersManager {
     }
 
     public void getProfileValue(Context activityContext, String id, final OnObjectChangedListener<Profile> listener) {
-        ValueEventListener valueEventListener = profileInteractor.getProfile(id, listener);
-        addListenerToMap(activityContext, valueEventListener);
+//        ValueEventListener valueEventListener = profileInteractor.getProfile(id, listener);
+//        addListenerToMap(activityContext, valueEventListener);
     }
 
     public void getProfileSingleValue(String id, final OnObjectChangedListener<Profile> listener) {
@@ -91,8 +88,8 @@ public class ProfileManager extends FirebaseListenersManager {
     }
 
     public ProfileStatus checkProfile() {
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-
+//        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        Object user = null;
         if (user == null) {
             return ProfileStatus.NOT_AUTHORIZED;
         } else if (!SharePreUtil.isProfileCreated(context)) {
@@ -104,8 +101,8 @@ public class ProfileManager extends FirebaseListenersManager {
 
     public void search(String searchText, OnDataChangedListener<Profile> onDataChangedListener) {
         closeListeners(context);
-        ValueEventListener valueEventListener = profileInteractor.searchProfiles(searchText, onDataChangedListener);
-        addListenerToMap(context, valueEventListener);
+//        ValueEventListener valueEventListener = profileInteractor.searchProfiles(searchText, onDataChangedListener);
+//        addListenerToMap(context, valueEventListener);
     }
 
     public void addRegistrationToken(String token, String userId) {
