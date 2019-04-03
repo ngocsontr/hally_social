@@ -51,7 +51,9 @@ public class EditProfilePresenter<V extends EditProfileView> extends PickImagePr
         if (checkInternetConnection()) {
             ifViewAttached(new ViewAction<V>() {
                 @Override
-                public void run(@NonNull V view) {
+                public void run(@NonNull EditProfileView view) {
+                    if (!view.doValidate(view)) return;
+
                     User user = new User();
                     user.setEmail(socialUser.getEmail());
                     user.setUsername(socialUser.getUsername());
@@ -92,8 +94,8 @@ public class EditProfilePresenter<V extends EditProfileView> extends PickImagePr
         ifViewAttached(BaseView::finish);
     }
 
-    public void initProfessionalList() {
-        ifViewAttached(EditProfileView::createProfessionalList);
+    public void initProfessionView() {
+        ifViewAttached(EditProfileView::createProfessionView);
     }
 
     public void setIsUpdate(boolean isUpdate) {

@@ -93,16 +93,18 @@ public class EditProfileActivity<V extends EditProfileView, P extends EditProfil
         avatarImageView = findViewById(R.id.imageView);
         emailEditText = findViewById(R.id.emailEditText);
         emailEditText.addValidator(new RegexpValidator(getString(R.string.error_invalid_email),
-                Constants.EMAIL_PATTERN));
+                Constants.Profile.EMAIL_PATTERN));
         nameEditText = findViewById(R.id.nameEditText);
+        nameEditText.setMinCharacters(Constants.Profile.MIM_NAME_LENGTH);
         male = findViewById(R.id.male);
         female = findViewById(R.id.female);
         dobEditText = findViewById(R.id.dobEditText);
         dobEditText.addValidator(new RegexpValidator(getString(R.string.dob_helper),
-                Constants.DOB_PATTERN));
+                Constants.Profile.DOB_PATTERN));
         dobEditText.addTextChangedListener(TextWatcherUtil.getTextWatcher(dobEditText));
         locationEditText = findViewById(R.id.locationEditText);
         desEditText = findViewById(R.id.descriptionEditText);
+        desEditText.setMinCharacters(Constants.Profile.MIM_DESCRIPTION_LENGTH);
         userTypeChoices = findViewById(R.id.user_type_choices);
         influencer = findViewById(R.id.influencer);
         marketer = findViewById(R.id.marketer);
@@ -128,7 +130,7 @@ public class EditProfileActivity<V extends EditProfileView, P extends EditProfil
 
     protected void initContent() {
         presenter.loadProfile(user);
-        presenter.initProfessionalList();
+        presenter.initProfessionView();
     }
 
     @Override
@@ -154,12 +156,6 @@ public class EditProfileActivity<V extends EditProfileView, P extends EditProfil
         handleCropImageResult(requestCode, resultCode, data);
     }
 
-    @Override
-    public void setName(String username) {
-        nameEditText.setText(username);
-    }
-
-    @Override
     public void setProfilePhoto(String photoUrl) {
         ImageUtil.loadImage(GlideApp.with(this), photoUrl, avatarImageView, new RequestListener<Drawable>() {
             @Override
@@ -176,25 +172,45 @@ public class EditProfileActivity<V extends EditProfileView, P extends EditProfil
         });
     }
 
-    @Override
-    public String getNameText() {
-        return nameEditText.getText().toString();
-    }
 
     @Override
-    public void setNameError(@Nullable String string) {
-        nameEditText.setError(string);
-        nameEditText.requestFocus();
-    }
-
-    @Override
-    public void createProfessionalList() {
+    public void createProfessionView() {
         groupProfessional.removeAllViews();
         for (String category : PROFESSIONS) {
             LabelToggle toggle = new LabelToggle(this);
             toggle.setText(category);
             groupProfessional.addView(toggle);
         }
+    }
+
+    @Override
+    public boolean doValidate(EditProfileView view) {
+        StringBuilder mess = new StringBuilder();
+        if (userTypeChoices.getCheckedId() == View.NO_ID) {
+            mess.append(getString(R.string.user_type_invalid_message)).append("\n");
+        }
+        if (!emailEditText.validate()) {
+            mess.append(getString(R.string.email_invalid_message)).append("\n");
+        }
+        if (!nameEditText.isCharactersCountValid()) {
+            mess.append(getString(R.string.user_length_invalid_message)).append("\n");
+        }
+        if (!dobEditText.validate()) {
+            mess.append(getString(R.string.dob_invalid_message)).append("\n");
+        }
+        if (!desEditText.isCharactersCountValid()) {
+            mess.append(getString(R.string.des_length_invalid_message)).append("\n");
+        }
+        int proSize = Constants.Profile.MIN_PROFESSION_SIZE;
+        if (groupProfessional.getCheckedIds().size() < proSize) {
+            mess.append(getString(R.string.profession_invalid_message, proSize)).append("\n");
+        }
+
+        if (!TextUtils.isEmpty(mess)) {
+            showSnackBar(mess.deleteCharAt(mess.length() - 1).toString());
+            return false;
+        }
+        return true;
     }
 
     @Override
@@ -209,6 +225,7 @@ public class EditProfileActivity<V extends EditProfileView, P extends EditProfil
         // Handle item selection
         switch (item.getItemId()) {
             case R.id.save:
+                hideKeyboard();
                 presenter.setIsUpdate(true);
                 presenter.attemptCreateOrUpdateProfile(getUser());
                 return true;
@@ -219,7 +236,6 @@ public class EditProfileActivity<V extends EditProfileView, P extends EditProfil
 
     @Override
     public void loadProfile(User user) {
-        loadSocialItem();
         if (user.isInfluencer()) {
             influencer.setChecked(true);
             marketer.setVisibility(View.GONE);
@@ -238,6 +254,8 @@ public class EditProfileActivity<V extends EditProfileView, P extends EditProfil
         dobEditText.setText(user.getDateOfBirth());
         locationEditText.setText(user.getLocation());
         desEditText.setText(user.getDescription());
+        loadSocialItem();
+        loadProfessions();
     }
 
     protected void loadSocialItem() {
@@ -263,6 +281,19 @@ public class EditProfileActivity<V extends EditProfileView, P extends EditProfil
                 socialImageView.setVisibility(View.VISIBLE);
                 ImageUtil.loadImage(GlideApp.with(this),
                         userSocial.getSocialAvatar(), socialImageView);
+            }
+        }
+    }
+
+    private void loadProfessions() {
+        if (user.getProfession() == null) return;
+
+        for (int i = 0; i < groupProfessional.getChildCount(); i++) {
+            for (String pro : user.getProfession()) {
+                LabelToggle toggle = (LabelToggle) groupProfessional.getChildAt(i);
+                if (TextUtils.equals(pro, toggle.getText())) {
+                    toggle.setChecked(true);
+                }
             }
         }
     }

@@ -47,7 +47,7 @@ public class CreateProfileActivity extends
     @Override
     protected void initContent() {
         presenter.buildProfile(user);
-        presenter.initProfessionalList();
+        presenter.initProfessionView();
         if (TextUtils.isEmpty(user.getLocation())) {
             presenter.initLocation();
         }
@@ -74,6 +74,7 @@ public class CreateProfileActivity extends
         // Handle item selection
         switch (item.getItemId()) {
             case R.id.continueButton:
+                hideKeyboard();
                 presenter.attemptCreateOrUpdateProfile(getUser());
                 return true;
             default:

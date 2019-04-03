@@ -17,7 +17,6 @@
 package com.hally.influencerai.main.editProfile;
 
 import com.hally.influencerai.main.pickImageBase.PickImageView;
-import com.hally.influencerai.model.Profile;
 import com.hally.influencerai.model.User;
 
 /**
@@ -25,15 +24,22 @@ import com.hally.influencerai.model.User;
  */
 
 public interface EditProfileView extends PickImageView {
-    void setName(String username);
 
-    void setProfilePhoto(String photoUrl);
+    /**
+     * Load the exist user
+     *
+     * @param user user
+     */
+    void loadProfile(User user);
 
-    String getNameText();
+    /**
+     * view professions list
+     */
+    void createProfessionView();
 
-    void setNameError(String string);
-
-    void createProfessionalList();
-
-    void loadProfile(User profile);
+    /**
+     * @param view sign up view
+     * @return true if all field was validated
+     */
+    boolean doValidate(EditProfileView view);
 }

@@ -19,8 +19,6 @@ package com.hally.influencerai;
 public class Constants {
 
     public static final boolean DEBUG = true;
-    public static final String EMAIL_PATTERN = "^[_A-Za-z0-9-]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
-    public static final String DOB_PATTERN = "^((19|20|21)\\d\\d)\\-(0?[1-9]|1[012])\\-(0?[1-9]|[12][0-9]|3[01])$";
 
     public static class UserType {
         public static final int FACEBOOK = 1;
@@ -33,6 +31,11 @@ public class Constants {
         public static final int MAX_AVATAR_SIZE = 1280; //px, side of square
         public static final int MIN_AVATAR_SIZE = 100; //px, side of square
         public static final int MAX_NAME_LENGTH = 120;
+        public static final int MIM_NAME_LENGTH = 8;
+        public static final int MIN_PROFESSION_SIZE = 3;
+        public static final int MIM_DESCRIPTION_LENGTH = 120;
+        public static final String EMAIL_PATTERN = "^[_A-Za-z0-9-]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
+        public static final String DOB_PATTERN = "^((19|20|21)\\d\\d)\\-(0?[1-9]|1[012])\\-(0?[1-9]|[12][0-9]|3[01])$";
     }
 
     public static class Post {

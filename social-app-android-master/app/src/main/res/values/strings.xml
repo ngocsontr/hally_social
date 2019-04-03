@@ -112,6 +112,13 @@
     <string name="enter_group_name">Enter group name</string>
     <string name="facebook_request_field">id,name,email,gender,birthday,picture,cover</string>
 
+    <string name="user_type_invalid_message">Must be a Marketer or Influencer!</string>
+    <string name="email_invalid_message">Email format is invalid!</string>
+    <string name="user_length_invalid_message">Name length is invalid!</string>
+    <string name="des_length_invalid_message">Description length is invalid!</string>
+    <string name="dob_invalid_message">Date of birth is wrong format!</string>
+    <string name="profession_invalid_message">Must be select at less %1$d professions!</string>
+
     <string name="loading">Loading …</string>
     <string name="removing">Removing …</string>
     <string name="error_general">Something went wrong.</string>
