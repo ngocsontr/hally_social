@@ -26,6 +26,7 @@ import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -61,7 +62,7 @@ public class EditProfileActivity<V extends EditProfileView, P extends EditProfil
     private static final String TAG = EditProfileActivity.class.getSimpleName();
 
     public static final String SOCIAL_USER_EXTRA_KEY = "SOCIAL_USER_EXTRA_KEY";
-    private String[] PROFESSIONS;
+    private String[] CATEGORIES;
 
     protected User user;
     // UI references.
@@ -77,7 +78,7 @@ public class EditProfileActivity<V extends EditProfileView, P extends EditProfil
     protected SingleSelectToggleGroup userTypeChoices;
     protected LabelToggle influencer;
     protected LabelToggle marketer;
-    protected MultiSelectToggleGroup groupProfessional;
+    protected MultiSelectToggleGroup categoryGroup;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,7 +88,7 @@ public class EditProfileActivity<V extends EditProfileView, P extends EditProfil
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
         user = getIntent().getParcelableExtra(SOCIAL_USER_EXTRA_KEY);
-        PROFESSIONS = getResources().getStringArray(R.array.professional_array);
+        CATEGORIES = getResources().getStringArray(R.array.category_array);
 
         avatarProgressBar = findViewById(R.id.avatarProgressBar);
         avatarImageView = findViewById(R.id.imageView);
@@ -108,12 +109,22 @@ public class EditProfileActivity<V extends EditProfileView, P extends EditProfil
         userTypeChoices = findViewById(R.id.user_type_choices);
         influencer = findViewById(R.id.influencer);
         marketer = findViewById(R.id.marketer);
-        groupProfessional = findViewById(R.id.group_professional);
+        categoryGroup = findViewById(R.id.category_group);
 
+        locationEditText.setOnTouchListener((v, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_UP) {
+                if (event.getRawX() >= locationEditText.getRight()) {
+                    showSnackBar("My location:" + event.getRawX() + " -- " + locationEditText.getRight());
+                    presenter.onMyLocationClick();
+                    return true;
+                }
+            }
+            return false;
+        });
         avatarImageView.setOnClickListener(this::onSelectImageClick);
         userTypeChoices.setOnCheckedChangeListener((group, checkedId)
                 -> LogUtil.logInfo(TAG, "" + group + checkedId));
-        groupProfessional.setOnCheckedChangeListener((group, checkedId, isChecked)
+        categoryGroup.setOnCheckedChangeListener((group, checkedId, isChecked)
                 -> LogUtil.logInfo(TAG, "" + group + group.getCheckedIds() + isChecked));
 
         initContent();
@@ -130,7 +141,7 @@ public class EditProfileActivity<V extends EditProfileView, P extends EditProfil
 
     protected void initContent() {
         presenter.loadProfile(user);
-        presenter.initProfessionView();
+        presenter.initCategoryView();
     }
 
     @Override
@@ -174,12 +185,12 @@ public class EditProfileActivity<V extends EditProfileView, P extends EditProfil
 
 
     @Override
-    public void createProfessionView() {
-        groupProfessional.removeAllViews();
-        for (String category : PROFESSIONS) {
+    public void createCategoryView() {
+        categoryGroup.removeAllViews();
+        for (String category : CATEGORIES) {
             LabelToggle toggle = new LabelToggle(this);
             toggle.setText(category);
-            groupProfessional.addView(toggle);
+            categoryGroup.addView(toggle);
         }
     }
 
@@ -201,9 +212,9 @@ public class EditProfileActivity<V extends EditProfileView, P extends EditProfil
         if (!desEditText.isCharactersCountValid()) {
             mess.append(getString(R.string.des_length_invalid_message)).append("\n");
         }
-        int proSize = Constants.Profile.MIN_PROFESSION_SIZE;
-        if (groupProfessional.getCheckedIds().size() < proSize) {
-            mess.append(getString(R.string.profession_invalid_message, proSize)).append("\n");
+        int proSize = Constants.Profile.MIN_CATEGORY_SIZE;
+        if (categoryGroup.getCheckedIds().size() < proSize) {
+            mess.append(getString(R.string.categories_invalid_message, proSize)).append("\n");
         }
 
         if (!TextUtils.isEmpty(mess)) {
@@ -255,7 +266,7 @@ public class EditProfileActivity<V extends EditProfileView, P extends EditProfil
         locationEditText.setText(user.getLocation());
         desEditText.setText(user.getDescription());
         loadSocialItem();
-        loadProfessions();
+        loadCategories();
     }
 
     protected void loadSocialItem() {
@@ -285,12 +296,12 @@ public class EditProfileActivity<V extends EditProfileView, P extends EditProfil
         }
     }
 
-    private void loadProfessions() {
-        if (user.getProfession() == null) return;
+    private void loadCategories() {
+        if (user.getCategory() == null) return;
 
-        for (int i = 0; i < groupProfessional.getChildCount(); i++) {
-            for (String pro : user.getProfession()) {
-                LabelToggle toggle = (LabelToggle) groupProfessional.getChildAt(i);
+        for (int i = 0; i < categoryGroup.getChildCount(); i++) {
+            for (String pro : user.getCategory()) {
+                LabelToggle toggle = (LabelToggle) categoryGroup.getChildAt(i);
                 if (TextUtils.equals(pro, toggle.getText())) {
                     toggle.setChecked(true);
                 }
@@ -307,14 +318,14 @@ public class EditProfileActivity<V extends EditProfileView, P extends EditProfil
         user.setLocation(locationEditText.getText().toString());
         user.setDescription(desEditText.getText().toString());
         user.setUserType(getUserType());
-        user.setProfessions(getProfessions());
+        user.setCategories(getCategories());
         return user;
     }
 
-    protected List<String> getProfessions() {
+    protected List<String> getCategories() {
         List<String> results = new ArrayList<>();
-        for (int i = 0; i < groupProfessional.getChildCount(); i++) {
-            LabelToggle toggle = (LabelToggle) groupProfessional.getChildAt(i);
+        for (int i = 0; i < categoryGroup.getChildCount(); i++) {
+            LabelToggle toggle = (LabelToggle) categoryGroup.getChildAt(i);
             if (toggle.isChecked()) {
                 results.add(toggle.getText().toString());
             }

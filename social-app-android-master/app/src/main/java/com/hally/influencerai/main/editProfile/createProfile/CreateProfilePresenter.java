@@ -54,8 +54,8 @@ class CreateProfilePresenter extends EditProfilePresenter<CreateProfileView> {
         ifViewAttached(view -> view.buildProfile(profile));
     }
 
-    public void initProfessionView() {
-        ifViewAttached(EditProfileView::createProfessionView);
+    public void initCategoryView() {
+        ifViewAttached(EditProfileView::createCategoryView);
     }
 
 

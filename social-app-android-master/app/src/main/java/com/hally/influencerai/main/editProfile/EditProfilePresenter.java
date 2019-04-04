@@ -63,7 +63,7 @@ public class EditProfilePresenter<V extends EditProfileView> extends PickImagePr
                     user.setDescription(socialUser.getDescription());
                     user.setLocation(socialUser.getLocation());
                     if (!isUpdate) user.setUserType(socialUser.getUserType());
-                    user.setProfessions(socialUser.getProfession());
+                    user.setCategories(socialUser.getCategory());
 
                     ApiUtils.updateUser(context, user, new Callback<UpdateUserRes>() {
                         @Override
@@ -94,11 +94,16 @@ public class EditProfilePresenter<V extends EditProfileView> extends PickImagePr
         ifViewAttached(BaseView::finish);
     }
 
-    public void initProfessionView() {
-        ifViewAttached(EditProfileView::createProfessionView);
+    public void initCategoryView() {
+        ifViewAttached(EditProfileView::createCategoryView);
     }
 
     public void setIsUpdate(boolean isUpdate) {
         this.isUpdate = isUpdate;
+    }
+
+    public void onMyLocationClick() {
+
+
     }
 }

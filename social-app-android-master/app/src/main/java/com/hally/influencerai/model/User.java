@@ -94,9 +94,9 @@ public class User implements Parcelable {
     @SerializedName("coverPicUrl")
     @Expose
     private String coverPicUrl;
-    @SerializedName("professions")
+    @SerializedName("category")
     @Expose
-    private List<String> professions;
+    private List<String> categories;
 
     public User() {
     }
@@ -128,7 +128,7 @@ public class User implements Parcelable {
         website = in.readString();
         about = in.readString();
         coverPicUrl = in.readString();
-        professions = in.createStringArrayList();
+        categories = in.createStringArrayList();
     }
 
     public static final Creator<User> CREATOR = new Creator<User>() {
@@ -351,12 +351,12 @@ public class User implements Parcelable {
         this.coverPicUrl = coverPicUrl;
     }
 
-    public void setProfessions(List<String> professions) {
-        this.professions = professions;
+    public void setCategories(List<String> categories) {
+        this.categories = categories;
     }
 
-    public List<String> getProfession() {
-        return professions;
+    public List<String> getCategory() {
+        return categories;
     }
 
     public boolean isInfluencer() {
@@ -396,7 +396,7 @@ public class User implements Parcelable {
         dest.writeString(website);
         dest.writeString(about);
         dest.writeString(coverPicUrl);
-        dest.writeStringList(professions);
+        dest.writeStringList(categories);
     }
 
     @Override
@@ -428,7 +428,7 @@ public class User implements Parcelable {
                 ", website='" + website + '\'' +
                 ", about='" + about + '\'' +
                 ", coverPicUrl='" + coverPicUrl + '\'' +
-                ", professions=" + professions +
+                ", categories=" + categories +
                 '}';
     }
 

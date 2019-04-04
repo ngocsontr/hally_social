@@ -47,7 +47,7 @@ public class CreateProfileActivity extends
     @Override
     protected void initContent() {
         presenter.buildProfile(user);
-        presenter.initProfessionView();
+        presenter.initCategoryView();
         if (TextUtils.isEmpty(user.getLocation())) {
             presenter.initLocation();
         }

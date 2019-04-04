@@ -161,8 +161,8 @@
                         android:inputType="date"
                         android:maxLines="1"
                         app:met_accentTypeface="font/roboto_light_italic.ttf"
-                        app:met_floatingLabel="highlight"
                         app:met_autoValidate="true"
+                        app:met_floatingLabel="highlight"
                         app:met_helperText="@string/dob_helper" />
 
                     <com.rengwuxian.materialedittext.MaterialEditText
@@ -175,7 +175,9 @@
                         android:maxLines="1"
                         app:met_accentTypeface="font/roboto_light_italic.ttf"
                         app:met_floatingLabel="highlight"
-                        app:met_helperText="@string/location_helper" />
+                        app:met_helperText="@string/location_helper"
+                        app:met_iconPadding="0dp"
+                        app:met_iconRight="@drawable/my_location_black" />
 
                     <com.rengwuxian.materialedittext.MaterialEditText
                         android:id="@+id/descriptionEditText"
@@ -212,10 +214,10 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="@dimen/large_intrinsic_padding"
-                        android:text="@string/prompt_professional" />
+                        android:text="@string/prompt_category" />
 
                     <com.nex3z.togglebuttongroup.MultiSelectToggleGroup
-                        android:id="@+id/group_professional"
+                        android:id="@+id/category_group"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         app:tbgChildSpacing="20dp"

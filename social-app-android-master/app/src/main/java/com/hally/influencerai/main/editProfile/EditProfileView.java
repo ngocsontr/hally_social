@@ -35,7 +35,7 @@ public interface EditProfileView extends PickImageView {
     /**
      * view professions list
      */
-    void createProfessionView();
+    void createCategoryView();
 
     /**
      * @param view sign up view

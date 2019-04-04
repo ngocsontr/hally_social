@@ -78,7 +78,7 @@
     <string name="prompt_dob">Date of birth</string>
     <string name="prompt_location">Location</string>
     <string name="prompt_description">Description</string>
-    <string name="prompt_professional">Professions</string>
+    <string name="prompt_category">Categories</string>
     <string name="prompt_profile_infor">Profile information</string>
     <string name="prompt_socical_infor">Social network</string>
     <string name="prompt_password">Password</string>
@@ -117,7 +117,7 @@
     <string name="user_length_invalid_message">Name length is invalid!</string>
     <string name="des_length_invalid_message">Description length is invalid!</string>
     <string name="dob_invalid_message">Date of birth is wrong format!</string>
-    <string name="profession_invalid_message">Must be select at less %1$d professions!</string>
+    <string name="categories_invalid_message">Must be select at less %1$d Categories!</string>
 
     <string name="loading">Loading …</string>
     <string name="removing">Removing …</string>
