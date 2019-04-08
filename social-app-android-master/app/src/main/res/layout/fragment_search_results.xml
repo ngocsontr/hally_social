@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.hally.influencerai.main.search.posts.SearchPostsFragment">
+    tools:context="com.hally.social.main.search.posts.SearchPostsFragment">
 
 
     <android.support.v7.widget.RecyclerView

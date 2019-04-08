@@ -38,7 +38,7 @@
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <com.hally.influencerai.views.SwipeRefreshPreLollyPop
+        <com.hally.social.views.SwipeRefreshPreLollyPop
             android:id="@+id/swipeContainer"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
@@ -50,7 +50,7 @@
                 android:divider="@null"
                 android:paddingBottom="@dimen/intrinsic_padding" />
 
-        </com.hally.influencerai.views.SwipeRefreshPreLollyPop>
+        </com.hally.social.views.SwipeRefreshPreLollyPop>
 
         <TextView
             android:id="@+id/newPostsCounterTextView"

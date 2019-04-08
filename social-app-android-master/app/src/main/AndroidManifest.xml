@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.hally.influencerai">
+    package="com.hally.social">
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
@@ -14,7 +14,7 @@
     <uses-permission android:name="android.permission.VIBRATE" />
 
     <application
-        android:name="com.hally.influencerai.Application"
+        android:name="com.hally.social.Application"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -32,7 +32,7 @@
             android:label="@string/app_name" />
 
         <activity
-            android:name="com.hally.influencerai.main.main.MainActivity"
+            android:name="com.hally.social.main.main.MainActivity"
             android:configChanges="orientation|screenSize"
             android:theme="@style/AppCompat.NoActionBar">
             <intent-filter>
@@ -42,57 +42,57 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.hally.influencerai.main.postDetails.PostDetailsActivity"
+            android:name="com.hally.social.main.postDetails.PostDetailsActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/label_post_detail_activity" />
         <activity
-            android:name="com.hally.influencerai.main.post.createPost.CreatePostActivity"
+            android:name="com.hally.social.main.post.createPost.CreatePostActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/label_create_post_activity" />
         <activity
-            android:name="com.hally.influencerai.main.imageDetail.ImageDetailActivity"
+            android:name="com.hally.social.main.imageDetail.ImageDetailActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/label_image_detail_activity"
             android:theme="@style/AppCompat.Black.NoActionBar" />
         <activity
-            android:name="com.hally.influencerai.main.login.LoginActivity"
+            android:name="com.hally.social.main.login.LoginActivity"
             android:label="@string/title_activity_login"
             android:theme="@style/AppCompat.NoActionBar" />
         <activity
-            android:name="com.hally.influencerai.main.editProfile.createProfile.CreateProfileActivity"
+            android:name="com.hally.social.main.editProfile.createProfile.CreateProfileActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/title_activity_create_profile" />
         <activity
             android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
             android:theme="@style/Base.Theme.AppCompat" />
         <activity
-            android:name="com.hally.influencerai.main.profile.ProfileActivity"
+            android:name="com.hally.social.main.profile.ProfileActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/title_activity_profile"
             android:theme="@style/AppCompat.NoActionBar" />
         <activity
-            android:name="com.hally.influencerai.main.editProfile.EditProfileActivity"
+            android:name="com.hally.social.main.editProfile.EditProfileActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/title_activity_edit_profile" />
 
         <activity
-            android:name="com.hally.influencerai.main.post.editPost.EditPostActivity"
+            android:name="com.hally.social.main.post.editPost.EditPostActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/title_activity_edit_post" />
 
         <activity
-            android:name="com.hally.influencerai.main.usersList.UsersListActivity"
+            android:name="com.hally.social.main.usersList.UsersListActivity"
             android:configChanges="orientation|screenSize"
             android:theme="@style/AppCompat.NoActionBar" />
 
         <activity
-            android:name="com.hally.influencerai.main.followPosts.FollowingPostsActivity"
+            android:name="com.hally.social.main.followPosts.FollowingPostsActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/title_activity_following_posts"
             android:theme="@style/AppCompat.NoActionBar" />
 
         <activity
-            android:name="com.hally.influencerai.main.search.SearchActivity"
+            android:name="com.hally.social.main.search.SearchActivity"
             android:configChanges="orientation|screenSize"
             android:theme="@style/AppCompat.NoActionBar"
             android:windowSoftInputMode="adjustResize">
@@ -109,32 +109,32 @@
             android:name="io.fabric.ApiKey"
             android:value="84e05e27c9fcba7e1de6a47e355a1aa247264a46" />
 
-        <service android:name="com.hally.influencerai.services.MyFirebaseMessagingService">
+        <service android:name="com.hally.social.services.MyFirebaseMessagingService">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
 
-        <service android:name="com.hally.influencerai.services.MyFirebaseInstanceIDService">
+        <service android:name="com.hally.social.services.MyFirebaseInstanceIDService">
             <intent-filter>
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
         </service>
 
         <activity
-            android:name="com.hally.influencerai.chat.ChatMainActivity"
+            android:name="com.hally.social.chat.ChatMainActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/AppCompat.NoActionBar" />
         <activity
-            android:name="com.hally.influencerai.chat.ui.ChatActivity"
+            android:name="com.hally.social.chat.ui.ChatActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.hally.influencerai.chat.ui.AddGroupActivity"
+            android:name="com.hally.social.chat.ui.AddGroupActivity"
             android:theme="@style/MyThemeNoActionbar" />
 
         <service
-            android:name="com.hally.influencerai.chat.service.FriendChatService"
+            android:name="com.hally.social.chat.service.FriendChatService"
             android:exported="false"
             android:persistent="true" />
     </application>
